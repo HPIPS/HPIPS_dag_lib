@@ -28,7 +28,7 @@
 #include "json-rpc/rpc_service.h"
 
 #define ARG_EQUAL(a,b,c) strcmp(c, "") == 0 ? strcmp(a, b) == 0 : (strcmp(a, b) == 0 || strcmp(a, c) == 0)
-enum xdag_field_type g_block_header_type = DAG_FIELD_HEAD;
+enum dag_field_type g_block_header_type = DAG_FIELD_HEAD;
 
 void printUsage(char* appName);
 
@@ -240,8 +240,8 @@ int DAG_init::init(int argc, char ** argv, int isGui)
 		g_disable_mining = 0;   // this option is only for pools
 	}
 
-	memset(&g_xdag_stats, 0, sizeof(g_xdag_stats));
-	memset(&g_xdag_extstats, 0, sizeof(g_xdag_extstats));
+	memset(&g_dag_stats, 0, sizeof(g_dag_stats));
+	memset(&g_dag_extstats, 0, sizeof(g_dag_extstats));
 
 	dag_mess("Starting %s, version %s", g_progname, DAG_VERSION);
 	dag_mess("Starting synchonization engine...");

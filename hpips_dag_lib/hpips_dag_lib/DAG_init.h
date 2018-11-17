@@ -73,12 +73,12 @@ public:
 
 	int dag_set_password_callback(int(*callback)(const char *prompt, char *buf, unsigned size));
 
-	int(*g_xdag_show_state)(const char *state, const char *balance, const char *address);
+	int(*g_dag_show_state)(const char *state, const char *balance, const char *address);
 private:
 	int g_is_pool = 0;
-	time_t g_xdag_xfer_last = 0;
-	dag_stats g_xdag_stats;
-	dag_ext_stats g_xdag_extstats;
+	time_t g_dag_xfer_last = 0;
+	dag_stats g_dag_stats;
+	dag_ext_stats g_dag_extstats;
 	int g_disable_mining = 0;
 	char g_pool_address[50] = { 0 };
 };
