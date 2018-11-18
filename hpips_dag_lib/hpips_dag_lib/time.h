@@ -28,9 +28,11 @@ public:
 	int dag_time_init(void);
 	// 转换time_t到字符串表示
 	// 字符串缓冲区“BUF”的最小长度应该是50。
-	void xdag_xtime_to_string(time_t time, char *buf);
+	void dag_xtime_to_string(time_t time, char *buf);
 
-	time_t xdag_get_xtimestamp(void);
-	uint64_t xdag_get_time_ms(void);
+	time_t dag_get_xtimestamp(void);
+	uint64_t dag_get_time_ms(void);
+private:
+	int g_dag_testnet;
 };
 
