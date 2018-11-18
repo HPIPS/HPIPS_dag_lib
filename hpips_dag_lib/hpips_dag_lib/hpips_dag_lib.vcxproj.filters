@@ -24,6 +24,9 @@
     <ClInclude Include="DAG_init.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="time.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -36,6 +39,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="DAG_init.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="time.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

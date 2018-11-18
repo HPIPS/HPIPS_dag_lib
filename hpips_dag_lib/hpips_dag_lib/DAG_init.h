@@ -14,7 +14,7 @@ enum dag_states
 
 extern struct dag_stats
 {
-	xdag_diff_t difficulty, max_difficulty;
+	dag_diff_t difficulty, max_difficulty;
 	uint64_t nblocks, total_nblocks;
 	uint64_t nmain, total_nmain;
 	uint32_t nhosts, total_nhosts;
