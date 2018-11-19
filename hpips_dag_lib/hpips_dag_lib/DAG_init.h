@@ -22,7 +22,7 @@ extern struct dag_stats
 		uint32_t reserved[2];
 		uint64_t main_time;
 	};
-} g_xdag_stats;
+} g_dag_stats;
 
 extern struct dag_ext_stats
 {
