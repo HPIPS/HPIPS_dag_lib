@@ -149,6 +149,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="termios.h" />
     <ClInclude Include="time.h" />
+    <ClInclude Include="unistd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DAG_init.cpp" />
