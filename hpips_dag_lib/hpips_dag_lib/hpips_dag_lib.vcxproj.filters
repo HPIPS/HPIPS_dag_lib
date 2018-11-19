@@ -19,6 +19,9 @@
     <Filter Include="源文件\win">
       <UniqueIdentifier>{3d1c28a7-393d-445b-b004-c7e435275254}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\win\arpa">
+      <UniqueIdentifier>{61b4fba1-8ecf-452c-a61d-d699babfa49d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -41,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="unistd.h">
       <Filter>头文件\win</Filter>
+    </ClInclude>
+    <ClInclude Include="inet.h">
+      <Filter>头文件\win\arpa</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
