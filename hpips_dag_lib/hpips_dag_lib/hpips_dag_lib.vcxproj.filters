@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\win">
+      <UniqueIdentifier>{c815f944-419c-433a-aadb-e643a99f3018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\win">
+      <UniqueIdentifier>{3d1c28a7-393d-445b-b004-c7e435275254}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -26,6 +32,9 @@
     </ClInclude>
     <ClInclude Include="time.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="netdb.h">
+      <Filter>头文件\win</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
