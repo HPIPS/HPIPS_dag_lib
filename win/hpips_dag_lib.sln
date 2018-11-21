@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hpips_dag_lib", "hpips_dag_lib\hpips_dag_lib.vcxproj", "{0B8EA0D8-EECA-4EFF-8EF5-D4EB744A73CA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xdag", "xdag\xdag.vcxproj", "{8F05F6FF-AA25-4D79-AB2D-886BA8976393}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hpips_dag", "hpips_dag\hpips_dag.vcxproj", "{E66556D6-800C-4CBC-82E7-DC6435565A02}"
 EndProject
 Global
@@ -31,18 +29,6 @@ Global
 		{0B8EA0D8-EECA-4EFF-8EF5-D4EB744A73CA}.Release|x64.Build.0 = Release|x64
 		{0B8EA0D8-EECA-4EFF-8EF5-D4EB744A73CA}.Release|x86.ActiveCfg = Release|Win32
 		{0B8EA0D8-EECA-4EFF-8EF5-D4EB744A73CA}.Release|x86.Build.0 = Release|Win32
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Debug|x64.ActiveCfg = Debug|x64
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Debug|x64.Build.0 = Debug|x64
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Debug|x86.ActiveCfg = Debug|Win32
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Debug|x86.Build.0 = Debug|Win32
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Release_profiling|x64.ActiveCfg = Release_profiling|x64
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Release_profiling|x64.Build.0 = Release_profiling|x64
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Release_profiling|x86.ActiveCfg = Release_profiling|Win32
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Release_profiling|x86.Build.0 = Release_profiling|Win32
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Release|x64.ActiveCfg = Release|x64
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Release|x64.Build.0 = Release|x64
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Release|x86.ActiveCfg = Release|Win32
-		{8F05F6FF-AA25-4D79-AB2D-886BA8976393}.Release|x86.Build.0 = Release|Win32
 		{E66556D6-800C-4CBC-82E7-DC6435565A02}.Debug|x64.ActiveCfg = Debug|x64
 		{E66556D6-800C-4CBC-82E7-DC6435565A02}.Debug|x64.Build.0 = Debug|x64
 		{E66556D6-800C-4CBC-82E7-DC6435565A02}.Debug|x86.ActiveCfg = Debug|Win32
