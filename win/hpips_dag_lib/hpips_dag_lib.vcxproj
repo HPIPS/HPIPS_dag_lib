@@ -143,9 +143,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\client\address.h" />
+    <ClInclude Include="..\..\client\block.h" />
+    <ClInclude Include="..\..\client\commands.h" />
+    <ClInclude Include="..\..\client\crypt.h" />
+    <ClInclude Include="..\..\client\init.h" />
+    <ClInclude Include="..\..\client\math.h" />
     <ClInclude Include="DAG_init.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\client\address.c" />
+    <ClCompile Include="..\..\client\block.c" />
+    <ClCompile Include="..\..\client\commands.c" />
+    <ClCompile Include="..\..\client\crypt.c" />
+    <ClCompile Include="..\..\client\init.c" />
+    <ClCompile Include="..\..\client\math.c" />
     <ClCompile Include="DAG_init.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

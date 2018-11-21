@@ -9,14 +9,14 @@
 extern "C" {
 #endif
 	
-/* intializes the addresses module */
-extern int xdag_address_init(void);
+/* 初始化地址模块 */
+extern int dag_address_init(void);
 
-/* converts address to hash */
-extern int xdag_address2hash(const char *address, xdag_hash_t hash);
+/* 转换address到hash */
+extern int dag_address2hash(const char *address, xdag_hash_t hash);
 
-/* converts hash to address */
-extern void xdag_hash2address(const xdag_hash_t hash, char *address);
+/* 转换hash到address */
+extern void dag_hash2address(const xdag_hash_t hash, char *address);
 	
 #ifdef __cplusplus
 };

@@ -16,15 +16,72 @@
     <Filter Include="源文件\win">
       <UniqueIdentifier>{3d1c28a7-393d-445b-b004-c7e435275254}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cilent">
+      <UniqueIdentifier>{53f78e04-c69e-4aee-84d3-bb010d2b0332}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cilent\http">
+      <UniqueIdentifier>{9140c19c-1dc6-41f6-9093-362a3f593786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cilent\json-rpc">
+      <UniqueIdentifier>{99e17190-84d8-45c2-ac0f-6163bdc4342d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cilent\mining">
+      <UniqueIdentifier>{251a6556-b2c0-4461-838c-d9f01e8d38ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cilent\pool_lists">
+      <UniqueIdentifier>{c560e0aa-f579-47e5-b446-f925b121ff1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cilent\uthash">
+      <UniqueIdentifier>{05ad40bf-ba0a-4812-8056-eadb9fd08c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cilent\utils">
+      <UniqueIdentifier>{d8ca9afa-a66d-4c27-81da-84134ba5c29f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DAG_init.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\client\address.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\block.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\commands.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\crypt.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\init.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\math.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DAG_init.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\address.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\block.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\commands.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\crypt.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\init.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\math.c">
+      <Filter>cilent</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

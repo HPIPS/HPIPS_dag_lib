@@ -7,8 +7,8 @@
 static const uint8_t bits2mime[64] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static uint8_t mime2bits[256];
 
-// intializes the address module
-int xdag_address_init(void)
+// 初始化地址模块
+int dag_address_init(void)
 {
 	int i;
 
@@ -21,8 +21,8 @@ int xdag_address_init(void)
 	return 0;
 }
 
-// converts address to hash
-int xdag_address2hash(const char *address, xdag_hash_t hash)
+// 转换address到hash
+int dag_address2hash(const char *address, xdag_hash_t hash)
 {
 	uint8_t *fld = (uint8_t*)hash;
 	int i, c, d, n;
@@ -50,8 +50,8 @@ int xdag_address2hash(const char *address, xdag_hash_t hash)
 	return 0;
 }
 
-// converts hash to address
-void xdag_hash2address(const xdag_hash_t hash, char *address)
+// 转换hash到address
+void dag_hash2address(const xdag_hash_t hash, char *address)
 {
 	int c, d;
 	const uint8_t *fld = (const uint8_t*)hash;

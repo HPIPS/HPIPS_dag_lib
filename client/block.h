@@ -10,7 +10,7 @@
 #include "system.h"
 #include "types.h"
 
-enum xdag_field_type {
+enum dag_field_type {
 	XDAG_FIELD_NONCE,        //0
 	XDAG_FIELD_HEAD,         //1
 	XDAG_FIELD_IN,           //2
@@ -29,7 +29,7 @@ enum xdag_field_type {
 	XDAG_FIELD_RESERVE6      //F
 };
 
-enum xdag_message_type {
+enum dag_message_type {
 	XDAG_MESSAGE_BLOCKS_REQUEST,
 	XDAG_MESSAGE_BLOCKS_REPLY,
 	XDAG_MESSAGE_SUMS_REQUEST,
@@ -50,7 +50,7 @@ enum bi_flags {
 	BI_REMARK     = 0x80
 };
 
-#define XDAG_BLOCK_FIELDS 16
+#define DAG_BLOCK_FIELDS 16
 
 #define REMARK_ENABLED 0
 
@@ -82,10 +82,10 @@ struct xdag_field {
 };
 
 struct xdag_block {
-	struct xdag_field field[XDAG_BLOCK_FIELDS];
+	struct xdag_field field[DAG_BLOCK_FIELDS];
 };
 
-#define xdag_type(b, n) ((b)->field[0].type >> ((n) << 2) & 0xf)
+#define dag_type(b, n) ((b)->field[0].type >> ((n) << 2) & 0xf)
 
 #ifdef __cplusplus
 extern "C" {
@@ -93,57 +93,57 @@ extern "C" {
 
 extern int g_bi_index_enable;
 
-// start of regular block processing
-extern int xdag_blocks_start(int is_pool, int mining_threads_count, int miner_address);
+// 常规块处理的开始
+extern int dag_blocks_start(int is_pool, int mining_threads_count, int miner_address);
 
-// checks and adds block to the storage. Returns non-zero value in case of error.
-extern int xdag_add_block(struct xdag_block *b);
+// 检查并向存储块中添加块。在错误的情况下返回非零值。
+extern int dag_add_block(struct xdag_block *b);
 
-// returns our first block. If there is no blocks yet - the first block is created.
-extern int xdag_get_our_block(xdag_hash_t hash);
+// 返回我们的初始块。如果没有块，则创建第一个块。
+extern int dag_get_our_block(xdag_hash_t hash);
 
-// calls callback for each own block
-extern int xdag_traverse_our_blocks(void *data,
+// 调用原始块的回调
+extern int dag_traverse_our_blocks(void *data,
 	int (*callback)(void*, xdag_hash_t, xdag_amount_t, xtime_t, int));
 
-// calls callback for each block
-extern int xdag_traverse_all_blocks(void *data, int (*callback)(void *data, xdag_hash_t hash,
+// 调用所有块的回调
+extern int dag_traverse_all_blocks(void *data, int (*callback)(void *data, xdag_hash_t hash,
 	xdag_amount_t amount, xtime_t time));
 
-// create a new block
-extern struct xdag_block* xdag_create_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
+// 创建新的块
+extern struct xdag_block* dag_create_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
 	xdag_amount_t fee, xtime_t send_time, xdag_hash_t block_hash_result);
 
-// create and publish a block
-extern int xdag_create_and_send_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
+// 创建并发布一个块
+extern int dag_create_and_send_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
 	xdag_amount_t fee, xtime_t send_time, xdag_hash_t block_hash_result);
 
-// returns current balance for specified address or balance for all addresses if hash == 0
-extern xdag_amount_t xdag_get_balance(xdag_hash_t hash);
+// 返回指定地址的余额如果返回只是零
+extern xdag_amount_t dag_get_balance(xdag_hash_t hash);
 
-// sets current balance for the specified address
-extern int xdag_set_balance(xdag_hash_t hash, xdag_amount_t balance);
+// 设置指定地址的当前余额
+extern int dag_set_balance(xdag_hash_t hash, xdag_amount_t balance);
 
-// calculates current supply by specified count of main blocks
-extern xdag_amount_t xdag_get_supply(uint64_t nmain);
+// 按指定的主要块数计算当前供应量
+extern xdag_amount_t dag_get_supply(uint64_t nmain);
 
-// returns position and time of block by hash; if block is extra and block != 0 also returns the whole block
-extern int64_t xdag_get_block_pos(const xdag_hash_t hash, xtime_t *time, struct xdag_block *block);
+// 通过哈希返回块的位置和时间; 如果block是extra并且block！= 0也返回整个块
+extern int64_t dag_get_block_pos(const xdag_hash_t hash, xtime_t *time, struct xdag_block *block);
 
-// return state info string
-extern const char* xdag_get_block_state_info(uint8_t flag);
+// 返回状态信息字符串
+extern const char* dag_get_block_state_info(uint8_t flag);
 
-// returns a number of the current period, period is 64 seconds
-extern xtime_t xdag_main_time(void);
+// 返回当前时段的数量，周期为64秒
+extern xtime_t dag_main_time(void);
 
-// returns the number of the time period corresponding to the start of the network
-extern xtime_t xdag_start_main_time(void);
+// 返回与网络开始对应的时间段的编号
+extern xtime_t dag_start_main_time(void);
 
-// returns a number of key by hash of block or -1 if block is not ours
-extern int xdag_get_key(xdag_hash_t hash);
+// 通过块的散列返回一些键，如果块不是我们的，则返回-1
+extern int dag_get_key(xdag_hash_t hash);
 
-// reinitialization of block processing
-extern int xdag_blocks_reset(void);
+// 块处理的重新初始化
+extern int dag_blocks_reset(void);
 
 // prints detailed information about block
 extern int xdag_print_block_info(xdag_hash_t hash, FILE *out);
