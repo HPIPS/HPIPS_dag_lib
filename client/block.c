@@ -282,7 +282,7 @@ static uint64_t unapply_block(struct block_internal *bi)
 	return (xdag_amount_t)0 - bi->fee;
 }
 
-// calculates current supply by specified count of main blocks
+// 按指定的主要块数计算当前供应量
 xdag_amount_t xdag_get_supply(uint64_t nmain)
 {
 	xdag_amount_t res = 0, amount = MAIN_START_AMOUNT;
@@ -373,7 +373,7 @@ static int valid_signature(const struct xdag_block *b, int signo_r, int keysLeng
 
 	memcpy(buf, b, sizeof(struct xdag_block));
 
-	for(i = signo_r; i < XDAG_BLOCK_FIELDS; ++i) {
+	for(i = signo_r; i < DAG_BLOCK_FIELDS; ++i) {
 		if(xdag_type(b, i) == XDAG_FIELD_SIGN_IN || xdag_type(b, i) == XDAG_FIELD_SIGN_OUT) {
 			memset(&buf[0].field[i], 0, sizeof(struct xdag_field));
 			if(i > signo_r && signo_s < 0 && xdag_type(b, i) == xdag_type(b, signo_r)) {

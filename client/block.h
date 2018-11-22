@@ -145,25 +145,25 @@ extern int dag_get_key(xdag_hash_t hash);
 // 块处理的重新初始化
 extern int dag_blocks_reset(void);
 
-// prints detailed information about block
-extern int xdag_print_block_info(xdag_hash_t hash, FILE *out);
+// 打印有关块的详细信息
+extern int dag_print_block_info(xdag_hash_t hash, FILE *out);
 
-// prints list of N last main blocks
-extern void xdag_list_main_blocks(int count, int print_only_addresses, FILE *out);
+// 打印N个最后主要块的列表
+extern void dag_list_main_blocks(int count, int print_only_addresses, FILE *out);
 
-// prints list of N last blocks mined by current pool
-extern void xdag_list_mined_blocks(int count, int include_non_payed, FILE *out);
+// 打印当前池挖掘的N个最后块的列表
+extern void dag_list_mined_blocks(int count, int include_non_payed, FILE *out);
 
-// get all transactions of specified address, and return total number of transactions
-extern int xdag_get_transactions(xdag_hash_t hash, void *data, int (*callback)(void*, int, int, xdag_hash_t, xdag_amount_t, xtime_t, const char*));
+// 获取指定地址的所有交易，并返回交易总数
+extern int dag_get_transactions(xdag_hash_t hash, void *data, int (*callback)(void*, int, int, xdag_hash_t, xdag_amount_t, xtime_t, const char*));
 
-// print orphan blocks
-void xdag_list_orphan_blocks(int, FILE*);
+// 打印orphan块
+void dag_list_orphan_blocks(int, FILE*);
 
-// completes work with the blocks
-void xdag_block_finish(void);
+// 完成块的工作
+void dag_block_finish(void);
 	
-// get block info of specified address
+// 获取指定地址的块信息
 extern int xdag_get_block_info(xdag_hash_t, void *, int (*)(void*, int, xdag_hash_t, xdag_amount_t, xtime_t, const char*),
 							void *, int (*)(void*, const char *, xdag_hash_t, xdag_amount_t));
 
