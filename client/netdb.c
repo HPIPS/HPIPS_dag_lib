@@ -61,8 +61,8 @@ static struct host *selected_hosts[MAX_SELECTED_HOSTS], *our_host;
 static unsigned n_selected_hosts = 0;
 
 /* blocked ip for incoming connections and their number */
-uint32_t *g_xdag_blocked_ips, *g_xdag_white_ips;
-int g_xdag_n_blocked_ips = 0, g_xdag_n_white_ips = 0;
+uint32_t *g_dag_blocked_ips, *g_dag_white_ips;
+int g_dag_n_blocked_ips = 0, g_dag_n_white_ips = 0;
 
 static struct host *find_add_host(struct host *h)
 {
@@ -77,10 +77,10 @@ static struct host *find_add_host(struct host *h)
 	} else if (!(h->flags & HOST_NOT_ADD) && (h0 = malloc(sizeof(struct host)))) {
 		memcpy(h0, h, sizeof(struct host));
 		ldus_rbtree_insert(&root, &h0->node);
-		g_xdag_stats.nhosts++;
+		g_dag_stats.nhosts++;
 		
-		if (g_xdag_stats.nhosts > g_xdag_stats.total_nhosts) {
-			g_xdag_stats.total_nhosts = g_xdag_stats.nhosts;
+		if (g_dag_stats.nhosts > g_dag_stats.total_nhosts) {
+			g_dag_stats.total_nhosts = g_dag_stats.nhosts;
 		}
 
 		if (!(h->flags & HOST_INDB)) {
@@ -112,7 +112,7 @@ static struct host *random_host(int mask)
 
 		r = root;
 		p = 0;
-		int n = g_xdag_stats.nhosts;
+		int n = g_dag_stats.nhosts;
 
 		while (r) {
 			p = _rbtree_ptr(r);
@@ -183,7 +183,7 @@ static int read_database(const char *fname, int flags)
 				n_ips++;
 			} else if (i < n_ips && ips_count[i] < MAX_ALLOWED_FROM_IP
 					   && ++ips_count[i] == MAX_ALLOWED_FROM_IP && n_blocked < MAX_BLOCKED_IPS) {
-				g_xdag_blocked_ips[n_blocked++] = ips[i];
+				g_dag_blocked_ips[n_blocked++] = ips[i];
 			}
 		}
 
@@ -201,7 +201,7 @@ static int read_database(const char *fname, int flags)
 	xdag_close_file(f);
 	
 	if (flags & HOST_CONNECTED) {
-		g_xdag_n_blocked_ips = n_blocked;
+		g_dag_n_blocked_ips = n_blocked;
 	}
 	
 	return n;
@@ -226,9 +226,9 @@ static void *monitor_thread(void *arg)
 
 		if (!f) continue;
 
-		xdag_net_command("conn", f);
+		dag_net_command("conn", f);
 		
-		xdag_close_file(f);
+		dag_close_file(f);
 		
 		pthread_mutex_lock(&host_mutex);
 		
@@ -357,14 +357,14 @@ static void *refresh_thread(void *arg)
 /* initialized hosts base, 'our_host_str' - exteranal address of our host (ip:port),
 * 'addr_port_pairs' - addresses of other 'npairs' hosts in the same format
 */
-int xdag_netdb_init(const char *our_host_str, int npairs, const char **addr_port_pairs)
+int dag_netdb_init(const char *our_host_str, int npairs, const char **addr_port_pairs)
 {
 	struct host h;
 
-	g_xdag_blocked_ips = malloc(MAX_BLOCKED_IPS * sizeof(uint32_t));
-	g_xdag_white_ips = malloc(MAX_WHITE_IPS * sizeof(uint32_t));
+	g_dag_blocked_ips = malloc(MAX_BLOCKED_IPS * sizeof(uint32_t));
+	g_dag_white_ips = malloc(MAX_WHITE_IPS * sizeof(uint32_t));
 	
-	if (!g_xdag_blocked_ips || !g_xdag_white_ips) return -1;
+	if (!g_dag_blocked_ips || !g_dag_white_ips) return -1;
 	
 	if (read_database(DATABASE, HOST_INDB) < 0) {
 		xdag_fatal("Can't find file '%s'", DATABASE);
@@ -399,7 +399,7 @@ int xdag_netdb_init(const char *our_host_str, int npairs, const char **addr_port
 }
 
 /* writes data to the array for transmission to another host */
-unsigned xdag_netdb_send(uint8_t *data, unsigned len)
+unsigned dag_netdb_send(uint8_t *data, unsigned len)
 {
 	unsigned i;
 
@@ -414,7 +414,7 @@ unsigned xdag_netdb_send(uint8_t *data, unsigned len)
 }
 
 /* reads data sent by another host */
-unsigned xdag_netdb_receive(const uint8_t *data, unsigned len)
+unsigned dag_netdb_receive(const uint8_t *data, unsigned len)
 {
 	struct host h;
 	int i;
@@ -432,7 +432,7 @@ unsigned xdag_netdb_receive(const uint8_t *data, unsigned len)
 }
 
 /* completes the work with the host database */
-void xdag_netdb_finish(void)
+void dag_netdb_finish(void)
 {
 	pthread_mutex_lock(&host_mutex);
 }

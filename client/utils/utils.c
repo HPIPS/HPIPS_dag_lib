@@ -327,7 +327,7 @@ FILE* xdag_open_file(const char *path, const char *mode)
 	return f;
 }
 
-void xdag_close_file(FILE *f)
+void dag_close_file(FILE *f)
 {
 	fclose(f);
 }

@@ -407,7 +407,7 @@ int xdag_send_new_block(struct xdag_block *b)
 }
 
 /* executes transport level command, out - stream to display the result of the command execution */
-int xdag_net_command(const char *cmd, void *out)
+int dag_net_command(const char *cmd, void *out)
 {
 	return dnet_execute_command(cmd, out);
 }

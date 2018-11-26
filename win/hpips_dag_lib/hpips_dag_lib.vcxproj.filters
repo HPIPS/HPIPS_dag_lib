@@ -54,6 +54,9 @@
     <ClInclude Include="..\..\client\memory.h">
       <Filter>cilent</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\client\netdb.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c">
@@ -81,6 +84,9 @@
       <Filter>cilent</Filter>
     </ClCompile>
     <ClCompile Include="..\..\client\memory.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\netdb.c">
       <Filter>cilent</Filter>
     </ClCompile>
   </ItemGroup>

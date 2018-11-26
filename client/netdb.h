@@ -9,26 +9,26 @@
 extern "C" {
 #endif
 
-/* prevent auto refresh */
+/* 防止自动刷新参数 */
 extern int g_prevent_auto_refresh;
 
-/* initialized hosts base, 'our_host_str' - exteranal address of our host (ip:port),
- * 'addr_port_pairs' - addresses of other 'npairs' hosts in the same format
+/* 初始化主机基础，“Url HoothStrut”-我们主机的外部地址（IP：端口）,
+ * “AddRelPosithBoin”——以相同格式的其他“对”主机的地址
  */
-extern int xdag_netdb_init(const char *our_host_str, int npairs, const char **addr_port_pairs);
+extern int dag_netdb_init(const char *our_host_str, int npairs, const char **addr_port_pairs);
 
-/* writes data to the array for transmission to another host */
-extern unsigned xdag_netdb_send(uint8_t *data, unsigned len);
+/*将数据写入数组以传输到另一个主机*/
+extern unsigned dag_netdb_send(uint8_t *data, unsigned len);
 
-/* reads data sent by another host */
-extern unsigned xdag_netdb_receive(const uint8_t *data, unsigned len);
+/*读取另一主机发送的数据*/
+extern unsigned dag_netdb_receive(const uint8_t *data, unsigned len);
 
-/* completes the work with the host database */
-extern void xdag_netdb_finish(void);
+/* 用主机数据库完成工作 */
+extern void dag_netdb_finish(void);
 
-/* blocked ip for incoming connections and their number */
-extern uint32_t *g_xdag_blocked_ips, *g_xdag_white_ips;
-extern int g_xdag_n_blocked_ips, g_xdag_n_white_ips;
+/* 传入连接的阻塞IP及其数量 */
+extern uint32_t *g_dag_blocked_ips, *g_xdag_white_ips;
+extern int g_dag_n_blocked_ips, g_xdag_n_white_ips;
 
 #ifdef __cplusplus
 };
