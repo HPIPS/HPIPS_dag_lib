@@ -66,6 +66,9 @@
     <ClInclude Include="..\..\client\storage.h">
       <Filter>cilent</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\client\sync.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c">
@@ -102,6 +105,9 @@
       <Filter>cilent</Filter>
     </ClCompile>
     <ClCompile Include="..\..\client\storage.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\sync.c">
       <Filter>cilent</Filter>
     </ClCompile>
   </ItemGroup>

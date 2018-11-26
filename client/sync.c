@@ -20,8 +20,8 @@
 #define QUERY_RETRIES       2
 
 struct sync_block {
-	struct xdag_block b;
-	xdag_hash_t hash;
+	struct dag_block b;
+	dag_hash_t hash;
 	struct sync_block *next, *next_r;
 	void *conn;
 	time_t t;
@@ -31,28 +31,28 @@ struct sync_block {
 
 static struct sync_block **g_sync_hash, **g_sync_hash_r;
 static pthread_mutex_t g_sync_hash_mutex = PTHREAD_MUTEX_INITIALIZER;
-int g_xdag_sync_on = 0;
+int g_dag_sync_on = 0;
 extern xtime_t g_time_limit;
 
 //functions
-int xdag_sync_add_block_nolock(struct xdag_block*, void*);
-int xdag_sync_pop_block_nolock(struct xdag_block*);
+int dag_sync_add_block_nolock(struct xdag_block*, void*);
+int dag_sync_pop_block_nolock(struct xdag_block*);
 extern void *add_block_callback(void *block, void *data);
 void *sync_thread(void*);
 
 /* moves the block to the wait list, block with hash written to field 'nfield' of block 'b' is expected 
  (original russian comment was unclear too) */
-static int push_block_nolock(struct xdag_block *b, void *conn, int nfield, int ttl)
+static int push_block_nolock(struct dag_block *b, void *conn, int nfield, int ttl)
 {
-	xdag_hash_t hash;
+	dag_hash_t hash;
 	struct sync_block **p, *q;
 	int res;
 	time_t t = time(0);
 
-	xdag_hash(b, sizeof(struct xdag_block), hash);
+	xdag_hash(b, sizeof(struct dag_block), hash);
 
 	for (p = get_list(b->field[nfield].hash), q = *p; q; q = q->next) {
-		if (!memcmp(&q->b, b, sizeof(struct xdag_block))) {
+		if (!memcmp(&q->b, b, sizeof(struct dag_block))) {
 			res = (t - q->t >= REQ_PERIOD);
 			
 			q->conn = conn;
@@ -68,8 +68,8 @@ static int push_block_nolock(struct xdag_block *b, void *conn, int nfield, int t
 	q = (struct sync_block *)malloc(sizeof(struct sync_block));
 	if (!q) return -1;
 	
-	memcpy(&q->b, b, sizeof(struct xdag_block));
-	memcpy(&q->hash, hash, sizeof(xdag_hash_t));
+	memcpy(&q->b, b, sizeof(struct dag_block));
+	memcpy(&q->hash, hash, sizeof(dag_hash_t));
 	
 	q->conn = conn;
 	q->nfield = nfield;
@@ -83,25 +83,25 @@ static int push_block_nolock(struct xdag_block *b, void *conn, int nfield, int t
 	q->next_r = *p;
 	*p = q;
 	
-	g_xdag_extstats.nwaitsync++;
+	g_dag_extstats.nwaitsync++;
 	
 	return 1;
 }
 
-/* notifies synchronization mechanism about found block */
-int xdag_sync_pop_block_nolock(struct xdag_block *b)
+/* 通知找到块的同步机制 */
+int dag_sync_pop_block_nolock(struct dag_block *b)
 {
 	struct sync_block **p, *q, *r;
-	xdag_hash_t hash;
+	dag_hash_t hash;
 
-	xdag_hash(b, sizeof(struct xdag_block), hash);
+	xdag_hash(b, sizeof(struct dag_block), hash);
  
 begin:
 
 	for (p = get_list(hash); (q = *p); p = &q->next) {
-		if (!memcmp(hash, q->b.field[q->nfield].hash, sizeof(xdag_hashlow_t))) {
+		if (!memcmp(hash, q->b.field[q->nfield].hash, sizeof(dag_hashlow_t))) {
 			*p = q->next;
-			g_xdag_extstats.nwaitsync--;
+			g_dag_extstats.nwaitsync--;
 
 			for (p = get_list_r(q->hash); (r = *p) && r != q; p = &r->next_r);
 				
@@ -110,7 +110,7 @@ begin:
 			}
 			
 			q->b.field[0].transport_header = q->ttl << 8 | 1;
-			xdag_sync_add_block_nolock(&q->b, q->conn);			
+			dag_sync_add_block_nolock(&q->b, q->conn);			
 			free(q);
 			
 			goto begin;
@@ -120,25 +120,25 @@ begin:
 	return 0;
 }
 
-int xdag_sync_pop_block(struct xdag_block *b)
+int dag_sync_pop_block(struct dag_block *b)
 {
 	pthread_mutex_lock(&g_sync_hash_mutex);
-	int res = xdag_sync_pop_block_nolock(b);
+	int res = dag_sync_pop_block_nolock(b);
 	pthread_mutex_unlock(&g_sync_hash_mutex);
 	return res;
 }
 
-/* checks a block and includes it in the database with synchronization, ruturs non-zero value in case of error */
-int xdag_sync_add_block_nolock(struct xdag_block *b, void *conn)
+/* 检查一个块并将其同步地包括在数据库中，如果出现错误，ruturs非零值 */
+int dag_sync_add_block_nolock(struct dag_block *b, void *conn)
 {
 	int res=0, ttl = b->field[0].transport_header >> 8 & 0xff;
 
-	res = xdag_add_block(b);
+	res = dag_add_block(b);
 	if (res >= 0) {
-		xdag_sync_pop_block_nolock(b);
+		dag_sync_pop_block_nolock(b);
 		if (res > 0 && ttl > 2) {
 			b->field[0].transport_header = ttl << 8;
-			xdag_send_packet(b, (void*)((uintptr_t)conn | 1l));
+			dag_send_packet(b, (void*)((uintptr_t)conn | 1l));
 		}
 	} else if (g_xdag_sync_on && ((res = -res) & 0xf) == 5) {
 		res = (res >> 4) & 0xf;
@@ -149,7 +149,7 @@ int xdag_sync_add_block_nolock(struct xdag_block *b, void *conn)
  
 begin:
 			for (p = get_list_r(hash); (q = *p); p = &q->next_r) {
-				if (!memcmp(hash, q->hash, sizeof(xdag_hashlow_t))) {
+				if (!memcmp(hash, q->hash, sizeof(dag_hashlow_t))) {
 					if (t - q->t < REQ_PERIOD) {
 						return 0;
 					}
@@ -161,25 +161,25 @@ begin:
 				}
 			}
 			
-			xdag_request_block(hash, (void*)(uintptr_t)1l);
+			dag_request_block(hash, (void*)(uintptr_t)1l);
 			
-			xdag_info("ReqBlk: %016llx%016llx%016llx%016llx", hash[3], hash[2], hash[1], hash[0]);
+			dag_info("ReqBlk: %016llx%016llx%016llx%016llx", hash[3], hash[2], hash[1], hash[0]);
 		}
 	}
 
 	return 0;
 }
 
-int xdag_sync_add_block(struct xdag_block *b, void *conn)
+int dag_sync_add_block(struct dag_block *b, void *conn)
 {
 	pthread_mutex_lock(&g_sync_hash_mutex);
-	int res = xdag_sync_add_block_nolock(b, conn);
+	int res = dag_sync_add_block_nolock(b, conn);
 	pthread_mutex_unlock(&g_sync_hash_mutex);
 	return res;
 }
 
 /* initialized block synchronization */
-int xdag_sync_init(void)
+int dag_sync_init(void)
 {
 	g_sync_hash = (struct sync_block **)calloc(sizeof(struct sync_block *), SYNC_HASH_SIZE);
 	g_sync_hash_r = (struct sync_block **)calloc(sizeof(struct sync_block *), SYNC_HASH_SIZE);
@@ -194,29 +194,29 @@ static int request_blocks(xtime_t t, xtime_t dt)
 {
 	int i, res = 0;
 
-	if (!g_xdag_sync_on) return -1;
+	if (!g_dag_sync_on) return -1;
 
 	if (dt <= REQUEST_BLOCKS_MAX_TIME) {
 		xtime_t t0 = g_time_limit;
 
 		for (i = 0;
 			xdag_info("QueryB: t=%llx dt=%llx", t, dt),
-			i < QUERY_RETRIES && (res = xdag_request_blocks(t, t + dt, &t0, add_block_callback)) < 0;
+			i < QUERY_RETRIES && (res = dag_request_blocks(t, t + dt, &t0, add_block_callback)) < 0;
 			++i);
 
 		if (res <= 0) {
 			return -1;
 		}
 	} else {
-		struct xdag_storage_sum lsums[16], rsums[16];
+		struct dag_storage_sum lsums[16], rsums[16];
 		if (xdag_load_sums(t, t + dt, lsums) <= 0) {
 			return -1;
 		}
 
-		xdag_debug("Local : [%s]", xdag_log_array(lsums, 16 * sizeof(struct xdag_storage_sum)));
+		dag_debug("Local : [%s]", xdag_log_array(lsums, 16 * sizeof(struct dag_storage_sum)));
 
 		for (i = 0;
-			xdag_info("QueryS: t=%llx dt=%llx", t, dt),
+			dag_info("QueryS: t=%llx dt=%llx", t, dt),
 			i < QUERY_RETRIES && (res = xdag_request_sums(t, t + dt, rsums)) < 0;
 			++i);
 
@@ -226,7 +226,7 @@ static int request_blocks(xtime_t t, xtime_t dt)
 
 		dt >>= 4;
 
-		xdag_debug("Remote: [%s]", xdag_log_array(rsums, 16 * sizeof(struct xdag_storage_sum)));
+		dag_debug("Remote: [%s]", xdag_log_array(rsums, 16 * sizeof(struct dag_storage_sum)));
 
 		for (i = 0; i < 16; ++i) {
 			if (lsums[i].size != rsums[i].size || lsums[i].sum != rsums[i].sum) {
@@ -238,13 +238,13 @@ static int request_blocks(xtime_t t, xtime_t dt)
 	return 0;
 }
 
-/* a long procedure of synchronization */
+/*一个长的同步过程*/
 void *sync_thread(void *arg)
 {
 	xtime_t t = 0;
 
 	for (;;) {
-		xtime_t st = xdag_get_xtimestamp();
+		xtime_t st = dag_get_xtimestamp();
 		if (st - t >= MAIN_CHAIN_PERIOD) {
 			t = st;
 			request_blocks(0, 1ll << 48);
