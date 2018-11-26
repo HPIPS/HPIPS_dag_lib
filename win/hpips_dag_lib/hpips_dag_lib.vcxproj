@@ -153,6 +153,9 @@
     <ClInclude Include="..\..\client\memory.h" />
     <ClInclude Include="..\..\client\netdb.h" />
     <ClInclude Include="..\..\client\network.h" />
+    <ClInclude Include="..\..\client\sha256.h" />
+    <ClInclude Include="..\..\client\state.h" />
+    <ClInclude Include="..\..\client\storage.h" />
     <ClInclude Include="..\..\client\system.h" />
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +169,8 @@
     <ClCompile Include="..\..\client\memory.c" />
     <ClCompile Include="..\..\client\netdb.c" />
     <ClCompile Include="..\..\client\network.c" />
+    <ClCompile Include="..\..\client\sha256.c" />
+    <ClCompile Include="..\..\client\storage.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

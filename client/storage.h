@@ -1,11 +1,11 @@
 /* локальное хранилище, T13.663-T13.788 $DVS:time$ */
 
-#ifndef XDAG_STORAGE_H
-#define XDAG_STORAGE_H
+#ifndef DAG_STORAGE_H
+#define DAG_STORAGE_H
 
 #include "block.h"
 
-struct xdag_storage_sum {
+struct dag_storage_sum {
 	uint64_t sum;
 	uint64_t size;
 };
@@ -14,24 +14,24 @@ struct xdag_storage_sum {
 extern "C" {
 #endif
 	
-/* Saves the block to local storage, returns its number or -1 in case of error */
-extern int64_t xdag_storage_save(const struct xdag_block *b);
+/* 将块保存到本地存储，在错误的情况下返回其编号或-1 */
+extern int64_t dag_storage_save(const struct dag_block *b);
 
-/* reads a block and its number from the local repository; writes it to the buffer or returns a permanent reference, 0 in case of error */
-extern struct xdag_block *xdag_storage_load(xdag_hash_t hash, xtime_t time, uint64_t pos,
-	struct xdag_block *buf);
+/*从本地存储库读取块及其编号；将其写入缓冲区或返回永久引用，万一出错，返回0*/
+extern struct dag_block *dag_storage_load(dag_hash_t hash, xtime_t time, uint64_t pos,
+	struct dag_block *buf);
 
-/* Calls a callback for all blocks from the repository that are in specified time interval; returns the number of blocks */
-extern uint64_t xdag_load_blocks(xtime_t start_time, xtime_t end_time, void *data,
+/* 调用存储库中指定时间间隔的所有块的回调；返回块的数量*/
+extern uint64_t dag_load_blocks(xtime_t start_time, xtime_t end_time, void *data,
 									  void *(*callback)(void *block, void *data));
 
-/* places the sums of blocks in 'sums' array, blocks are filtered by interval from start_time to end_time, splitted to 16 parts;
- * end - start should be in form 16^k
+/* 将块和置于“和”数组中，按从开始时间到结束时间的间隔对块进行过滤，分成16个部分； 
+ * 结束启动应该在表格16 ^ k中 
  * (original russian comment is unclear too) */
-extern int xdag_load_sums(xtime_t start_time, xtime_t end_time, struct xdag_storage_sum sums[16]);
+extern int dag_load_sums(xtime_t start_time, xtime_t end_time, struct dag_storage_sum sums[16]);
 
-/* completes work with the storage */
-extern void xdag_storage_finish(void);
+/* 用存储完成工作 */
+extern void dag_storage_finish(void);
 
 #ifdef __cplusplus
 };

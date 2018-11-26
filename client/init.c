@@ -221,8 +221,8 @@ int dag_init(int argc, char **argv, int isGui)
 		g_disable_mining = 0;   // this option is only for pools
 	}
 
-	memset(&g_xdag_stats, 0, sizeof(g_xdag_stats));
-	memset(&g_xdag_extstats, 0, sizeof(g_xdag_extstats));
+	memset(&g_xdag_stats, 0, sizeof(g_dag_stats));
+	memset(&g_xdag_extstats, 0, sizeof(g_dag_extstats));
 
 	xdag_mess("Starting %s, version %s", g_progname, XDAG_VERSION);
 	xdag_mess("Starting synchonization engine...");

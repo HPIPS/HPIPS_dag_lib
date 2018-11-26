@@ -10,7 +10,7 @@
 
 enum dag_states
 {
-#define xdag_state(n,s) XDAG_STATE_##n ,
+#define dag_state(n,s) XDAG_STATE_##n ,
 #include "state.h"
 #undef xdag_state
 };

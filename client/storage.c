@@ -26,9 +26,9 @@
 static pthread_mutex_t storage_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int in_adding_all = 0;
 
-static int correct_storage_sum(const char *path, int pos, const struct xdag_storage_sum *sum, int add)
+static int correct_storage_sum(const char *path, int pos, const struct dag_storage_sum *sum, int add)
 {
-	struct xdag_storage_sum sums[256];
+	struct dag_storage_sum sums[256];
 	FILE *f = xdag_open_file(path, "r+b");
 
 	if (f) {
@@ -38,9 +38,9 @@ static int correct_storage_sum(const char *path, int pos, const struct xdag_stor
 		}
 		rewind(f);
 	} else {
-		f = xdag_open_file(path, "wb");
+		f = dag_open_file(path, "wb");
 		if (!f) {
-			xdag_err("Storage: can't create file %s", path);
+			dag_err("Storage: can't create file %s", path);
 			return -1;
 		}
 		memset(sums, 0, sizeof(sums));
@@ -69,7 +69,7 @@ static int correct_storage_sum(const char *path, int pos, const struct xdag_stor
 	return 1;
 }
 
-static int correct_storage_sums(xtime_t t, const struct xdag_storage_sum *sum, int add)
+static int correct_storage_sums(xtime_t t, const struct dag_storage_sum *sum, int add)
 {
 	char path[256] = {0};
 
@@ -92,10 +92,10 @@ static int correct_storage_sums(xtime_t t, const struct xdag_storage_sum *sum, i
 	return 0;
 }
 
-/* Saves the block to local storage, returns its number or -1 in case of error */
-int64_t xdag_storage_save(const struct xdag_block *b)
+/* 将块保存到本地存储，在错误的情况下返回其编号或-1 */
+int64_t dag_storage_save(const struct dag_block *b)
 {
-	struct xdag_storage_sum s;
+	struct dag_storage_sum s;
 	char path[256] = {0};
 	int64_t res;
 
@@ -123,12 +123,12 @@ int64_t xdag_storage_save(const struct xdag_block *b)
 	if (f) {
 		fseek(f, 0, SEEK_END);
 		res = ftell(f);
-		fwrite(b, sizeof(struct xdag_block), 1, f);
-		xdag_close_file(f);
-		s.size = sizeof(struct xdag_block);
+		fwrite(b, sizeof(struct dag_block), 1, f);
+		dag_close_file(f);
+		s.size = sizeof(struct dag_block);
 		s.sum = 0;
 
-		for (int j = 0; j < sizeof(struct xdag_block) / sizeof(uint64_t); ++j) {
+		for (int j = 0; j < sizeof(struct dag_block) / sizeof(uint64_t); ++j) {
 			s.sum += ((uint64_t*)b)[j];
 		}
 
@@ -144,10 +144,10 @@ int64_t xdag_storage_save(const struct xdag_block *b)
 	return res;
 }
 
-/* reads a block and its number from the local repository; writes it to the buffer or returns a permanent reference, 0 in case of error */
-struct xdag_block *xdag_storage_load(xdag_hash_t hash, xtime_t time, uint64_t pos, struct xdag_block *buf)
+/* 从本地存储库读取块及其编号；将其写入缓冲区或返回永久引用，万一出错，返回0  */
+struct xdag_block *xdag_storage_load(dag_hash_t hash, xtime_t time, uint64_t pos, struct dag_block *buf)
 {
-	xdag_hash_t hash0;
+	dag_hash_t hash0;
 	char path[256] = {0};
 
 	sprintf(path, STORAGE_FILE, STORAGE_FILE_ARGS(time));
@@ -156,7 +156,7 @@ struct xdag_block *xdag_storage_load(xdag_hash_t hash, xtime_t time, uint64_t po
 	
 	FILE *f = xdag_open_file(path, "rb");
 	if (f) {
-		if (fseek(f, pos, SEEK_SET) < 0 || fread(buf, sizeof(struct xdag_block), 1, f) != 1) {
+		if (fseek(f, pos, SEEK_SET) < 0 || fread(buf, sizeof(struct dag_block), 1, f) != 1) {
 			buf = 0;
 		}
 		xdag_close_file(f);
@@ -167,8 +167,8 @@ struct xdag_block *xdag_storage_load(xdag_hash_t hash, xtime_t time, uint64_t po
 	pthread_mutex_unlock(&storage_mutex);
 	
 	if (buf) {
-		xdag_hash(buf, sizeof(struct xdag_block), hash0);
-		if (memcmp(hash, hash0, sizeof(xdag_hashlow_t))) {
+		xdag_hash(buf, sizeof(struct dag_block), hash0);
+		if (memcmp(hash, hash0, sizeof(dag_hashlow_t))) {
 			buf = 0;
 		}
 	}
@@ -184,7 +184,7 @@ struct xdag_block *xdag_storage_load(xdag_hash_t hash, xtime_t time, uint64_t po
 
 static int sort_callback(const void *l, const void *r)
 {
-	struct xdag_block **L = (struct xdag_block **)l, **R = (struct xdag_block **)r;
+	struct dag_block **L = (struct xdag_block **)l, **R = (struct xdag_block **)r;
 
 	if ((*L)->field[0].time < (*R)->field[0].time) return -1;
 	if ((*L)->field[0].time > (*R)->field[0].time) return 1;
@@ -195,8 +195,8 @@ static int sort_callback(const void *l, const void *r)
 /* Calls a callback for all blocks from the repository that are in specified time interval; returns the number of blocks */
 uint64_t xdag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void *(*callback)(void *, void *))
 {
-	struct xdag_block *buf, *pbuf[bufsize];
-	struct xdag_storage_sum s;
+	struct dag_block *buf, *pbuf[bufsize];
+	struct dag_storage_sum s;
 	char path[256] = {0};
 	
 	uint64_t sum = 0, pos = 0, mask;
@@ -204,9 +204,9 @@ uint64_t xdag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void
 
 	s.size = s.sum = 0;
 
-	buf = malloc(bufsize*sizeof(struct xdag_block));
+	buf = malloc(bufsize*sizeof(struct dag_block));
  	if(buf == NULL){
-		xdag_fatal("malloc failed [function xdag_load_blocks]");
+		dag_fatal("malloc failed [function xdag_load_blocks]");
 		return 0;
 	}
 
@@ -219,7 +219,7 @@ uint64_t xdag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void
 		if (f) {
 			if (fseek(f, pos, SEEK_SET) < 0) todo = 0;
 			else todo = fread(buf, sizeof(struct xdag_block), bufsize, f);
-			xdag_close_file(f);
+			dag_close_file(f);
 		} else {
 			todo = 0;
 		}
@@ -228,11 +228,11 @@ uint64_t xdag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void
 		
 		uint64_t pos0 = pos;
 
-		for (i = k = 0; i < todo; ++i, pos += sizeof(struct xdag_block)) {
+		for (i = k = 0; i < todo; ++i, pos += sizeof(struct dag_block)) {
 			if (buf[i].field[0].time >= start_time && buf[i].field[0].time < end_time) {
-				s.size += sizeof(struct xdag_block);
+				s.size += sizeof(struct dag_block);
 
-				for (j = 0; j < sizeof(struct xdag_block) / sizeof(uint64_t); ++j) {
+				for (j = 0; j < sizeof(struct dag_block) / sizeof(uint64_t); ++j) {
 					s.sum += ((uint64_t*)(buf + i))[j];
 				}
 
@@ -241,7 +241,7 @@ uint64_t xdag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void
 		}
 
 		if (k) {
-			qsort(pbuf, k, sizeof(struct xdag_block *), sort_callback);
+			qsort(pbuf, k, sizeof(struct dag_block *), sort_callback);
 		}
 
 		for (i = 0; i < k; ++i) {
@@ -286,12 +286,12 @@ uint64_t xdag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void
 	return sum;
 }
 
-/* places the sums of blocks in 'sums' array, blocks are filtered by interval from start_time to end_time, splitted to 16 parts;
- * end - start should be in form 16^k
+/* 将块和置于“和”数组中，按从开始时间到结束时间的间隔对块进行过滤，分成16个部分；
+ * 结束启动应该在表格16 ^ k中
  * (original russian comment is unclear too) */
-int xdag_load_sums(xtime_t start_time, xtime_t end_time, struct xdag_storage_sum sums[16])
+int xdag_load_sums(xtime_t start_time, xtime_t end_time, struct dag_storage_sum sums[16])
 {
-	struct xdag_storage_sum buf[256];
+	struct dag_storage_sum buf[256];
 	char path[256] = {0};
 	int i, level;
 
@@ -330,8 +330,8 @@ int xdag_load_sums(xtime_t start_time, xtime_t end_time, struct xdag_storage_sum
 	return 1;
 }
 
-/* completes work with the storage */
-void xdag_storage_finish(void)
+/* 用存储完成工作 */
+void dag_storage_finish(void)
 {
 	pthread_mutex_lock(&storage_mutex);
 }
