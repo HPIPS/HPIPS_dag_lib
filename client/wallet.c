@@ -91,7 +91,7 @@ fail:
 }
 
 /* generates a new key and sets is as defauld, returns its index */
-int xdag_wallet_new_key(void)
+int dag_wallet_new_key(void)
 {
 	int res = add_key(0);
 

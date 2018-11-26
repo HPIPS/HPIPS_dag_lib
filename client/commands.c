@@ -133,7 +133,7 @@ XDAG_COMMAND commands[] = {
 	{ (char *)NULL  , 0, (xdag_com_func_t)NULL}
 };
 
-int xdag_com_account(char* args, FILE* out)
+int dag_com_account(char* args, FILE* out)
 {
 	processAccountCommand(args, out);
 	return 0;
@@ -316,7 +316,8 @@ void startCommandProcessing(int transportFlags)
 	}
 }
 
-int xdag_command(char *cmd, FILE *out)
+//dag 命令
+int dag_command(char *cmd, FILE *out)
 {
 	uint32_t pwd[4] = {0};
 	char *nextParam;
@@ -343,6 +344,7 @@ int xdag_command(char *cmd, FILE *out)
 	return 0;
 }
 
+//进程帐户命令
 void processAccountCommand(char *nextParam, FILE *out)
 {
 	struct account_callback_data d;
@@ -358,6 +360,7 @@ void processAccountCommand(char *nextParam, FILE *out)
 	xdag_traverse_our_blocks(&d, &account_callback);
 }
 
+// 进程平衡命令
 void processBalanceCommand(char *nextParam, FILE *out)
 {
 	if(g_xdag_state < XDAG_STATE_XFER) {
@@ -376,6 +379,7 @@ void processBalanceCommand(char *nextParam, FILE *out)
 	}
 }
 
+//块命令函数
 void processBlockCommand(char *nextParam, FILE *out)
 {
 	int c;
@@ -386,7 +390,7 @@ void processBlockCommand(char *nextParam, FILE *out)
 		size_t len = strlen(cmd);
 
 		if(len == 32) {
-			if(xdag_address2hash(cmd, hash)) {
+			if(dag_address2hash(cmd, hash)) {
 				fprintf(out, "Address is incorrect.\n");
 				incorrect = -1;
 			}
@@ -409,7 +413,7 @@ void processBlockCommand(char *nextParam, FILE *out)
 			incorrect = -1;
 		}
 		if(!incorrect) {
-			if(xdag_print_block_info(hash, out)) {
+			if(dag_print_block_info(hash, out)) {
 				fprintf(out, "Block is not found.\n");
 			}
 		}
@@ -418,9 +422,10 @@ void processBlockCommand(char *nextParam, FILE *out)
 	}
 }
 
+//生成秘钥函数
 void processKeyGenCommand(FILE *out)
 {
-	const int res = xdag_wallet_new_key();
+	const int res = dag_wallet_new_key();
 	if(res < 0) {
 		fprintf(out, "Can't generate new key pair.\n");
 	} else {
@@ -764,7 +769,7 @@ static int make_transaction_block(struct xfer_callback_data *xferData)
 	return 0;
 }
 
-int xdag_do_xfer(void *outv, const char *amount, const char *address, const char *remark, int isGui)
+int dag_do_xfer(void *outv, const char *amount, const char *address, const char *remark, int isGui)
 {
 	char address_buf[33] = {0};
 	struct xfer_callback_data xfer;
@@ -955,6 +960,7 @@ int xdag_show_state(xdag_hash_t hash)
 	return (*g_xdag_show_state)(state, balance, address);
 }
 
+//输出参数说明文件
 void processHelpCommand(FILE *out)
 {
 	fprintf(out, "Commands:\n"
@@ -992,12 +998,14 @@ void processHelpCommand(FILE *out)
 		, g_coinname);
 }
 
-void xdagSetCountMiningTread(int miningThreadsCount)
+//设置挖矿基础指数
+void dagSetCountMiningTread(int miningThreadsCount)
 {
 	xdag_mining_start(miningThreadsCount);
 }
 
-double xdagGetHashRate(void)
+//获取Hash比率
+double dagGetHashRate(void)
 {
 	return g_xdag_extstats.hashrate_s / (1024 * 1024);
 }
@@ -1024,7 +1032,7 @@ int read_command(char *cmd)
 #else
 	printf("%s> ", g_progname);
 	fflush(stdout);
-	fgets(cmd, XDAG_COMMAND_MAX, stdin);
+	fgets(cmd, DAG_COMMAND_MAX, stdin);
 #endif
 
 	return 0;
@@ -1041,7 +1049,8 @@ static void xdag_com_completion(const char *buf, linenoiseCompletions *lc)
 }
 #endif
 
-void xdag_init_commands(void)
+//初始化指令参数
+void dag_init_commands(void)
 {
 #if !defined(_WIN32) && !defined(_WIN64)
 	linenoiseSetCompletionCallback(xdag_com_completion); //set completion

@@ -17,8 +17,8 @@ extern "C" {
 /* initializes a wallet */
 extern int xdag_wallet_init(void);
 
-/* generates a new key and sets is as defauld, returns its index */
-extern int xdag_wallet_new_key(void);
+/* 生成一个新的关键字并设置为默认值，返回其索引 */
+extern int dag_wallet_new_key(void);
 
 /* returns a default key, the index of the default key is written to *n_key */
 extern struct xdag_public_key *xdag_wallet_default_key(int *n_key);

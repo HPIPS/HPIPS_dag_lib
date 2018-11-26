@@ -1,20 +1,20 @@
-#ifndef XDAG_COMMANDS_H
-#define XDAG_COMMANDS_H
+#ifndef DAG_COMMANDS_H
+#define DAG_COMMANDS_H
 
 #include <time.h>
 #include "block.h"
 
-#define XDAG_COMMAND_MAX	0x1000
+#define DAG_COMMAND_MAX	0x1000
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* time of last transfer */
-extern time_t g_xdag_xfer_last;
-extern int xdag_do_xfer(void *outv, const char *amount, const char *address, const char *remark, int isGui);
-extern void xdagSetCountMiningTread(int miningThreadsCount);
-extern double xdagGetHashRate(void);
+extern time_t g_dag_xfer_last;
+extern int dag_do_xfer(void *outv, const char *amount, const char *address, const char *remark, int isGui);
+extern void dagSetCountMiningTread(int miningThreadsCount);
+extern double dagGetHashRate(void);
 extern long double hashrate(xdag_diff_t *diff);
 extern const char *get_state(void);
 
@@ -45,4 +45,4 @@ int read_command(char* cmd);
 
 void xdag_init_commands(void);
 
-#endif // !XDAG_COMMANDS_H
+#endif // !DAG_COMMANDS_H
