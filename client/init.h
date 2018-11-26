@@ -8,16 +8,16 @@
 #include "block.h"
 #include "system.h"
 
-enum xdag_states
+enum dag_states
 {
 #define xdag_state(n,s) XDAG_STATE_##n ,
 #include "state.h"
 #undef xdag_state
 };
 
-extern struct xdag_stats
+extern struct dag_stats
 {
-	xdag_diff_t difficulty, max_difficulty;
+	dag_diff_t difficulty, max_difficulty;
 	uint64_t nblocks, total_nblocks;
 	uint64_t nmain, total_nmain;
 	uint32_t nhosts, total_nhosts;
@@ -25,12 +25,12 @@ extern struct xdag_stats
 		uint32_t reserved[2];
 		uint64_t main_time;
 	};
-} g_xdag_stats;
+} g_dag_stats;
 
-extern struct xdag_ext_stats
+extern struct dag_ext_stats
 {
-	xdag_diff_t hashrate_total[HASHRATE_LAST_MAX_TIME];
-	xdag_diff_t hashrate_ours[HASHRATE_LAST_MAX_TIME];
+	dag_diff_t hashrate_total[HASHRATE_LAST_MAX_TIME];
+	dag_diff_t hashrate_ours[HASHRATE_LAST_MAX_TIME];
 	xtime_t hashrate_last_time;
 	uint64_t nnoref;
 	uint64_t nextra;
@@ -41,33 +41,33 @@ extern struct xdag_ext_stats
 	uint32_t cache_usage;
 	double cache_hitrate;
 	int use_orphan_hashtable;
-} g_xdag_extstats;
+} g_dag_extstats;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* the program state */
-extern int g_xdag_state;
+/* 程序状态参数 */
+extern int g_dag_state;
 
-/* is there command 'run' */
-extern int g_xdag_run;
+/* 有命令'运行'状态参数 */
+extern int g_dag_run;
 
-/* 1 - the program works in a test network */
-extern int g_xdag_testnet;
+/* 1 - 程序在测试网络中工作 状态参数*/
+extern int g_dag_testnet;
 
-/* coin token and program name */
+/* 硬币令牌和程序名称 */
 extern char *g_coinname, *g_progname;
 
-//defines if client runs as miner or pool
+//定义客户端是作为矿工还是池运行
 extern int g_is_miner;
 
-//defines if mining is disabled (pool)
+//定义是否禁用挖掘（池）
 extern int g_disable_mining;
 
-//Default type of the block header
-//Test network and main network have different types of the block headers, so blocks from different networks are incompatible
-extern enum xdag_field_type g_block_header_type;
+//块头的默认类型
+//测试网络和主网络具有不同类型的块头，因此来自不同网络的块是不兼容的
+extern enum dag_field_type g_block_header_type;
 
 extern int xdag_init(int argc, char **argv, int isGui);
 

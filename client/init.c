@@ -40,7 +40,7 @@ int g_is_miner = 0;
 static int g_is_pool = 0;
 int g_xdag_run = 0;
 time_t g_xdag_xfer_last = 0;
-enum xdag_field_type g_block_header_type = XDAG_FIELD_HEAD;
+enum dag_field_type g_block_header_type = XDAG_FIELD_HEAD;
 struct xdag_stats g_xdag_stats;
 struct xdag_ext_stats g_xdag_extstats;
 int g_disable_mining = 0;

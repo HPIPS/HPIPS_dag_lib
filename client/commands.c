@@ -296,7 +296,7 @@ XDAG_COMMAND* find_xdag_command(char *name)
 
 void startCommandProcessing(int transportFlags)
 {
-	char cmd[XDAG_COMMAND_MAX] = {0};
+	char cmd[DAG_COMMAND_MAX] = {0};
 	if(!(transportFlags & XDAG_DAEMON)) printf("Type command, help for example.\n");
 
 	xdag_init_commands();
@@ -1016,10 +1016,10 @@ int read_command(char *cmd)
 	char* line = linenoise("xdag> ");
 	if(line == NULL) return 0;
 
-	if(strlen(line) > XDAG_COMMAND_MAX) {
+	if(strlen(line) > DAG_COMMAND_MAX) {
 		printf("exceed max length\n");
-		strncpy(cmd, line, XDAG_COMMAND_MAX - 1);
-		cmd[XDAG_COMMAND_MAX - 1] = '\0';
+		strncpy(cmd, line, DAG_COMMAND_MAX - 1);
+		cmd[DAG_COMMAND_MAX - 1] = '\0';
 	} else {
 		strcpy(cmd, line);
 	}

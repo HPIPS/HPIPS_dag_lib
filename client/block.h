@@ -60,7 +60,7 @@ enum bi_flags {
 
 typedef uint8_t xdag_remark_t[32];
 
-struct xdag_field {
+struct dag_field {
 	union {
 		struct {
 			union {
@@ -81,8 +81,8 @@ struct xdag_field {
 	};
 };
 
-struct xdag_block {
-	struct xdag_field field[DAG_BLOCK_FIELDS];
+struct dag_block {
+	struct dag_field field[DAG_BLOCK_FIELDS];
 };
 
 #define dag_type(b, n) ((b)->field[0].type >> ((n) << 2) & 0xf)

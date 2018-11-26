@@ -147,8 +147,10 @@
     <ClInclude Include="..\..\client\block.h" />
     <ClInclude Include="..\..\client\commands.h" />
     <ClInclude Include="..\..\client\crypt.h" />
+    <ClInclude Include="..\..\client\hash.h" />
     <ClInclude Include="..\..\client\init.h" />
     <ClInclude Include="..\..\client\math.h" />
+    <ClInclude Include="..\..\client\system.h" />
     <ClInclude Include="DAG_init.h" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +158,7 @@
     <ClCompile Include="..\..\client\block.c" />
     <ClCompile Include="..\..\client\commands.c" />
     <ClCompile Include="..\..\client\crypt.c" />
+    <ClCompile Include="..\..\client\hash.c" />
     <ClCompile Include="..\..\client\init.c" />
     <ClCompile Include="..\..\client\math.c" />
     <ClCompile Include="DAG_init.cpp" />

@@ -30,9 +30,9 @@ long double xdag_diff2log(xdag_diff_t);
 // convert difficulty represented as logarithm in hashrate
 long double xdag_log_difficulty2hashrate(long double);
 
-// calculates hashrate from last HASHRATE_LAST_MAX_TIME recorded difficulties
-// diff is actually a pointer to a xdag_diff_t array with HASHRATE_LAST_MAX_TIME elements
-long double xdag_hashrate(xdag_diff_t *diff);
+// 从上次记录的HASHRATE_LAST_MAX_TIME 难度计算哈希率
+// DIFF实际上是指向元素的xdAgDeffixt数组的HASHRATE_LAST_MAX_TIME指针
+long double dag_hashrate(xdag_diff_t *diff);
 	
 #ifdef __cplusplus
 };

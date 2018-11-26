@@ -60,6 +60,12 @@
     <ClInclude Include="..\..\client\math.h">
       <Filter>cilent</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\client\system.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\hash.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DAG_init.cpp">
@@ -81,6 +87,9 @@
       <Filter>cilent</Filter>
     </ClCompile>
     <ClCompile Include="..\..\client\math.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\hash.c">
       <Filter>cilent</Filter>
     </ClCompile>
   </ItemGroup>

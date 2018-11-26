@@ -59,7 +59,7 @@ long double xdag_log_difficulty2hashrate(long double log_diff)
 	return ldexpl(expl(log_diff), -58)*(0.65);
 }
 
-long double xdag_hashrate(xdag_diff_t *diff)
+long double dag_hashrate(xdag_diff_t *diff)
 {
 	long double sum = 0;
 	for(int i = 0; i < HASHRATE_LAST_MAX_TIME; ++i) {

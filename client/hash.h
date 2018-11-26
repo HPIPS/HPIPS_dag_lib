@@ -6,34 +6,34 @@
 #include <stddef.h>
 #include <stdint.h>
 
-typedef uint64_t xdag_hash_t[4];
-typedef uint64_t xdag_hashlow_t[3];
+typedef uint64_t dag_hash_t[4];
+typedef uint64_t dag_hashlow_t[3];
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 	
-extern void xdag_hash(void *data, size_t size, xdag_hash_t hash);
+extern void dag_hash(void *data, size_t size, dag_hash_t hash);
 
-static inline int xdag_cmphash(xdag_hash_t l, xdag_hash_t r)
+static inline int dag_cmphash(dag_hash_t l, dag_hash_t r)
 {
 	for(int i = 3; i >= 0; --i) if(l[i] != r[i]) return (l[i] < r[i] ? -1 : 1);
 	return 0;
 }
 
-extern unsigned xdag_hash_ctx_size(void);
+extern unsigned dag_hash_ctx_size(void);
 
-extern void xdag_hash_init(void *ctxv);
+extern void dag_hash_init(void *ctxv);
 
-extern void xdag_hash_update(void *ctxv, void *data, size_t size);
+extern void dag_hash_update(void *ctxv, void *data, size_t size);
 
-extern void xdag_hash_final(void *ctxv, void *data, size_t size, xdag_hash_t hash);
+extern void dag_hash_final(void *ctxv, void *data, size_t size, dag_hash_t hash);
 
-extern uint64_t xdag_hash_final_multi(void *ctxv, uint64_t *nonce, int attempts, int step, xdag_hash_t hash);
+extern uint64_t dag_hash_final_multi(void *ctxv, uint64_t *nonce, int attempts, int step, dag_hash_t hash);
 
-extern void xdag_hash_get_state(void *ctxv, xdag_hash_t state);
+extern void dag_hash_get_state(void *ctxv, dag_hash_t state);
 
-extern void xdag_hash_set_state(void *ctxv, xdag_hash_t state, size_t size);
+extern void dag_hash_set_state(void *ctxv, dag_hash_t state, size_t size);
 	
 #ifdef __cplusplus
 };

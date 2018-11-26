@@ -28,8 +28,9 @@ static EC_GROUP *group;
 extern unsigned int xOPENSSL_ia32cap_P[4];
 extern int xOPENSSL_ia32_cpuid(unsigned int *);
 
-// initialization of the encryption system
-int xdag_crypt_init(int withrandom)
+// 加密系统的初始化
+///* 输入随机数 withrandom
+int dag_crypt_init(int withrandom)
 {
 	if(withrandom) {
 		uint64_t buf[64];
@@ -49,14 +50,14 @@ int xdag_crypt_init(int withrandom)
 	return 0;
 }
 
-/* creates a new pair of private and public keys
- * the private key is saved to the 'privkey' array, the public key to the 'pubkey' array,
- * the parity of the public key is saved to the variable 'pubkey_bit'
- * returns a pointer to its internal representation
+/* 创建一对新的私钥和公钥
+ * 私钥保存到'privkey'数组，'pubkey'数组的公钥，
+ * 公钥的奇偶校验保存到变量'pubkey_bit'
+ * 返回指向其内部表示的指针
  */
-void *xdag_create_key(xdag_hash_t privkey, xdag_hash_t pubkey, uint8_t *pubkey_bit)
+void *dag_create_key(dag_hash_t privkey, dag_hash_t pubkey, uint8_t *pubkey_bit)
 {
-	uint8_t buf[sizeof(xdag_hash_t) + 1];
+	uint8_t buf[sizeof(dag_hash_t) + 1];
 	EC_KEY *eckey = 0;
 	const BIGNUM *priv = 0;
 	const EC_POINT *pub = 0;
@@ -86,7 +87,7 @@ void *xdag_create_key(xdag_hash_t privkey, xdag_hash_t pubkey, uint8_t *pubkey_b
 		goto fail;
 	}
 
-	if(BN_bn2bin(priv, (uint8_t*)privkey) != sizeof(xdag_hash_t)) {
+	if(BN_bn2bin(priv, (uint8_t*)privkey) != sizeof(dag_hash_t)) {
 		goto fail;
 	}
 
@@ -101,11 +102,11 @@ void *xdag_create_key(xdag_hash_t privkey, xdag_hash_t pubkey, uint8_t *pubkey_b
 	}
 
 	BN_CTX_start(ctx);
-	if(EC_POINT_point2oct(group, pub, POINT_CONVERSION_COMPRESSED, buf, sizeof(xdag_hash_t) + 1, ctx) != sizeof(xdag_hash_t) + 1) {
+	if(EC_POINT_point2oct(group, pub, POINT_CONVERSION_COMPRESSED, buf, sizeof(dag_hash_t) + 1, ctx) != sizeof(dag_hash_t) + 1) {
 		goto fail;
 	}
 
-	memcpy(pubkey, buf + 1, sizeof(xdag_hash_t));
+	memcpy(pubkey, buf + 1, sizeof(dag_hash_t));
 	*pubkey_bit = *buf & 1;
 	res = 0;
 
@@ -121,10 +122,10 @@ fail:
 	return res ? 0 : eckey;
 }
 
-// returns the internal representation of the key and the public key by the known private key
-void *xdag_private_to_key(const xdag_hash_t privkey, xdag_hash_t pubkey, uint8_t *pubkey_bit)
+// 通过已知的私钥返回密钥和公钥的内部表示
+void *dag_private_to_key(const dag_hash_t privkey, dag_hash_t pubkey, uint8_t *pubkey_bit)
 {
-	uint8_t buf[sizeof(xdag_hash_t) + 1];
+	uint8_t buf[sizeof(dag_hash_t) + 1];
 	EC_KEY *eckey = 0;
 	BIGNUM *priv = 0;
 	EC_POINT *pub = 0;
@@ -150,7 +151,7 @@ void *xdag_private_to_key(const xdag_hash_t privkey, xdag_hash_t pubkey, uint8_t
 	}
 
 	//	BN_init(priv);
-	BN_bin2bn((uint8_t*)privkey, sizeof(xdag_hash_t), priv);
+	BN_bin2bn((uint8_t*)privkey, sizeof(dag_hash_t), priv);
 	EC_KEY_set_private_key(eckey, priv);
 
 	ctx = BN_CTX_new();
@@ -167,7 +168,7 @@ void *xdag_private_to_key(const xdag_hash_t privkey, xdag_hash_t pubkey, uint8_t
 
 	EC_POINT_mul(group, pub, priv, NULL, NULL, ctx);
 	EC_KEY_set_public_key(eckey, pub);
-	if(EC_POINT_point2oct(group, pub, POINT_CONVERSION_COMPRESSED, buf, sizeof(xdag_hash_t) + 1, ctx) != sizeof(xdag_hash_t) + 1) {
+	if(EC_POINT_point2oct(group, pub, POINT_CONVERSION_COMPRESSED, buf, sizeof(dag_hash_t) + 1, ctx) != sizeof(xdag_hash_t) + 1) {
 		goto fail;
 	}
 
@@ -195,8 +196,8 @@ fail:
 	return res ? 0 : eckey;
 }
 
-// Returns the internal representation of the key by the known public key
-void *xdag_public_to_key(const xdag_hash_t pubkey, uint8_t pubkey_bit)
+// 通过已知的公钥返回密钥的内部表示
+void *dag_public_to_key(const dag_hash_t pubkey, uint8_t pubkey_bit)
 {
 	EC_KEY *eckey = 0;
 	BIGNUM *pub = 0;
@@ -223,7 +224,7 @@ void *xdag_public_to_key(const xdag_hash_t pubkey, uint8_t pubkey_bit)
 	}
 
 	//	BN_init(pub);
-	BN_bin2bn((uint8_t*)pubkey, sizeof(xdag_hash_t), pub);
+	BN_bin2bn((uint8_t*)pubkey, sizeof(dag_hash_t), pub);
 	p = EC_POINT_new(group);
 	if(!p) {
 		goto fail;
@@ -263,54 +264,54 @@ fail:
 }
 
 // removes the internal key representation
-void xdag_free_key(void *key)
+void dag_free_key(void *key)
 {
 	EC_KEY_free((EC_KEY*)key);
 }
 
 // sign the hash and put the result in sign_r and sign_s
-int xdag_sign(const void *key, const xdag_hash_t hash, xdag_hash_t sign_r, xdag_hash_t sign_s)
+int dag_sign(const void *key, const dag_hash_t hash, dag_hash_t sign_r, dag_hash_t sign_s)
 {
 	uint8_t buf[72], *p;
 	unsigned sig_len, s;
 
-	if(!ECDSA_sign(0, (const uint8_t*)hash, sizeof(xdag_hash_t), buf, &sig_len, (EC_KEY*)key)) {
+	if(!ECDSA_sign(0, (const uint8_t*)hash, sizeof(dag_hash_t), buf, &sig_len, (EC_KEY*)key)) {
 		return -1;
 	}
 
 	p = buf + 3, s = *p++;
 
-	if(s >= sizeof(xdag_hash_t)) {
-		memcpy(sign_r, p + s - sizeof(xdag_hash_t), sizeof(xdag_hash_t));
+	if(s >= sizeof(dag_hash_t)) {
+		memcpy(sign_r, p + s - sizeof(dag_hash_t), sizeof(xdag_hash_t));
 	} else {
-		memset(sign_r, 0, sizeof(xdag_hash_t));
-		memcpy((uint8_t*)sign_r + sizeof(xdag_hash_t) - s, p, s);
+		memset(sign_r, 0, sizeof(dag_hash_t));
+		memcpy((uint8_t*)sign_r + sizeof(dag_hash_t) - s, p, s);
 	}
 
 	p += s + 1, s = *p++;
 
-	if(s >= sizeof(xdag_hash_t)) {
-		memcpy(sign_s, p + s - sizeof(xdag_hash_t), sizeof(xdag_hash_t));
+	if(s >= sizeof(dag_hash_t)) {
+		memcpy(sign_s, p + s - sizeof(dag_hash_t), sizeof(xdag_hash_t));
 	} else {
-		memset(sign_s, 0, sizeof(xdag_hash_t));
+		memset(sign_s, 0, sizeof(dag_hash_t));
 		memcpy((uint8_t*)sign_s + sizeof(xdag_hash_t) - s, p, s);
 	}
 
-	xdag_debug("Sign  : hash=[%s] sign=[%s] r=[%s], s=[%s]", xdag_log_hash(hash),
+	dag_debug("Sign  : hash=[%s] sign=[%s] r=[%s], s=[%s]", xdag_log_hash(hash),
 		xdag_log_array(buf, sig_len), xdag_log_hash(sign_r), xdag_log_hash(sign_s));
 
 	return 0;
 }
 
-static uint8_t *add_number_to_sign(uint8_t *sign, const xdag_hash_t num)
+static uint8_t *add_number_to_sign(uint8_t *sign, const dag_hash_t num)
 {
 	uint8_t *n = (uint8_t*)num;
 	int i, len, leadzero;
 
-	for(i = 0; i < sizeof(xdag_hash_t) && !n[i]; ++i);
+	for(i = 0; i < sizeof(dag_hash_t) && !n[i]; ++i);
 
-	leadzero = (i < sizeof(xdag_hash_t) && n[i] & 0x80);
-	len = (sizeof(xdag_hash_t) - i) + leadzero;
+	leadzero = (i < sizeof(dag_hash_t) && n[i] & 0x80);
+	len = (sizeof(dag_hash_t) - i) + leadzero;
 	*sign++ = 0x02;
 	*sign++ = len;
 
@@ -318,16 +319,16 @@ static uint8_t *add_number_to_sign(uint8_t *sign, const xdag_hash_t num)
 		*sign++ = 0;
 	}
 
-	while(i < sizeof(xdag_hash_t)) {
+	while(i < sizeof(dag_hash_t)) {
 		*sign++ = n[i++];
 	}
 
 	return sign;
 }
 
-// verify that the signature (sign_r, sign_s) corresponds to a hash 'hash', a version for its own key
-// returns 0 on success
-int xdag_verify_signature(const void *key, const xdag_hash_t hash, const xdag_hash_t sign_r, const xdag_hash_t sign_s)
+// 验证签名（sign_r，sign_s）是否对应于散列'hash'，即自己密钥的版本
+// 成功时返回0
+int dag_verify_signature(const void *key, const dag_hash_t hash, const dag_hash_t sign_r, const dag_hash_t sign_s)
 {
 	uint8_t buf[72], *ptr;
 	int res;
@@ -336,7 +337,7 @@ int xdag_verify_signature(const void *key, const xdag_hash_t hash, const xdag_ha
 	ptr = add_number_to_sign(ptr, sign_s);
 	buf[0] = 0x30;
 	buf[1] = ptr - buf - 2;
-	res = ECDSA_verify(0, (const uint8_t*)hash, sizeof(xdag_hash_t), buf, ptr - buf, (EC_KEY*)key);
+	res = ECDSA_verify(0, (const uint8_t*)hash, sizeof(dag_hash_t), buf, ptr - buf, (EC_KEY*)key);
 
 	xdag_debug("Verify: res=%2d key=%lx hash=[%s] sign=[%s] r=[%s], s=[%s]", res, (long)key, xdag_log_hash(hash),
 		xdag_log_array(buf, ptr - buf), xdag_log_hash(sign_r), xdag_log_hash(sign_s));
@@ -346,15 +347,15 @@ int xdag_verify_signature(const void *key, const xdag_hash_t hash, const xdag_ha
 
 #if USE_OPTIMIZED_EC == 1 || USE_OPTIMIZED_EC == 2
 
-static uint8_t *add_number_to_sign_optimized_ec(uint8_t *sign, const xdag_hash_t num)
+static uint8_t *add_number_to_sign_optimized_ec(uint8_t *sign, const dag_hash_t num)
 {
 	uint8_t *n = (uint8_t*)num;
 	int i, len, leadzero;
 
-	for(i = 0; i < sizeof(xdag_hash_t) && !n[i]; ++i);
+	for(i = 0; i < sizeof(dag_hash_t) && !n[i]; ++i);
 
-	leadzero = (i < sizeof(xdag_hash_t) && n[i] & 0x80);
-	len = (sizeof(xdag_hash_t) - i) + leadzero;
+	leadzero = (i < sizeof(dag_hash_t) && n[i] & 0x80);
+	len = (sizeof(dag_hash_t) - i) + leadzero;
 	*sign++ = 0x02;
 	if(len)
 		*sign++ = len;
@@ -368,25 +369,25 @@ static uint8_t *add_number_to_sign_optimized_ec(uint8_t *sign, const xdag_hash_t
 		*sign++ = 0;
 	}
 
-	while(i < sizeof(xdag_hash_t)) {
+	while(i < sizeof(dag_hash_t)) {
 		*sign++ = n[i++];
 	}
 
 	return sign;
 }
 
-// returns 0 on success
-int xdag_verify_signature_optimized_ec(const void *key, const xdag_hash_t hash, const xdag_hash_t sign_r, const xdag_hash_t sign_s)
+// 成功时返回0
+int dag_verify_signature_optimized_ec(const void *key, const dag_hash_t hash, const dag_hash_t sign_r, const dag_hash_t sign_s)
 {
-	uint8_t buf_pubkey[sizeof(xdag_hash_t) + 1];
+	uint8_t buf_pubkey[sizeof(dag_hash_t) + 1];
 	secp256k1_pubkey pubkey_noopenssl;
-	size_t pubkeylen = sizeof(xdag_hash_t) + 1;
+	size_t pubkeylen = sizeof(dag_hash_t) + 1;
 	secp256k1_ecdsa_signature sig_noopenssl;
 	secp256k1_ecdsa_signature sig_noopenssl_normalized;
 	int res = 0;
 
 	buf_pubkey[0] = 2 + ((uintptr_t)key & 1);
-	memcpy(&(buf_pubkey[1]), (xdag_hash_t*)((uintptr_t)key & ~1l), sizeof(xdag_hash_t));
+	memcpy(&(buf_pubkey[1]), (dag_hash_t*)((uintptr_t)key & ~1l), sizeof(dag_hash_t));
 
 	if((res = secp256k1_ec_pubkey_parse(ctx_noopenssl, &pubkey_noopenssl, buf_pubkey, pubkeylen)) != 1) {
 		xdag_debug("Public key parsing failed: res=%2d key parity bit = %ld key=[%s] hash=[%s] r=[%s], s=[%s]", res, ((uintptr_t)key & 1),
