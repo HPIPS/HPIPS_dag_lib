@@ -12,10 +12,10 @@
 #define SECTOR0_OFFSET         0x82e9d1b5u
 
 /* 1 - program works as a pool */
-int g_xdag_pool = 0;
+int g_dag_pool = 0;
 
-struct xdag_pool_task g_xdag_pool_task[2];
-uint64_t g_xdag_pool_task_index;
+struct dag_pool_task g_dag_pool_task[2];
+uint64_t g_dag_pool_task_index;
 
 const char *g_miner_address;
 
@@ -55,34 +55,34 @@ int xdag_initialize_mining(const char *pool_arg, const char *miner_address)
 	g_miner_address = miner_address;
 
 	for(int i = 0; i < 2; ++i) {
-		g_xdag_pool_task[i].ctx0 = malloc(xdag_hash_ctx_size());
-		g_xdag_pool_task[i].ctx = malloc(xdag_hash_ctx_size());
+		g_dag_pool_task[i].ctx0 = malloc(xdag_hash_ctx_size());
+		g_dag_pool_task[i].ctx = malloc(xdag_hash_ctx_size());
 
-		if(!g_xdag_pool_task[i].ctx0 || !g_xdag_pool_task[i].ctx) {
+		if(!g_dag_pool_task[i].ctx0 || !g_dag_pool_task[i].ctx) {
 			return -1;
 		}
 	}
 
-	if(!g_xdag_pool && !pool_arg) return 0;
+	if(!g_dag_pool && !pool_arg) return 0;
 
 	if(crypt_start()) return -1;
 
-	if(!g_xdag_pool) {
+	if(!g_dag_pool) {
 		return xdag_initialize_miner(pool_arg);
 	} else {
 		return xdag_initialize_pool(pool_arg);
 	}
 }
 
-//function sets minimal share for the task
-void xdag_set_min_share(struct xdag_pool_task *task, xdag_hash_t last, xdag_hash_t hash)
+//函数为任务设置最小份额
+void dag_set_min_share(struct dag_pool_task *task, dag_hash_t last, dag_hash_t hash)
 {
-	if(xdag_cmphash(hash, task->minhash.data) < 0) {
+	if(dag_cmphash(hash, task->minhash.data) < 0) {
 		pthread_mutex_lock(&g_share_mutex);
 
 		if(xdag_cmphash(hash, task->minhash.data) < 0) {
-			memcpy(task->minhash.data, hash, sizeof(xdag_hash_t));
-			memcpy(task->lastfield.data, last, sizeof(xdag_hash_t));
+			memcpy(task->minhash.data, hash, sizeof(dag_hash_t));
+			memcpy(task->lastfield.data, last, sizeof(dag_hash_t));
 		}
 
 		pthread_mutex_unlock(&g_share_mutex);

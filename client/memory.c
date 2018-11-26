@@ -9,30 +9,30 @@ int g_use_tmpfile = 0;
 
 #if defined(_WIN32) || defined(_WIN64)
 
-void xdag_mem_tempfile_path(const char *tempfile_path)
+void dag_mem_tempfile_path(const char *tempfile_path)
 {
 }
 
-int xdag_mem_init(size_t size)
+int dag_mem_init(size_t size)
 {
 	return 0;
 }
 
-void *xdag_malloc(size_t size)
+void *dag_malloc(size_t size)
 {
 	return malloc(size);
 }
 
-void xdag_free(void *mem)
+void dag_free(void *mem)
 {
 	free(mem);
 }
 
-void xdag_mem_finish(void)
+void dag_mem_finish(void)
 {
 }
 
-int xdag_free_all(void)
+int dag_free_all(void)
 {
 	return -1;
 }
@@ -224,7 +224,7 @@ void delete_actual_tmpfile(){
 
 #endif
 
-char** xdagCreateStringArray(int count, int stringLen)
+char** dagCreateStringArray(int count, int stringLen)
 {
 	char** stringArray = malloc(count * sizeof(char*));
 	for (int i = 0; i < count; ++i) {
@@ -233,7 +233,7 @@ char** xdagCreateStringArray(int count, int stringLen)
 	return  stringArray;
 }
 
-void xdagFreeStringArray(char** stringArray, int count)
+void dagFreeStringArray(char** stringArray, int count)
 {
 	for (int i = 0; i < count; ++i) {
 		free(stringArray[i]);

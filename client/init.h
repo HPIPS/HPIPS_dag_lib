@@ -69,11 +69,11 @@ extern int g_disable_mining;
 //测试网络和主网络具有不同类型的块头，因此来自不同网络的块是不兼容的
 extern enum dag_field_type g_block_header_type;
 
-extern int xdag_init(int argc, char **argv, int isGui);
+extern int dag_init(int argc, char **argv, int isGui);
 
-extern int xdag_set_password_callback(int(*callback)(const char *prompt, char *buf, unsigned size));
+extern int dag_set_password_callback(int(*callback)(const char *prompt, char *buf, unsigned size));
 
-extern int(*g_xdag_show_state)(const char *state, const char *balance, const char *address);
+extern int(*g_dag_show_state)(const char *state, const char *balance, const char *address);
 
 #ifdef __cplusplus
 };

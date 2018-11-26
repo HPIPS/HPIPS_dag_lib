@@ -46,11 +46,11 @@ struct xdag_ext_stats g_xdag_extstats;
 int g_disable_mining = 0;
 char g_pool_address[50] = {0};
 
-int(*g_xdag_show_state)(const char *state, const char *balance, const char *address) = 0;
+int(*g_dag_show_state)(const char *state, const char *balance, const char *address) = 0;
 
 void printUsage(char* appName);
 
-int xdag_init(int argc, char **argv, int isGui)
+int dag_init(int argc, char **argv, int isGui)
 {
     xdag_init_path(argv[0]);
 
@@ -179,12 +179,12 @@ int xdag_init(int argc, char **argv, int isGui)
 		}
 	}
 
-	if(!xdag_time_init()) {
+	if(!dag_time_init()) {
 		printf("Cannot initialize time module\n");
 		return -1;
 	}
 
-	if(!xdag_network_init()) {
+	if(!dag_network_init()) {
 		printf("Cannot initialize network\n");
 		return -1;
 	}
@@ -205,7 +205,7 @@ int xdag_init(int argc, char **argv, int isGui)
 		transport_threads = 0;
 	}
 	
-	g_xdag_pool = is_pool; // move to here to avoid Data Race
+	g_dag_pool = is_pool; // move to here to avoid Data Race
 
 	g_is_miner = is_miner;
 	g_is_pool = is_pool;
@@ -272,9 +272,9 @@ int xdag_init(int argc, char **argv, int isGui)
 	return 0;
 }
 
-int xdag_set_password_callback(int(*callback)(const char *prompt, char *buf, unsigned size))
+int dag_set_password_callback(int(*callback)(const char *prompt, char *buf, unsigned size))
 {
-    return xdag_user_crypt_action((uint32_t *)(void *)callback, 0, 0, 6);
+    return dag_user_crypt_action((uint32_t *)(void *)callback, 0, 0, 6);
 }
 
 void printUsage(char* appName)

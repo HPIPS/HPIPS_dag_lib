@@ -13,7 +13,8 @@
 #include "network.h"
 #include "system.h"
 
-int xdag_network_init(void)
+//dag 网络初始化函数
+int dag_network_init(void)
 {
 #ifdef _WIN32
 	WSADATA wsaData;
@@ -22,16 +23,18 @@ int xdag_network_init(void)
 	return 1;
 }
 
+//验证地址
+///* pool_address 矿池地址 *peerAddr 对比地址 ** error_message 错误输出信息
 static int validate_address(const char* pool_address, struct sockaddr_in *peerAddr, const char** error_message)
 {
 	char *lasts;
 	char buf[0x100] = { 0 };
 
-	// Fill in the address of server
+	// 填写服务器地址
 	memset(peerAddr, 0, sizeof(struct sockaddr_in));
 	peerAddr->sin_family = AF_INET;
 
-	// Resolve the server address (convert from symbolic name to IP number)
+	// 解析服务器地址（从符号名转换为IP号）
 	strncpy(buf, pool_address, sizeof(buf) - 1);
 	char *addressPart = strtok_r(buf, ":", &lasts);
 	if(!addressPart) {
@@ -46,11 +49,11 @@ static int validate_address(const char* pool_address, struct sockaddr_in *peerAd
 			*error_message = "cannot resolve host ";
 			return 0;
 		}
-		// Write resolved IP address of a server to the address structure
+		// 将服务器解析的IP地址写入地址结构
 		memmove(&peerAddr->sin_addr.s_addr, host->h_addr_list[0], 4);
 	}
 
-	// Resolve port
+	// 解析端口
 	char *portPart = strtok_r(0, ":", &lasts);
 	if(!portPart) {
 		//mess = "port is not given";
@@ -61,7 +64,8 @@ static int validate_address(const char* pool_address, struct sockaddr_in *peerAd
 	return 1;
 }
 
-int xdag_connect_pool(const char* pool_address, const char** error_message)
+//链接矿池地址
+int dag_connect_pool(const char* pool_address, const char** error_message)
 {
 	struct sockaddr_in peeraddr;
 	int reuseAddr = 1;
@@ -80,12 +84,12 @@ int xdag_connect_pool(const char* pool_address, const char** error_message)
 		xdag_err("pool : can't set FD_CLOEXEC flag on socket %d, %s\n", sock, strerror(errno));
 	}
 
-	// Set the "LINGER" timeout to zero, to close the listen socket
-	// immediately at program termination.
+	//将“LINGER”超时设置为零，关闭监听套接字
+	// 即终止程序。
 	setsockopt(sock, SOL_SOCKET, SO_LINGER, (char *)&lingerOpt, sizeof(lingerOpt));
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *)&reuseAddr, sizeof(int));
 
-	// Now, connect to a pool
+	// 现在，连接到一个池
 	int res = connect(sock, (struct sockaddr*)&peeraddr, sizeof(struct sockaddr_in));
 	if(res) {
 		*error_message = "cannot connect to the pool";
@@ -94,7 +98,8 @@ int xdag_connect_pool(const char* pool_address, const char** error_message)
 	return sock;
 }
 
-void xdag_connection_close(int socket)
+//Dga 关闭链接函数
+void dag_connection_close(int socket)
 {
 	if(socket != INVALID_SOCKET) {
 		close(socket);
