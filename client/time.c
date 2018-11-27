@@ -20,10 +20,11 @@ time_t dag_start_main_time(void)
 	return MAIN_TIME(DAG_ERA);
 }
 
+///*Dag 时间参数初始化
 int dag_time_init(void)
 {
 	if (g_dag_testnet) {
-		g_xdag_era = DAG_TEST_ERA;
+		g_dag_era = DAG_TEST_ERA;
 	}
 	
 	return 1;

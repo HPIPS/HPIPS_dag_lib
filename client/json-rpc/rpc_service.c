@@ -319,7 +319,8 @@ static int xdag_rpc_service_init(int port)
 	return 0;
 }
 
-int xdag_rpc_service_start(int port)
+
+int dag_rpc_service_start(int port)
 {
 	if(0 == g_rpc_stop) {
 		printf("rpc service is running\n");

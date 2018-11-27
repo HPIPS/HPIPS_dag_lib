@@ -44,33 +44,33 @@
 #define rpc_register_func(command) xdag_rpc_service_register_procedure(&method_##command, #command, NULL);
 
 /* method: xdag_version */
-cJSON * method_xdag_version(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
+cJSON * method_xdag_version(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
 
 /* method: xdag_state */
-cJSON * method_xdag_state(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
+cJSON * method_xdag_state(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
 
 /* method: xdag_stats */
-cJSON * method_xdag_stats(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
+cJSON * method_xdag_stats(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
 
 /* method: xdag_get_account */
-int rpc_account_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, int n_our_key);
-cJSON * method_xdag_get_account(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
+int rpc_account_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time, int n_our_key);
+cJSON * method_xdag_get_account(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
 
 /* method: xdag_get_balance */
-cJSON * method_xdag_get_balance(struct xdag_rpc_context * ctx, cJSON *params, cJSON *id, char *version);
+cJSON * method_xdag_get_balance(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version);
 
 /* method: xdag_get_block_info */
-int rpc_get_block_callback(void *data, int flag, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, const char* remark);
-int rpc_get_block_info_callback(void *data, int flags, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, const char* remark);
-int rpc_get_block_links_callback(void *data, const char *direction, xdag_hash_t hash, xdag_amount_t amount);
-cJSON * method_xdag_get_block_info(struct xdag_rpc_context * ctx, cJSON *params, cJSON *id, char *version);
+int rpc_get_block_callback(void *data, int flag, dag_hash_t hash, dag_amount_t amount, xtime_t time, const char* remark);
+int rpc_get_block_info_callback(void *data, int flags, dag_hash_t hash, dag_amount_t amount, xtime_t time, const char* remark);
+int rpc_get_block_links_callback(void *data, const char *direction, dag_hash_t hash, dag_amount_t amount);
+cJSON * method_xdag_get_block_info(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version);
 
 /* method: xdag_do_xfer */
-cJSON * method_xdag_do_xfer(struct xdag_rpc_context * ctx, cJSON *params, cJSON *id, char *version);
+cJSON * method_xdag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version);
 
 /* method: xdag_get_transactions */
-int rpc_transactions_callback(void *data, int type, int flags, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, const char* remark);
-cJSON * method_xdag_get_transactions(struct xdag_rpc_context * ctx, cJSON *params, cJSON *id, char *version);
+int rpc_transactions_callback(void *data, int type, int flags, dag_hash_t hash, dag_amount_t amount, xtime_t time, const char* remark);
+cJSON * method_xdag_get_transactions(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version);
 
 /* version */
 /*
@@ -84,7 +84,7 @@ cJSON * method_xdag_get_transactions(struct xdag_rpc_context * ctx, cJSON *param
  "jsonrpc":"2.0", "result":[{"version":"0.2.1"}], "error":null, "id":1
  "version":"1.1", "result":[{"version":"0.2.1"}], "error":null, "id":1
  */
-cJSON * method_xdag_version(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
+cJSON * method_xdag_version(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
 {
 	xdag_debug("rpc call method xdag_version, version %s",version);
 	cJSON *ret = NULL;
@@ -109,7 +109,7 @@ cJSON * method_xdag_version(struct xdag_rpc_context *ctx, cJSON *params, cJSON *
  "jsonrpc":"2.0", "result":[{"version":"0.2.1"}], "error":null, "id":1
  "version":"1.1", "result":[{"version":"0.2.1"}], "error":null, "id":1
  */
-cJSON * method_xdag_state(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
+cJSON * method_xdag_state(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
 {
 	xdag_debug("rpc call method xdag_state, version %s",version);
 	cJSON *ret = NULL;
@@ -297,7 +297,7 @@ int rpc_account_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xti
 	return 0;
 }
 
-cJSON * method_xdag_get_account(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
+cJSON * method_dag_get_account(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
 {
 	xdag_debug("rpc call method get_account, version %s",version);
 	struct rpc_account_callback_data cbdata;
@@ -321,7 +321,7 @@ cJSON * method_xdag_get_account(struct xdag_rpc_context *ctx, cJSON *params, cJS
 
 	cJSON *ret = NULL;
 	if(ctx->error_code == 0) {
-		if(g_xdag_state < DAG_STATE_XFER) {
+		if(g_dag_state < XDAG_STATE_XFER) {
 			ctx->error_code = 1;
 			ctx->error_message = strdup("Not ready to show a balance.");
 		} else {
@@ -347,9 +347,9 @@ cJSON * method_xdag_get_account(struct xdag_rpc_context *ctx, cJSON *params, cJS
  "jsonrpc":"2.0", "result":[{"balance":"10.111111"}], "error":null, "id":1
  "version":"1.1", "result":[{"balance":"10.111111"}], "error":null, "id":1
  */
-cJSON * method_xdag_get_balance(struct xdag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
+cJSON * method_dag_get_balance(struct xdag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
 {
-	xdag_debug("rpc call method xdag_get_balance, version %s", version);
+	dag_debug("rpc call method xdag_get_balance, version %s", version);
 	char address[128] = {0};
 	if (params) {
 		if (cJSON_IsArray(params)) {
@@ -369,15 +369,15 @@ cJSON * method_xdag_get_balance(struct xdag_rpc_context * ctx, cJSON *params, cJ
 		}
 	}
 	
-	if(g_xdag_state < DAG_STATE_XFER) {
+	if(g_dag_state < XDAG_STATE_XFER) {
 		ctx->error_code = 1;
 		ctx->error_message = strdup("Not ready to show a balance.");
 		return NULL;
 	} else {
 		cJSON *ret = NULL;
 		cJSON *item = cJSON_CreateObject();
-		xdag_hash_t hash;
-		xdag_amount_t balance;
+		dag_hash_t hash;
+		dag_amount_t balance;
 		
 		if(strlen(address)) {
 			xdag_address2hash(address, hash);
@@ -411,7 +411,7 @@ cJSON * method_xdag_get_balance(struct xdag_rpc_context * ctx, cJSON *params, cJ
  "version":"1.1", "result":[{"address":"BLOCK ADDRESS", "amount":"BLOCK AMOUNT",  "flags":"BLOCK FLAGS", "state":"BLOCK STATE", "timestamp":"2018-06-03 03:36:33.866 UTC"}], "error":null, "id":1
  */
 
-int rpc_get_block_info_callback(void *data, int flags, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, const char* remark)
+int rpc_get_block_info_callback(void *data, int flags, dag_hash_t hash, dag_amount_t amount, xtime_t time, const char* remark)
 {
 	cJSON *callback_data = (cJSON *)data;
 
@@ -456,7 +456,7 @@ int rpc_get_block_info_callback(void *data, int flags, xdag_hash_t hash, xdag_am
 	return 0;
 }
 
-int rpc_get_block_links_callback(void *data, const char *direction, xdag_hash_t hash, xdag_amount_t amount)
+int rpc_get_block_links_callback(void *data, const char *direction, dag_hash_t hash, dag_amount_t amount)
 {
 	cJSON *callback_data = (cJSON *)data;
 
@@ -484,7 +484,7 @@ int rpc_get_block_links_callback(void *data, const char *direction, xdag_hash_t 
 	return 0;
 }
 
-cJSON * method_xdag_get_block_info(struct xdag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
+cJSON * method_dag_get_block_info(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
 {
 	xdag_debug("rpc call method xdag_get_block_info, version %s", version);
 	char address[128] = {0};
@@ -506,7 +506,7 @@ cJSON * method_xdag_get_block_info(struct xdag_rpc_context * ctx, cJSON *params,
 		}
 	}
 
-	xdag_hash_t hash;
+	dag_hash_t hash;
 	size_t len = strlen(address);
 
 	if(len == 32) {
@@ -564,7 +564,7 @@ cJSON * method_xdag_get_block_info(struct xdag_rpc_context * ctx, cJSON *params,
  "version":"1.1", "result":[{"block":"ADDRESS"}], "error":null, "id":1
  */
 
-cJSON * method_xdag_do_xfer(struct xdag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
+cJSON * method_dag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
 {
 	//todo: need password or not?
 	xdag_debug("rpc call method do_xfer, version %s", version);
@@ -613,7 +613,7 @@ cJSON * method_xdag_do_xfer(struct xdag_rpc_context * ctx, cJSON *params, cJSON 
 		return NULL;
 	}
 	
-	if(g_xdag_state < XDAG_STATE_XFER) {
+	if(g_dag_state < XDAG_STATE_XFER) {
 		ctx->error_code = 1;
 		ctx->error_message = strdup("Not ready to transfer.");
 		return NULL;
@@ -642,8 +642,8 @@ cJSON * method_xdag_do_xfer(struct xdag_rpc_context * ctx, cJSON *params, cJSON 
 			}
 #endif
 
-			g_xdag_state = DAG_STATE_XFER;
-			g_xdag_xfer_last = time(0);
+			g_dag_state = XDAG_STATE_XFER;
+			g_dag_xfer_last = time(0);
 			xdag_traverse_our_blocks(&xfer, &xfer_callback);
 
 			char address_buf[33] = {0};
@@ -733,7 +733,7 @@ int rpc_transactions_callback(void *data, int type, int flags, xdag_hash_t hash,
 	return 0;
 }
 
-cJSON * method_xdag_get_transactions(struct xdag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
+cJSON * method_dag_get_transactions(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
 {
 	xdag_mess("rpc call method get_transactions, version %s", version);
 	
@@ -779,7 +779,7 @@ cJSON * method_xdag_get_transactions(struct xdag_rpc_context * ctx, cJSON *param
 		return NULL;
 	}
 	
-	xdag_hash_t hash;
+	dag_hash_t hash;
 	size_t len = strlen(address);
 	
 	if(len == 32) {
@@ -832,7 +832,7 @@ cJSON * method_xdag_get_transactions(struct xdag_rpc_context * ctx, cJSON *param
 }
 
 /* init rpc procedures */
-int xdag_rpc_init_procedures(void)
+int dag_rpc_init_procedures(void)
 {
 	/* register */
 	rpc_register_func(xdag_version);

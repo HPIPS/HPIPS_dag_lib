@@ -31,12 +31,14 @@
 #define APPLICATION_DOMAIN_PORT 7676
 #endif
 
+///*指令互动函数
 int terminal(void)
 {
 	char *lasts;
 	int sock;
 
-	if(!xdag_network_init()) {
+	//初始化DAG网络
+	if(!dag_network_init()) {
 		printf("Can't initialize sockets");
 	}
 

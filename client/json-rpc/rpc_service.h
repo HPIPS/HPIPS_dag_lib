@@ -22,11 +22,11 @@ extern int g_rpc_port;
 extern int g_rpc_xfer_enable;
 extern int g_rpc_white_enable;
 
-/* init xdag rpc */
-extern int xdag_rpc_service_start(int port);
+/* DAG rpc 初始化函数 */
+extern int dag_rpc_service_start(int port);
 
-/* stop xdag rpc */
-extern int xdag_rpc_service_stop(void);
+/* rpc 停止函数 */
+extern int dag_rpc_service_stop(void);
 
 #ifdef __cplusplus
 };

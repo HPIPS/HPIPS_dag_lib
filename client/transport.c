@@ -245,11 +245,11 @@ static void conn_close_notify(void *conn)
 
 /* external interface */
 
-/* starts the transport system; bindto - ip:port for a socket for external connections
-* addr-port_pairs - array of pointers to strings with parameters of other host for connection (ip:port),
-* npairs - count of the strings,
-* nthreads - number of transporrt threads
-*/
+/* 启动传输系统；bindto-ip：用于外部连接的套接字的端口
+ * addr-port_.s-指向字符串的指针数组，该字符串具有用于连接的其他主机的参数（ip:port），
+ * 字符串-计数
+ * 传输线程数
+ */
 int dag_transport_start(int flags, int nthreads, const char *bindto, int npairs, const char **addr_port_pairs)
 {
 	const char **argv = malloc((npairs + 7) * sizeof(char *)), *version;
