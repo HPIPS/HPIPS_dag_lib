@@ -20,13 +20,13 @@ enum xdag_debug_levels {
 extern "C" {
 #endif
 	
-extern int xdag_log(const char *logfile, int level, const char *format, ...);
+extern int dag_log(const char *logfile, int level, const char *format, ...);
 
-extern char *xdag_log_array(const void *arr, unsigned size);
+extern char *dag_log_array(const void *arr, unsigned size);
 
-extern int xdag_log_init(void);
+extern int dag_log_init(void);
 
-#define xdag_log_hash(hash) xdag_log_array(hash, sizeof(xdag_hash_t))
+#define xdag_log_hash(hash) dag_log_array(hash, sizeof(dag_hash_t))
 
 // sets the maximum error level for output to the log, returns the previous level (0 - do not log anything, 9 - all)
 extern int xdag_set_log_level(int level);
@@ -35,29 +35,29 @@ extern int xdag_set_log_level(int level);
 };
 #endif
 
-#define XDAG_LOG_FILE "xdag.log"
+#define DAG_LOG_FILE "dag.log"
 #define DNET_LOG_FILE "dnet.log"
 
-#define xdag_fatal(...) xdag_log(XDAG_LOG_FILE, XDAG_FATAL   , __VA_ARGS__)
-#define xdag_crit(...)  xdag_log(XDAG_LOG_FILE, XDAG_CRITICAL, __VA_ARGS__)
-#define xdag_err(...)   xdag_log(XDAG_LOG_FILE, XDAG_ERROR   , __VA_ARGS__)
-#define xdag_warn(...)  xdag_log(XDAG_LOG_FILE, XDAG_WARNING , __VA_ARGS__)
-#define xdag_mess(...)  xdag_log(XDAG_LOG_FILE, XDAG_MESSAGE , __VA_ARGS__)
-#define xdag_info(...)  xdag_log(XDAG_LOG_FILE, XDAG_INFO    , __VA_ARGS__)
+#define dag_fatal(...) dag_log(DAG_LOG_FILE, DAG_FATAL   , __VA_ARGS__)
+#define dag_crit(...)  dag_log(DAG_LOG_FILE, DAG_CRITICAL, __VA_ARGS__)
+#define dag_err(...)   dag_log(DAG_LOG_FILE, DAG_ERROR   , __VA_ARGS__)
+#define dag_warn(...)  dag_log(DAG_LOG_FILE, DAG_WARNING , __VA_ARGS__)
+#define dag_mess(...)  dag_log(DAG_LOG_FILE, DAG_MESSAGE , __VA_ARGS__)
+#define dag_info(...)  dag_log(DAG_LOG_FILE, DAG_INFO    , __VA_ARGS__)
 #ifndef NDEBUG
-#define xdag_debug(...) xdag_log(XDAG_LOG_FILE, XDAG_DEBUG   , __VA_ARGS__)
+#define dag_debug(...) dag_log(AG_LOG_FILE, DAG_DEBUG   , __VA_ARGS__)
 #else
 #define xdag_debug(...)
 #endif
 
-#define dnet_fatal(...) xdag_log(DNET_LOG_FILE, XDAG_FATAL   , __VA_ARGS__)
-#define dnet_crit(...)  xdag_log(DNET_LOG_FILE, XDAG_CRITICAL, __VA_ARGS__)
-#define dnet_err(...)   xdag_log(DNET_LOG_FILE, XDAG_ERROR   , __VA_ARGS__)
-#define dnet_warn(...)  xdag_log(DNET_LOG_FILE, XDAG_WARNING , __VA_ARGS__)
-#define dnet_mess(...)  xdag_log(DNET_LOG_FILE, XDAG_MESSAGE , __VA_ARGS__)
-#define dnet_info(...)  xdag_log(DNET_LOG_FILE, XDAG_INFO    , __VA_ARGS__)
+#define dnet_fatal(...) dag_log(DNET_LOG_FILE, DAG_FATAL   , __VA_ARGS__)
+#define dnet_crit(...)  dag_log(DNET_LOG_FILE, DAG_CRITICAL, __VA_ARGS__)
+#define dnet_err(...)   dag_log(DNET_LOG_FILE, DAG_ERROR   , __VA_ARGS__)
+#define dnet_warn(...)  dag_log(DNET_LOG_FILE, DAG_WARNING , __VA_ARGS__)
+#define dnet_mess(...)  dag_log(DNET_LOG_FILE, DAG_MESSAGE , __VA_ARGS__)
+#define dnet_info(...)  dag_log(DNET_LOG_FILE, DAG_INFO    , __VA_ARGS__)
 #ifndef NDEBUG
-#define dnet_debug(...) xdag_log(DNET_LOG_FILE, XDAG_DEBUG   , __VA_ARGS__)
+#define dnet_debug(...) dag_log(DNET_LOG_FILE, DAG_DEBUG   , __VA_ARGS__)
 #else
 #define dnet_debug(...)
 #endif

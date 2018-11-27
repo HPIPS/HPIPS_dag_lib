@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 	
-// simple http get, pass url, and return the content with malloc. Need free returned value.
+// 简单的HTTP获取、传递URL，并用Malc返回内容。需要释放返回值。
 extern char *http_get(const char* url);
 
 extern int test_https(void);

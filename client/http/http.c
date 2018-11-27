@@ -37,8 +37,7 @@
 
 
 
-// Simple structure to keep track of the handle, and
-// of what needs to be freed later.
+// 简单的HTTP获取、传递URL，并用Malc返回内容。需要释放返回值。
 typedef struct {
 	int socket;
 	SSL *sslHandle;
@@ -55,7 +54,7 @@ void sslDisconnect(connection *c);
 char *sslRead(connection *c);
 int sslWrite(connection *c, char *text);
 
-// Establish a regular tcp connection
+// 建立常规TCP连接
 connection * tcpConnect(const char* h, int port)
 {
 	int sock = 0 ;
@@ -110,7 +109,7 @@ connection * tcpConnect(const char* h, int port)
 	}
 }
 
-// Disconnect & free connection struct
+// 断开与自由连接结构
 void tcpDisconnect(connection *c)
 {
 	if(c->socket) {
@@ -166,7 +165,7 @@ int tcpWrite(connection *c, char *text)
 	return 0;
 }
 
-// Establish a connection using an SSL layer
+// 使用SSL层建立连接
 connection *sslConnect(const char* h, int port)
 {
 	int sock = 0 ;
@@ -218,11 +217,11 @@ connection *sslConnect(const char* h, int port)
 		// Register the error strings for libcrypto & libssl
 		SSL_load_error_strings();
 		
-		// Register the available ciphers and digests
+		// 注册可用的密码和摘要
 		SSL_library_init();
 		OpenSSL_add_all_algorithms();
 
-		// New context saying we are a client, and using SSL 2 or 3
+		// 新的上下文称我们是客户端，使用SSL 2或3
 		c->sslContext = SSL_CTX_new(SSLv23_client_method());
 		if(c->sslContext == NULL) {
 			xdag_err("SSL_CTX_new failed.");
@@ -231,7 +230,7 @@ connection *sslConnect(const char* h, int port)
 			return NULL;
 		}
 
-		// Create an SSL struct for the connection
+		// 为连接创建SSL结构
 		c->sslHandle = SSL_new(c->sslContext);
 		if(c->sslHandle == NULL) {
 			xdag_err("SSL_new failed.");
@@ -240,7 +239,7 @@ connection *sslConnect(const char* h, int port)
 			return NULL;
 		}
 
-		// Connect the SSL struct to our connection
+		// 将SSL结构连接到我们的连接
 		if(!SSL_set_fd(c->sslHandle, c->socket)) {
 			xdag_err("SSL_set_fd failed.");
 			ERR_print_errors_fp(stderr);
@@ -248,7 +247,7 @@ connection *sslConnect(const char* h, int port)
 			return NULL;
 		}
 
-		// Initiate SSL handshake
+		// 启动SSL链接
 		if(SSL_connect(c->sslHandle) != 1) {
 			xdag_err("SSL_connect failed.");
 			ERR_print_errors_fp(stderr);
@@ -258,12 +257,12 @@ connection *sslConnect(const char* h, int port)
 		
 		return c;
 	} else {
-		xdag_err("Creat ssl sock failed.");
+		dag_err("Creat ssl sock failed.");
 		return NULL;
 	}
 }
 
-// Disconnect & free connection struct
+// 断开与自由连接结构
 void sslDisconnect(connection *c)
 {
 	if(c->socket) {
@@ -282,7 +281,7 @@ void sslDisconnect(connection *c)
 	free(c);
 }
 
-// Read all available text from the connection
+// 从连接中读取所有可用文本
 char *sslRead(connection *c)
 {
 	const int readSize = 1024;
@@ -322,7 +321,7 @@ char *sslRead(connection *c)
 	return rc;
 }
 
-// Write text to the connection
+// 向连接写入文本
 int sslWrite(connection *c, char *text)
 {
 	if(c) {
@@ -403,7 +402,7 @@ char *http_get(const char *url)
 	return resp;
 }
 
-// Very basic main: we send GET / and print the resp.
+// 非常基础的主要：我们发送获取/打印RESP。
 int test_https(void)
 {
 	connection *c;

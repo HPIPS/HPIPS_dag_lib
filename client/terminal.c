@@ -130,7 +130,7 @@ void *terminal_thread(void *arg)
 	addrLocal.sin_port = htons(APPLICATION_DOMAIN_PORT);
 	addrLocal.sin_addr.s_addr = htonl(LOCAL_HOST_IP);
 	if (bind(sock, (struct sockadr*)&addrLocal, sizeof(addrLocal)) == -1) {
-		xdag_err("Can't bind domain socket errno:%d", errno);
+		dag_err("Can't bind domain socket errno:%d", errno);
 		return 0;
 	}
 #endif
@@ -143,7 +143,7 @@ void *terminal_thread(void *arg)
 		int clientSock, res;
 		struct pollfd fds;
 		if ((clientSock = accept(sock, NULL, NULL)) == -1) {
-			xdag_err("Unix domain socket accept errno:%d", errno);
+			dag_err("Unix domain socket accept errno:%d", errno);
 			break;
 		}
 
@@ -178,7 +178,7 @@ void *terminal_thread(void *arg)
 			res = xdag_command(cmd, fd);
 
 #if !defined(_WIN32) && !defined(_WIN64)
-			xdag_close_file(fd);
+			dag_close_file(fd);
 #else
 			rewind(fd);
 
@@ -187,7 +187,7 @@ void *terminal_thread(void *arg)
 				const int length = fread(buf, 1, 256, fd);
 				write(clientSock, buf, length);
 			}
-			xdag_close_file(fd);
+			dag_close_file(fd);
 			close(clientSock);
 #endif
 			if (res < 0) {

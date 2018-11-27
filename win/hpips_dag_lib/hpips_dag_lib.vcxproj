@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -148,6 +148,8 @@
     <ClInclude Include="..\..\client\commands.h" />
     <ClInclude Include="..\..\client\crypt.h" />
     <ClInclude Include="..\..\client\hash.h" />
+    <ClInclude Include="..\..\client\http\http.h" />
+    <ClInclude Include="..\..\client\http\url.h" />
     <ClInclude Include="..\..\client\init.h" />
     <ClInclude Include="..\..\client\math.h" />
     <ClInclude Include="..\..\client\memory.h" />
@@ -158,6 +160,11 @@
     <ClInclude Include="..\..\client\storage.h" />
     <ClInclude Include="..\..\client\sync.h" />
     <ClInclude Include="..\..\client\system.h" />
+    <ClInclude Include="..\..\client\terminal.h" />
+    <ClInclude Include="..\..\client\time.h" />
+    <ClInclude Include="..\..\client\transport.h" />
+    <ClInclude Include="..\..\client\types.h" />
+    <ClInclude Include="..\..\client\wallet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c" />
@@ -165,6 +172,8 @@
     <ClCompile Include="..\..\client\commands.c" />
     <ClCompile Include="..\..\client\crypt.c" />
     <ClCompile Include="..\..\client\hash.c" />
+    <ClCompile Include="..\..\client\http\http.c" />
+    <ClCompile Include="..\..\client\http\url.c" />
     <ClCompile Include="..\..\client\init.c" />
     <ClCompile Include="..\..\client\math.c" />
     <ClCompile Include="..\..\client\memory.c" />
@@ -173,6 +182,10 @@
     <ClCompile Include="..\..\client\sha256.c" />
     <ClCompile Include="..\..\client\storage.c" />
     <ClCompile Include="..\..\client\sync.c" />
+    <ClCompile Include="..\..\client\terminal.c" />
+    <ClCompile Include="..\..\client\time.c" />
+    <ClCompile Include="..\..\client\transport.c" />
+    <ClCompile Include="..\..\client\wallet.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

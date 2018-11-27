@@ -17,43 +17,43 @@ enum xdag_transport_flags {
 extern "C" {
 #endif
 	
-/* starts the transport system; bindto - ip:port for a socket for external connections
- * addr-port_pairs - array of pointers to strings with parameters of other host for connection (ip:port),
- * npairs - count of the strings,
- * nthreads - number of transport threads
+/* 启动传输系统；bindto-ip：用于外部连接的套接字的端口
+ * addr-port_.s-指向字符串的指针数组，该字符串具有用于连接的其他主机的参数（ip:port），
+ * 字符串-计数
+ * 传输线程数
  */
-extern int xdag_transport_start(int flags, int nthreads, const char *bindto, int npairs, const char **addr_port_pairs);
+extern int dag_transport_start(int flags, int nthreads, const char *bindto, int npairs, const char **addr_port_pairs);
 
-/* generates an array with random data */
-extern int xdag_generate_random_array(void *array, unsigned long size);
+/* 生成具有随机数据的数组 */
+extern int dag_generate_random_array(void *array, unsigned long size);
 
-/* sends a new block to network */
-extern int xdag_send_new_block(struct xdag_block *b);
+/*向网络发送新的块*/
+extern int dag_send_new_block(struct xdag_block *b);
 
-/* requests all blocks from the remote host, that are in specified time interval;
- * calls callback() for each block, callback received the block and data as paramenters;
- * return -1 in case of error
+/* 请求来自远程主机的所有块，这些块在指定的时间间隔内；
+ * 为每个块调用callback()，回调接收块和数据作为参数；
+ * 在错误的情况下返回1
  */
-extern int xdag_request_blocks(xtime_t start_time, xtime_t end_time, void *data,
+extern int dag_request_blocks(xtime_t start_time, xtime_t end_time, void *data,
 									void *(*callback)(void *, void *));
 
-/* requests a block by hash from another host */
-extern int xdag_request_block(xdag_hash_t hash, void *conn);
+/* 用另一个主机的散列请求块 */
+extern int dag_request_block(xdag_hash_t hash, void *conn);
 
-/* requests a block from a remote host and places sums of blocks into 'sums' array,
- * blocks are filtered by interval from start_time to end_time, splitted to 16 parts;
- * end - start should be in form 16^k
+/* 请求来自远程主机的块，并将块的总和放入“和”数组中， 
+ * 块按从开始时间到结束时间的间隔过滤，分成16个部分；
+ * 结束启动应该在表格16 ^ k中
  * (original russian comment is unclear too) */
-extern int xdag_request_sums(xtime_t start_time, xtime_t end_time, struct xdag_storage_sum sums[16]);
+extern int dag_request_sums(xtime_t start_time, xtime_t end_time, struct xdag_storage_sum sums[16]);
 
-/* executes transport level command, out - stream to display the result of the command execution */
-extern int xdag_net_command(const char *cmd, void *out);
+/* 执行传输级命令，输出流以显示命令执行的结果 */
+extern int dag_net_command(const char *cmd, void *out);
 
-/* sends the package, conn is the same as in function dnet_send_xdag_packet */
-extern int xdag_send_packet(struct xdag_block *b, void *conn);
+/* 发送包，CONN与函数dnet_send_xdag_packet包相同 */
+extern int dag_send_packet(struct xdag_block *b, void *conn);
 
-/* see dnet_user_crypt_action */
-extern int xdag_user_crypt_action(unsigned *data, unsigned long long data_id, unsigned size, int action);
+/* 查看 dnet_user_crypt_action */
+extern int dag_user_crypt_action(unsigned *data, unsigned long long data_id, unsigned size, int action);
 
 extern pthread_mutex_t g_transport_mutex;
 extern time_t g_xdag_last_received;

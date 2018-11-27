@@ -25,7 +25,7 @@ pthread_mutex_t g_transport_mutex      = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t g_process_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t g_process_cond   = PTHREAD_COND_INITIALIZER;
 
-time_t g_xdag_last_received = 0;
+time_t g_dag_last_received = 0;
 static void *reply_data;
 static void *(*reply_callback)(void *block, void *data) = 0;
 static void *reply_connection;
@@ -43,18 +43,18 @@ struct xdag_send_data {
 
 #define add_main_timestamp(a)   ((a)->main_time = xdag_main_time())
 
-static void *xdag_send_thread(void *arg)
+static void *dag_send_thread(void *arg)
 {
 	struct xdag_send_data *d = (struct xdag_send_data *)arg;
 
 	d->b.field[0].time = xdag_load_blocks(d->b.field[0].time, d->b.field[0].end_time, d->connection, &dnet_send_xdag_packet);
 	d->b.field[0].type = XDAG_FIELD_NONCE | XDAG_MESSAGE_BLOCKS_REPLY << 4;
 
-	memcpy(&d->b.field[2], &g_xdag_stats, sizeof(g_xdag_stats));
-	add_main_timestamp((struct xdag_stats*)&d->b.field[2]);
+	memcpy(&d->b.field[2], &g_dag_stats, sizeof(g_dag_stats));
+	add_main_timestamp((struct dag_stats*)&d->b.field[2]);
 
-	xdag_netdb_send((uint8_t*)&d->b.field[2] + sizeof(struct xdag_stats),
-						 14 * sizeof(struct xdag_field) - sizeof(struct xdag_stats));
+	xdag_netdb_send((uint8_t*)&d->b.field[2] + sizeof(struct dag_stats),
+						 14 * sizeof(struct dag_field) - sizeof(struct dag_stats));
 	
 	dnet_send_xdag_packet(&d->b, d->connection);
 	
@@ -65,14 +65,14 @@ static void *xdag_send_thread(void *arg)
 
 static int process_transport_block(struct xdag_block *received_block, void *connection)
 {
-	struct xdag_stats *stats = (struct xdag_stats *)&received_block->field[2];
-	struct xdag_stats *g = &g_xdag_stats;
-	xtime_t start_time = xdag_start_main_time();
-	xtime_t current_time = xdag_main_time();
+	struct dag_stats *stats = (struct xdag_stats *)&received_block->field[2];
+	struct dag_stats *g = &g_dag_stats;
+	xtime_t start_time = dag_start_main_time();
+	xtime_t current_time = dag_main_time();
 
 	if(current_time >= start_time && stats->total_nmain <= current_time - start_time + 2) {
 		if(stats->main_time <= current_time + 2) {
-			if(xdag_diff_gt(stats->max_difficulty, g->max_difficulty))
+			if(dag_diff_gt(stats->max_difficulty, g->max_difficulty))
 				g->max_difficulty = stats->max_difficulty;
 
 			if(stats->total_nblocks > g->total_nblocks)
@@ -90,11 +90,11 @@ static int process_transport_block(struct xdag_block *received_block, void *conn
 	g_xdag_last_received = time(0);
 	pthread_mutex_unlock(&g_transport_mutex);
 
-	xdag_netdb_receive((uint8_t*)&received_block->field[2] + sizeof(struct xdag_stats),
+	dag_netdb_receive((uint8_t*)&received_block->field[2] + sizeof(struct xdag_stats),
 		(xdag_type(received_block, 1) == XDAG_MESSAGE_SUMS_REPLY ? 6 : 14) * sizeof(struct xdag_field)
 		- sizeof(struct xdag_stats));
 
-	switch(xdag_type(received_block, 1)) {
+	switch(dag_type(received_block, 1)) {
 		case XDAG_MESSAGE_BLOCKS_REQUEST:
 		{
 			struct xdag_send_data *send_data = (struct xdag_send_data *)malloc(sizeof(struct xdag_send_data));
@@ -250,7 +250,7 @@ static void conn_close_notify(void *conn)
 * npairs - count of the strings,
 * nthreads - number of transporrt threads
 */
-int xdag_transport_start(int flags, int nthreads, const char *bindto, int npairs, const char **addr_port_pairs)
+int dag_transport_start(int flags, int nthreads, const char *bindto, int npairs, const char **addr_port_pairs)
 {
 	const char **argv = malloc((npairs + 7) * sizeof(char *)), *version;
 	int argc = 0, i, res;
@@ -308,7 +308,7 @@ int xdag_transport_start(int flags, int nthreads, const char *bindto, int npairs
 }
 
 /* generates an array with random data */
-int xdag_generate_random_array(void *array, unsigned long size)
+int dag_generate_random_array(void *array, unsigned long size)
 {
 	return dnet_generate_random_array(array, size);
 }
@@ -380,7 +380,7 @@ static int do_request(int type, xtime_t start_time, xtime_t end_time, void *data
 * calls callback() for each block, callback received the block and data as paramenters;
 * return -1 in case of error
 */
-int xdag_request_blocks(xtime_t start_time, xtime_t end_time, void *data,
+int dag_request_blocks(xtime_t start_time, xtime_t end_time, void *data,
 							 void *(*callback)(void *block, void *data))
 {
 	return do_request(XDAG_MESSAGE_BLOCKS_REQUEST, start_time, end_time, data, callback);
@@ -390,13 +390,13 @@ int xdag_request_blocks(xtime_t start_time, xtime_t end_time, void *data,
 * blocks are filtered by interval from start_time to end_time, splitted to 16 parts;
 * end - start should be in form 16^k
 * (original russian comment is unclear too) */
-int xdag_request_sums(xtime_t start_time, xtime_t end_time, struct xdag_storage_sum sums[16])
+int dag_request_sums(xtime_t start_time, xtime_t end_time, struct xdag_storage_sum sums[16])
 {
 	return do_request(XDAG_MESSAGE_SUMS_REQUEST, start_time, end_time, sums, 0);
 }
 
 /* sends a new block to network */
-int xdag_send_new_block(struct xdag_block *b)
+int dag_send_new_block(struct xdag_block *b)
 {
 	if(!g_is_miner) {
 		dnet_send_xdag_packet(b, (void*)(uintptr_t)NEW_BLOCK_TTL);
@@ -425,7 +425,7 @@ int xdag_send_packet(struct xdag_block *b, void *conn)
 }
 
 /* requests a block by hash from another host */
-int xdag_request_block(xdag_hash_t hash, void *conn)
+int dag_request_block(xdag_hash_t hash, void *conn)
 {
 	struct xdag_block b;
 
@@ -449,19 +449,19 @@ int xdag_request_block(xdag_hash_t hash, void *conn)
 }
 
 /* see dnet_user_crypt_action */
-int xdag_user_crypt_action(unsigned *data, unsigned long long data_id, unsigned size, int action)
+int dag_user_crypt_action(unsigned *data, unsigned long long data_id, unsigned size, int action)
 {
 	return dnet_user_crypt_action(data, data_id, size, action);
 }
 
 /* thread to change reply_id_private after REPLY_ID_PVT_TTL */
-static void *xdag_update_rip_thread(void *arg)
+static void *dag_update_rip_thread(void *arg)
 {
 	time_t last_change_time = 0;
 	while(1) {
 		if (time(NULL) - last_change_time > REPLY_ID_PVT_TTL) {
 			time(&last_change_time);
-			xdag_generate_random_array(&reply_id_private, sizeof(uint64_t));
+			dag_generate_random_array(&reply_id_private, sizeof(uint64_t));
 		}
 		sleep(60);
 	}

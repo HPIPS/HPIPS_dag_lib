@@ -15,7 +15,7 @@ extern time_t g_dag_xfer_last;
 extern int dag_do_xfer(void *outv, const char *amount, const char *address, const char *remark, int isGui);
 extern void dagSetCountMiningTread(int miningThreadsCount);
 extern double dagGetHashRate(void);
-extern long double hashrate(xdag_diff_t *diff);
+extern long double hashrate(dag_diff_t *diff);
 extern const char *get_state(void);
 
 #ifdef __cplusplus
@@ -35,9 +35,9 @@ struct xfer_callback_data {
 
 void startCommandProcessing(int transportFlags);
 int xdag_command(char *cmd, FILE *out);
-void xdag_log_xfer(xdag_hash_t from, xdag_hash_t to, xdag_amount_t amount);
+void dag_log_xfer(dag_hash_t from, dag_hash_t to, xdag_amount_t amount);
 int out_balances(void);
-int xdag_show_state(xdag_hash_t hash);
+int dag_show_state(xdag_hash_t hash);
 
 int xfer_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, int n_our_key);
 

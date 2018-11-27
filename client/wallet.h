@@ -5,29 +5,29 @@
 
 #include "block.h"
 
-struct xdag_public_key {
+struct dag_public_key {
 	void *key;
-	uint64_t *pub; /* lowest bit contains parity */
+	uint64_t *pub; /* 最低比特包含奇偶校验 */
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 	
-/* initializes a wallet */
-extern int xdag_wallet_init(void);
+/* 初始化钱包 */
+extern int dag_wallet_init(void);
 
 /* 生成一个新的关键字并设置为默认值，返回其索引 */
 extern int dag_wallet_new_key(void);
 
-/* returns a default key, the index of the default key is written to *n_key */
-extern struct xdag_public_key *xdag_wallet_default_key(int *n_key);
+/* 返回默认键，默认键的索引写入*NYKEY  */
+extern struct dag_public_key *dag_wallet_default_key(int *n_key);
 
-/* returns an array of our keys */
-extern struct xdag_public_key *xdag_wallet_our_keys(int *pnkeys);
+/* 返回密钥的数组 */
+extern struct dag_public_key *dag_wallet_our_keys(int *pnkeys);
 
-/* completes work with wallet */
-extern void xdag_wallet_finish(void);
+/* 用钱包完成工作 */
+extern void dag_wallet_finish(void);
 
 #ifdef __cplusplus
 };

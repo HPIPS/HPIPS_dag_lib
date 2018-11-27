@@ -69,6 +69,27 @@
     <ClInclude Include="..\..\client\sync.h">
       <Filter>cilent</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\client\terminal.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\time.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\transport.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\types.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\wallet.h">
+      <Filter>cilent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\http\http.h">
+      <Filter>cilent\http</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\http\url.h">
+      <Filter>cilent\http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c">
@@ -109,6 +130,24 @@
     </ClCompile>
     <ClCompile Include="..\..\client\sync.c">
       <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\terminal.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\time.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\transport.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\wallet.c">
+      <Filter>cilent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\http\http.c">
+      <Filter>cilent\http</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\http\url.c">
+      <Filter>cilent\http</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

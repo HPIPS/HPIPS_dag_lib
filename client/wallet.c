@@ -25,7 +25,7 @@ static struct xdag_public_key *keys_arr = 0;
 static pthread_mutex_t wallet_mutex = PTHREAD_MUTEX_INITIALIZER;
 int nkeys = 0, maxnkeys = 0;
 
-static int add_key(xdag_hash_t priv)
+static int add_key(dag_hash_t priv)
 {
 	struct key_internal *k = malloc(sizeof(struct key_internal));
 
@@ -34,22 +34,22 @@ static int add_key(xdag_hash_t priv)
 	pthread_mutex_lock(&wallet_mutex);
 
 	if (priv) {
-		memcpy(k->priv, priv, sizeof(xdag_hash_t));
+		memcpy(k->priv, priv, sizeof(dag_hash_t));
 		k->key = xdag_private_to_key(k->priv, k->pub, &k->pub_bit);
 	} else {
 		FILE *f;
-		uint32_t priv32[sizeof(xdag_hash_t) / sizeof(uint32_t)];
+		uint32_t priv32[sizeof(dag_hash_t) / sizeof(uint32_t)];
 
 		k->key = xdag_create_key(k->priv, k->pub, &k->pub_bit);
 		
 		f = xdag_open_file(WALLET_FILE, "ab");
 		if (!f) goto fail;
 		
-		memcpy(priv32, k->priv, sizeof(xdag_hash_t));
+		memcpy(priv32, k->priv, sizeof(dag_hash_t));
 		
-		xdag_user_crypt_action(priv32, nkeys, sizeof(xdag_hash_t) / sizeof(uint32_t), 1);
+		xdag_user_crypt_action(priv32, nkeys, sizeof(dag_hash_t) / sizeof(uint32_t), 1);
 		
-		if (fwrite(priv32, sizeof(xdag_hash_t), 1, f) != 1) {
+		if (fwrite(priv32, sizeof(dag_hash_t), 1, f) != 1) {
 			xdag_close_file(f);
 			goto fail;
 		}
@@ -63,8 +63,8 @@ static int add_key(xdag_hash_t priv)
 	def_key = k;
 	
 	if (nkeys == maxnkeys) {
-		struct xdag_public_key *newarr = (struct xdag_public_key *)
-			realloc(keys_arr, ((maxnkeys | 0xff) + 1) * sizeof(struct xdag_public_key));
+		struct dag_public_key *newarr = (struct dag_public_key *)
+			realloc(keys_arr, ((maxnkeys | 0xff) + 1) * sizeof(struct dag_public_key));
 		if (!newarr) goto fail;
 		
 		maxnkeys |= 0xff;
@@ -76,7 +76,7 @@ static int add_key(xdag_hash_t priv)
 	keys_arr[nkeys].pub = (uint64_t*)((uintptr_t)&k->pub | k->pub_bit);
 
 	xdag_debug("Key %2d: priv=[%s] pub=[%02x:%s]", nkeys,
-					xdag_log_hash(k->priv), 0x02 + k->pub_bit,  xdag_log_hash(k->pub));
+					dag_log_hash(k->priv), 0x02 + k->pub_bit,  dag_log_hash(k->pub));
 	
 	nkeys++;
 	
@@ -90,7 +90,7 @@ fail:
 	return -1;
 }
 
-/* generates a new key and sets is as defauld, returns its index */
+/* 生成一个新的关键字并设置为默认值，返回其索引 */
 int dag_wallet_new_key(void)
 {
 	int res = add_key(0);
@@ -101,40 +101,40 @@ int dag_wallet_new_key(void)
 	return res;
 }
 
-/* initializes a wallet */
-int xdag_wallet_init(void)
+/* 初始化钱包 */
+int dag_wallet_init(void)
 {
-	uint32_t priv32[sizeof(xdag_hash_t) / sizeof(uint32_t)];
-	xdag_hash_t priv;
-	FILE *f = xdag_open_file(WALLET_FILE, "rb");
+	uint32_t priv32[sizeof(dag_hash_t) / sizeof(uint32_t)];
+	dag_hash_t priv;
+	FILE *f = dag_open_file(WALLET_FILE, "rb");
 	int n;
 
 	if (!f) {
 		if (add_key(0)) return -1;
 		
-		f = xdag_open_file(WALLET_FILE, "r");
+		f = dag_open_file(WALLET_FILE, "r");
 		if (!f) return -1;
 		
-		fread(priv32, sizeof(xdag_hash_t), 1, f);
+		fread(priv32, sizeof(dag_hash_t), 1, f);
 		
 		n = 1;
 	} else {
 		n = 0;
 	}
 
-	while (fread(priv32, sizeof(xdag_hash_t), 1, f) == 1) {
-		xdag_user_crypt_action(priv32, n++, sizeof(xdag_hash_t) / sizeof(uint32_t), 2);
-		memcpy(priv, priv32, sizeof(xdag_hash_t));
+	while (fread(priv32, sizeof(dag_hash_t), 1, f) == 1) {
+		dag_user_crypt_action(priv32, n++, sizeof(dag_hash_t) / sizeof(uint32_t), 2);
+		memcpy(priv, priv32, sizeof(dag_hash_t));
 		add_key(priv);
 	}
 
-	xdag_close_file(f);
+	dag_close_file(f);
 	
 	return 0;
 }
 
-/* returns a default key, the index of the default key is written to *n_key */
-struct xdag_public_key *xdag_wallet_default_key(int *n_key)
+/* 返回默认键，默认键的索引写入*NYKEY*/
+struct dag_public_key *dag_wallet_default_key(int *n_key)
 {
 	if (nkeys) {
 		if (n_key) {
@@ -146,16 +146,16 @@ struct xdag_public_key *xdag_wallet_default_key(int *n_key)
 	return 0;
 }
 
-/* returns an array of our keys */
-struct xdag_public_key *xdag_wallet_our_keys(int *pnkeys)
+/* 返回密钥的数组 */
+struct dag_public_key *dag_wallet_our_keys(int *pnkeys)
 {
 	*pnkeys = nkeys;
 
 	return keys_arr;
 }
 
-/* completes work with wallet */
-void xdag_wallet_finish(void)
+/* 用钱包完成工作 */
+void dag_wallet_finish(void)
 {
 	pthread_mutex_lock(&wallet_mutex);
 }
