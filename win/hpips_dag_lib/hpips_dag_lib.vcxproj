@@ -181,6 +181,12 @@
     <ClInclude Include="..\..\client\utils\log.h" />
     <ClInclude Include="..\..\client\utils\utils.h" />
     <ClInclude Include="..\..\client\wallet.h" />
+    <ClInclude Include="..\..\dnet\dnet_crypt.h" />
+    <ClInclude Include="..\..\dnet\dnet_history.h" />
+    <ClInclude Include="..\..\dnet\dnet_main.h" />
+    <ClInclude Include="..\..\dnet\dnet_packet.h" />
+    <ClInclude Include="..\..\dnet\system.h" />
+    <ClInclude Include="..\..\dus\programs\dar\source\include\crc.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c" />
@@ -217,6 +223,12 @@
     <ClCompile Include="..\..\client\utils\log.c" />
     <ClCompile Include="..\..\client\utils\utils.c" />
     <ClCompile Include="..\..\client\wallet.c" />
+    <ClCompile Include="..\..\dnet\dnet_crypt.c" />
+    <ClCompile Include="..\..\dnet\dnet_xdag.c" />
+    <ClCompile Include="..\..\dus\programs\dar\source\lib\crc_c.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\dnet\dnet_keys.bin" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

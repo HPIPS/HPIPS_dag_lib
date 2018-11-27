@@ -22,6 +22,15 @@
     <Filter Include="cilent\utils">
       <UniqueIdentifier>{d8ca9afa-a66d-4c27-81da-84134ba5c29f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dnet">
+      <UniqueIdentifier>{23506746-00c0-4539-ad34-9577cfd4c287}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dus">
+      <UniqueIdentifier>{acc63929-e775-46df-99ff-cbfca59270e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dus\dar">
+      <UniqueIdentifier>{04af13d3-6bd3-47f4-8c40-d1e63f81409f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\client\address.h">
@@ -138,6 +147,24 @@
     <ClInclude Include="..\..\client\utils\utils.h">
       <Filter>cilent\utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\dnet\dnet_crypt.h">
+      <Filter>dnet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dnet\dnet_history.h">
+      <Filter>dnet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dnet\dnet_main.h">
+      <Filter>dnet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dnet\dnet_packet.h">
+      <Filter>dnet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dnet\system.h">
+      <Filter>dnet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dus\programs\dar\source\include\crc.h">
+      <Filter>dus\dar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c">
@@ -242,5 +269,19 @@
     <ClCompile Include="..\..\client\utils\utils.c">
       <Filter>cilent\utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\dnet\dnet_crypt.c">
+      <Filter>dnet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dnet\dnet_xdag.c">
+      <Filter>dnet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dus\programs\dar\source\lib\crc_c.c">
+      <Filter>dus\dar</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\dnet\dnet_keys.bin">
+      <Filter>dnet</Filter>
+    </None>
   </ItemGroup>
 </Project>
