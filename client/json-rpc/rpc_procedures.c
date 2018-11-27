@@ -638,7 +638,7 @@ cJSON * method_dag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *i
 #if REMARK_ENABLED
 			if(strlen(remark)>0) {
 				xfer.hasRemark = 1;
-				memcpy(xfer.remark, remark, sizeof(xdag_remark_t));
+				memcpy(xfer.remark, remark, sizeof(dag_remark_t));
 			}
 #endif
 

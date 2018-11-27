@@ -48,12 +48,12 @@ static void *dag_send_thread(void *arg)
 	struct xdag_send_data *d = (struct xdag_send_data *)arg;
 
 	d->b.field[0].time = xdag_load_blocks(d->b.field[0].time, d->b.field[0].end_time, d->connection, &dnet_send_xdag_packet);
-	d->b.field[0].type = XDAG_FIELD_NONCE | XDAG_MESSAGE_BLOCKS_REPLY << 4;
+	d->b.field[0].type = DAG_FIELD_NONCE | DAG_MESSAGE_BLOCKS_REPLY << 4;
 
 	memcpy(&d->b.field[2], &g_dag_stats, sizeof(g_dag_stats));
 	add_main_timestamp((struct dag_stats*)&d->b.field[2]);
 
-	xdag_netdb_send((uint8_t*)&d->b.field[2] + sizeof(struct dag_stats),
+	dag_netdb_send((uint8_t*)&d->b.field[2] + sizeof(struct dag_stats),
 						 14 * sizeof(struct dag_field) - sizeof(struct dag_stats));
 	
 	dnet_send_xdag_packet(&d->b, d->connection);

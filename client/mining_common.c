@@ -23,7 +23,7 @@ pthread_mutex_t g_share_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 struct dfslib_crypt *g_crypt;
 
-/* poiter to mutex for optimal share  */
+/* 互斥优化共享   */
 void *g_ptr_share_mutex = &g_share_mutex;
 
 static int crypt_start(void)
@@ -48,9 +48,9 @@ static int crypt_start(void)
 	return 0;
 }
 
-/* initialization of the pool (pool_on = 1) or connecting the miner to pool (pool_on = 0; pool_arg - pool parameters ip:port[:CFG];
-miner_addr - address of the miner, if specified */
-int xdag_initialize_mining(const char *pool_arg, const char *miner_address)
+/* 池的初始化（g_xdag_pool=1）或将挖掘器连接到池（g_xdag_pool=0；pool_arg-pool参数ip:port[:CFG]；
+矿工地址-矿工，如果指定*/
+int dag_initialize_mining(const char *pool_arg, const char *miner_address)
 {
 	g_miner_address = miner_address;
 

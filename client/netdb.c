@@ -398,7 +398,7 @@ int dag_netdb_init(const char *our_host_str, int npairs, const char **addr_port_
 	return 0;
 }
 
-/* writes data to the array for transmission to another host */
+/* 将数据写入数组以传输到另一个主机 */
 unsigned dag_netdb_send(uint8_t *data, unsigned len)
 {
 	unsigned i;

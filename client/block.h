@@ -58,7 +58,7 @@ enum bi_flags {
 #error Your system hasn't exactly 8 bit for a char, it won't run.
 #endif
 
-typedef uint8_t xdag_remark_t[32];
+typedef uint8_t dag_remark_t[32];
 
 struct dag_field {
 	union {
@@ -69,15 +69,15 @@ struct dag_field {
 					uint64_t type;
 					xtime_t time;
 				};
-				xdag_hashlow_t hash;
+				dag_hashlow_t hash;
 			};
 			union {
-				xdag_amount_t amount;
+				dag_amount_t amount;
 				xtime_t end_time;
 			};
 		};
-		xdag_hash_t data;
-		xdag_remark_t remark;
+		dag_hash_t data;
+		dag_remark_t remark;
 	};
 };
 
@@ -100,35 +100,35 @@ extern int dag_blocks_start(int is_pool, int mining_threads_count, int miner_add
 extern int dag_add_block(struct xdag_block *b);
 
 // 返回我们的初始块。如果没有块，则创建第一个块。
-extern int dag_get_our_block(xdag_hash_t hash);
+extern int dag_get_our_block(dag_hash_t hash);
 
 // 调用原始块的回调
 extern int dag_traverse_our_blocks(void *data,
-	int (*callback)(void*, xdag_hash_t, xdag_amount_t, xtime_t, int));
+	int (*callback)(void*, dag_hash_t, dag_amount_t, xtime_t, int));
 
 // 调用所有块的回调
-extern int dag_traverse_all_blocks(void *data, int (*callback)(void *data, xdag_hash_t hash,
-	xdag_amount_t amount, xtime_t time));
+extern int dag_traverse_all_blocks(void *data, int (*callback)(void *data, dag_hash_t hash,
+	dag_amount_t amount, xtime_t time));
 
 // 创建新的块
 extern struct xdag_block* dag_create_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
-	xdag_amount_t fee, xtime_t send_time, xdag_hash_t block_hash_result);
+	dag_amount_t fee, xtime_t send_time, dag_hash_t block_hash_result);
 
 // 创建并发布一个块
 extern int dag_create_and_send_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
-	xdag_amount_t fee, xtime_t send_time, xdag_hash_t block_hash_result);
+	dag_amount_t fee, xtime_t send_time, dag_hash_t block_hash_result);
 
 // 返回指定地址的余额如果返回只是零
-extern xdag_amount_t dag_get_balance(xdag_hash_t hash);
+extern dag_amount_t dag_get_balance(dag_hash_t hash);
 
 // 设置指定地址的当前余额
-extern int dag_set_balance(xdag_hash_t hash, xdag_amount_t balance);
+extern int dag_set_balance(dag_hash_t hash, dag_amount_t balance);
 
 // 按指定的主要块数计算当前供应量
-extern xdag_amount_t dag_get_supply(uint64_t nmain);
+extern dag_amount_t dag_get_supply(uint64_t nmain);
 
 // 通过哈希返回块的位置和时间; 如果block是extra并且block！= 0也返回整个块
-extern int64_t dag_get_block_pos(const xdag_hash_t hash, xtime_t *time, struct xdag_block *block);
+extern int64_t dag_get_block_pos(const dag_hash_t hash, xtime_t *time, struct dag_block *block);
 
 // 返回状态信息字符串
 extern const char* dag_get_block_state_info(uint8_t flag);
@@ -140,13 +140,13 @@ extern xtime_t dag_main_time(void);
 extern xtime_t dag_start_main_time(void);
 
 // 通过块的散列返回一些键，如果块不是我们的，则返回-1
-extern int dag_get_key(xdag_hash_t hash);
+extern int dag_get_key(dag_hash_t hash);
 
 // 块处理的重新初始化
 extern int dag_blocks_reset(void);
 
 // 打印有关块的详细信息
-extern int dag_print_block_info(xdag_hash_t hash, FILE *out);
+extern int dag_print_block_info(dag_hash_t hash, FILE *out);
 
 // 打印N个最后主要块的列表
 extern void dag_list_main_blocks(int count, int print_only_addresses, FILE *out);
@@ -155,7 +155,7 @@ extern void dag_list_main_blocks(int count, int print_only_addresses, FILE *out)
 extern void dag_list_mined_blocks(int count, int include_non_payed, FILE *out);
 
 // 获取指定地址的所有交易，并返回交易总数
-extern int dag_get_transactions(xdag_hash_t hash, void *data, int (*callback)(void*, int, int, xdag_hash_t, xdag_amount_t, xtime_t, const char*));
+extern int dag_get_transactions(dag_hash_t hash, void *data, int (*callback)(void*, int, int, dag_hash_t, dag_amount_t, xtime_t, const char*));
 
 // 打印orphan块
 void dag_list_orphan_blocks(int, FILE*);
@@ -164,7 +164,7 @@ void dag_list_orphan_blocks(int, FILE*);
 void dag_block_finish(void);
 	
 // 获取指定地址的块信息
-extern int dag_get_block_info(xdag_hash_t, void *, int (*)(void*, int, xdag_hash_t, xdag_amount_t, xtime_t, const char*),
+extern int dag_get_block_info(xdag_hash_t, void *, int (*)(void*, int, dag_hash_t, dag_amount_t, xtime_t, const char*),
 							void *, int (*)(void*, const char *, xdag_hash_t, xdag_amount_t));
 
 #ifdef __cplusplus

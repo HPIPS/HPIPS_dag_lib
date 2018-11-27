@@ -10,7 +10,7 @@
 #include "storage.h"
 
 enum xdag_transport_flags {
-	XDAG_DAEMON = 1,
+	DAG_DAEMON = 1,
 };
 
 #ifdef __cplusplus

@@ -37,9 +37,9 @@ extern pthread_mutex_t g_share_mutex;
 
 extern struct dfslib_crypt *g_crypt;
 
-/* initialization of the pool (g_xdag_pool = 1) or connecting the miner to pool (g_xdag_pool = 0; pool_arg - pool parameters ip:port[:CFG];
-miner_addr - address of the miner, if specified */
-extern int xdag_initialize_mining(const char *pool_arg, const char *miner_address);
+/* 池的初始化（g_xdag_pool=1）或将挖掘器连接到池（g_xdag_pool=0；pool_arg-pool参数ip:port[:CFG]；
+矿工地址-矿工，如果指定*/
+extern int dag_initialize_mining(const char *pool_arg, const char *miner_address);
 
 //函数为任务设置最小份额
 extern void dag_set_min_share(struct dag_pool_task *task, dag_hash_t last, dag_hash_t hash);

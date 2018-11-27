@@ -128,9 +128,9 @@ struct payment_data {
 	int reward_index;
 };
 
-xdag_hash_t g_xdag_mined_hashes[CONFIRMATIONS_COUNT];
-xdag_hash_t g_xdag_mined_nonce[CONFIRMATIONS_COUNT];
-xdag_remark_t g_pool_tag = {0};
+dag_hash_t g_xdag_mined_hashes[CONFIRMATIONS_COUNT];
+dag_hash_t g_xdag_mined_nonce[CONFIRMATIONS_COUNT];
+dag_remark_t g_pool_tag = {0};
 int g_pool_has_tag = 0;
 
 static uint32_t g_max_connections_count = START_MINERS_COUNT, g_max_miner_ip_count = START_MINERS_IP_COUNT;

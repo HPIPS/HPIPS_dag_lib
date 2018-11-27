@@ -25,12 +25,12 @@ extern const char *get_state(void);
 #define XFER_MAX_IN				11
 
 struct xfer_callback_data {
-	struct xdag_field fields[XFER_MAX_IN + 1];
+	struct dag_field fields[XFER_MAX_IN + 1];
 	int keys[XFER_MAX_IN + 1];
 	dag_amount_t todo, done, remains;
 	int fieldsCount, keysCount, outsig, hasRemark;
 	dag_hash_t transactionBlockHash;
-	xdag_remark_t remark;
+	dag_remark_t remark;
 };
 
 void startCommandProcessing(int transportFlags);

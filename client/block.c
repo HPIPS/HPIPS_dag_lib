@@ -127,8 +127,8 @@ static int32_t find_and_verify_signature_out(struct xdag_block*, struct xdag_pub
 int do_mining(struct xdag_block *block, struct block_internal **pretop, xtime_t send_time);
 void remove_orphan(struct block_internal*,int);
 void add_orphan(struct block_internal*,struct xdag_block*);
-static inline size_t remark_acceptance(xdag_remark_t);
-static int add_remark_bi(struct block_internal*, xdag_remark_t);
+static inline size_t remark_acceptance(dag_remark_t);
+static int add_remark_bi(struct block_internal*, dag_remark_t);
 static void add_backref(struct block_internal*, struct block_internal*);
 static inline int get_nfield(struct xdag_block*, int);
 static inline const char* get_remark(struct block_internal*);
@@ -961,11 +961,11 @@ struct xdag_block* dag_create_block(struct xdag_field *fields, int inputsCount, 
 	}
 
 	if(hasRemark) {
-		setfld(XDAG_FIELD_REMARK, fields + inputsCount + outputsCount, xdag_remark_t);
+		setfld(XDAG_FIELD_REMARK, fields + inputsCount + outputsCount, dag_remark_t);
 	}
 
 	if(mining && has_pool_tag) {
-		setfld(XDAG_FIELD_REMARK, g_pool_tag, xdag_remark_t);
+		setfld(XDAG_FIELD_REMARK, g_pool_tag, dag_remark_t);
 	}
 
 	for (j = 0; j < nkeysnum; ++j) {
@@ -2022,10 +2022,10 @@ int dag_get_block_info(xdag_hash_t hash, void *info, int (*info_callback)(void*,
 	return 0;
 }
 
-static inline size_t remark_acceptance(xdag_remark_t origin)
+static inline size_t remark_acceptance(dag_remark_t origin)
 {
 	char remark_buf[33] = {0};
-	memcpy(remark_buf, origin, sizeof(xdag_remark_t));
+	memcpy(remark_buf, origin, sizeof(dag_remark_t));
 	size_t size = validate_remark(remark_buf);
 	if(size){
 		return size;
@@ -2033,7 +2033,7 @@ static inline size_t remark_acceptance(xdag_remark_t origin)
 	return 0;
 }
 
-static int add_remark_bi(struct block_internal* bi, xdag_remark_t strbuf)
+static int add_remark_bi(struct block_internal* bi, dag_remark_t strbuf)
 {
 	size_t size = remark_acceptance(strbuf);
 	char *remark_tmp = xdag_malloc(size + 1);

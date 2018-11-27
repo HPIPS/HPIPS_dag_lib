@@ -263,20 +263,22 @@ int dag_init(int argc, char **argv, int isGui)
 	dag_mess("Initializing addresses...");
 	if (dag_address_init()) return -1;
 
+	//rpc 初始化
 	if(is_rpc) {
 		xdag_mess("Initializing RPC service...");
 		if(!!dag_rpc_service_start(rpc_port)) return -1;
 	}
-	xdag_mess("Starting blocks engine...");
-	if (xdag_blocks_start(g_is_pool, mining_threads_count, !!miner_address)) return -1;
+	dag_mess("Starting blocks engine...");
+	//常规块处理
+	if (dag_blocks_start(g_is_pool, mining_threads_count, !!miner_address)) return -1;
 
 	if(!g_disable_mining) {
-		xdag_mess("Starting pool engine...");
-		if(xdag_initialize_mining(pool_arg, miner_address)) return -1;
+		dag_mess("Starting pool engine...");
+		if(dag_initialize_mining(pool_arg, miner_address)) return -1;
 	}
 
 	if (!isGui) {
-		if (is_pool || (transport_flags & XDAG_DAEMON) > 0) {
+		if (is_pool || (transport_flags & DAG_DAEMON) > 0) {
 			xdag_mess("Starting terminal server...");
 			pthread_t th;
 			const int err = pthread_create(&th, 0, &terminal_thread, 0);
