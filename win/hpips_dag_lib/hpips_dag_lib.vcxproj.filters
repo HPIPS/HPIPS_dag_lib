@@ -27,9 +27,6 @@
     <ClInclude Include="..\..\client\address.h">
       <Filter>cilent</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\client\block.h">
-      <Filter>cilent</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\client\commands.h">
       <Filter>cilent</Filter>
     </ClInclude>
@@ -90,6 +87,27 @@
     <ClInclude Include="..\..\client\http\url.h">
       <Filter>cilent\http</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\client\json-rpc\cJSON.h">
+      <Filter>cilent\json-rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\json-rpc\cJSON_Utils.h">
+      <Filter>cilent\json-rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\json-rpc\rpc_commands.h">
+      <Filter>cilent\json-rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\json-rpc\rpc_procedure.h">
+      <Filter>cilent\json-rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\json-rpc\rpc_procedures.h">
+      <Filter>cilent\json-rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\json-rpc\rpc_service.h">
+      <Filter>cilent\json-rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\json-rpc\rpc_wrapper.h">
+      <Filter>cilent\json-rpc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c">
@@ -148,6 +166,27 @@
     </ClCompile>
     <ClCompile Include="..\..\client\http\url.c">
       <Filter>cilent\http</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\json-rpc\cJSON.c">
+      <Filter>cilent\json-rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\json-rpc\cJSON_Utils.c">
+      <Filter>cilent\json-rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\json-rpc\rpc_commands.c">
+      <Filter>cilent\json-rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\json-rpc\rpc_procedure.c">
+      <Filter>cilent\json-rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\json-rpc\rpc_procedures.c">
+      <Filter>cilent\json-rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\json-rpc\rpc_service.c">
+      <Filter>cilent\json-rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\json-rpc\rpc_wrapper.c">
+      <Filter>cilent\json-rpc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

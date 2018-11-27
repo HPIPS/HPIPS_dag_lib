@@ -56,7 +56,7 @@ extern int dag_send_packet(struct xdag_block *b, void *conn);
 extern int dag_user_crypt_action(unsigned *data, unsigned long long data_id, unsigned size, int action);
 
 extern pthread_mutex_t g_transport_mutex;
-extern time_t g_xdag_last_received;
+extern time_t g_dag_last_received;
 	
 #ifdef __cplusplus
 };

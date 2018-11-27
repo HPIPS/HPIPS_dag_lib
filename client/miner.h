@@ -10,22 +10,22 @@
 extern "C" {
 #endif
 	
-/* a number of mining threads */
-extern int g_xdag_mining_threads;
+/* 一些挖掘线程 */
+extern int g_dag_mining_threads;
 
-/* changes the number of mining threads */
-extern int xdag_mining_start(int n_mining_threads);
+/* 更改挖掘线程的数量 */
+extern int dag_mining_start(int n_mining_threads);
 
-/* initialization of connection the miner to pool */
-extern int xdag_initialize_miner(const char *pool_address);
+/* 连接矿工到池的初始化 */
+extern int dag_initialize_miner(const char *pool_address);
 
 extern void *miner_net_thread(void *arg);
 
-/* send block to network via pool */
-extern int xdag_send_block_via_pool(struct xdag_block *block);
+/* 通过池向网络发送块 */
+extern int dag_send_block_via_pool(struct xdag_block *block);
 
-/* picks random pool from the list of pools */
-extern int xdag_pick_pool(char *pool_address);
+/* 从池列表中选择随机池 */
+extern int dag_pick_pool(char *pool_address);
 
 #ifdef __cplusplus
 };

@@ -28,14 +28,14 @@ extern "C"
 {
 #endif
 
-/* project version */
+/* 项目版本 */
 #define CJSON_VERSION_MAJOR 1
 #define CJSON_VERSION_MINOR 7
 #define CJSON_VERSION_PATCH 5
 
 #include <stddef.h>
 
-/* cJSON Types: */
+/* CJSON类型： */
 #define cJSON_Invalid (0)
 #define cJSON_False  (1 << 0)
 #define cJSON_True   (1 << 1)
@@ -49,16 +49,16 @@ extern "C"
 #define cJSON_IsReference 256
 #define cJSON_StringIsConst 512
 
-/* The cJSON structure: */
+/* CJSON结构： */
 typedef struct cJSON
 {
     /* next/prev allow you to walk array/object chains. Alternatively, use GetArraySize/GetArrayItem/GetObjectItem */
     struct cJSON *next;
     struct cJSON *prev;
-    /* An array or object item will have a child pointer pointing to a chain of the items in the array/object. */
+    /* 数组或对象项将具有指向数组/对象中的项链的子指针。 */
     struct cJSON *child;
 
-    /* The type of the item, as above. */
+    /* 这类型的问题，作为以上。  */
     int type;
 
     /* The item's string, if type==cJSON_String  and type == cJSON_Raw */

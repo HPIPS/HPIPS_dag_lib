@@ -56,8 +56,8 @@ static int can_send_share(time_t current_time, time_t task_time, time_t share_ti
 	return can_send;
 }
 
-/* initialization of connection the miner to pool */
-extern int xdag_initialize_miner(const char *pool_address)
+/* 连接矿工到池的初始化  */
+extern int dag_initialize_miner(const char *pool_address)
 {
 	pthread_t th;
 
@@ -79,12 +79,12 @@ extern int xdag_initialize_miner(const char *pool_address)
 	return 0;
 }
 
-static int send_to_pool(struct xdag_field *fld, int nfld)
+static int send_to_pool(struct dag_field *fld, int nfld)
 {
-	struct xdag_field f[XDAG_BLOCK_FIELDS];
-	xdag_hash_t h;
+	struct dag_field f[XDAG_BLOCK_FIELDS];
+	dag_hash_t h;
 	struct miner *m = &g_local_miner;
-	int todo = nfld * sizeof(struct xdag_field), done = 0;
+	int todo = nfld * sizeof(struct dag_field), done = 0;
 
 	if(g_socket < 0) {
 		return -1;
@@ -92,14 +92,14 @@ static int send_to_pool(struct xdag_field *fld, int nfld)
 
 	memcpy(f, fld, todo);
 
-	if(nfld == XDAG_BLOCK_FIELDS) {
+	if(nfld == DAG_BLOCK_FIELDS) {
 		f[0].transport_header = 0;
 
-		xdag_hash(f, sizeof(struct xdag_block), h);
+		dag_hash(f, sizeof(struct dag_block), h);
 
 		f[0].transport_header = BLOCK_HEADER_WORD;
 
-		uint32_t crc = crc_of_array((uint8_t*)f, sizeof(struct xdag_block));
+		uint32_t crc = crc_of_array((uint8_t*)f, sizeof(struct dag_block));
 
 		f[0].transport_header |= (uint64_t)crc << 32;
 	}
@@ -131,8 +131,8 @@ static int send_to_pool(struct xdag_field *fld, int nfld)
 		todo -= res;
 	}
 
-	if(nfld == XDAG_BLOCK_FIELDS) {
-		xdag_info("Sent  : %016llx%016llx%016llx%016llx t=%llx res=%d",
+	if(nfld == DAG_BLOCK_FIELDS) {
+		dag_info("Sent  : %016llx%016llx%016llx%016llx t=%llx res=%d",
 			h[3], h[2], h[1], h[0], fld[0].time, 0);
 	}
 
@@ -141,9 +141,9 @@ static int send_to_pool(struct xdag_field *fld, int nfld)
 
 void *miner_net_thread(void *arg)
 {
-	struct xdag_block b;
-	struct xdag_field data[2];
-	xdag_hash_t hash;
+	struct dag_block b;
+	struct dag_field data[2];
+	dag_hash_t hash;
 	const char *pool_address = (const char*)arg;
 	const char *mess = NULL;
 	int res = 0;
@@ -158,12 +158,12 @@ begin:
 	m->nfield_in = m->nfield_out = 0;
 
 	int ndata = 0;
-	int maxndata = sizeof(struct xdag_field);
+	int maxndata = sizeof(struct dag_field);
 	time_t share_time = 0;
 	time_t task_time = 0;
 
 	if(g_miner_address) {
-		if(xdag_address2hash(g_miner_address, hash)) {
+		if(dag_address2hash(g_miner_address, hash)) {
 			mess = "incorrect miner address";
 			goto err;
 		}
@@ -188,13 +188,13 @@ begin:
 	}
 
 	pthread_mutex_lock(&g_miner_mutex);
-	g_socket = xdag_connect_pool(pool_address, &mess);
+	g_socket = dag_connect_pool(pool_address, &mess);
 	if(g_socket == INVALID_SOCKET) {
 		pthread_mutex_unlock(&g_miner_mutex);
 		goto err;
 	}
 
-	if(send_to_pool(b.field, XDAG_BLOCK_FIELDS) < 0) {
+	if(send_to_pool(b.field, DAG_BLOCK_FIELDS) < 0) {
 		mess = "socket is closed";
 		pthread_mutex_unlock(&g_miner_mutex);
 		goto err;
@@ -245,49 +245,49 @@ begin:
 
 				dfslib_uncrypt_array(g_crypt, (uint32_t*)last->data, DATA_SIZE, m->nfield_in++);
 
-				if(!memcmp(last->data, hash, sizeof(xdag_hashlow_t))) {
-					xdag_set_balance(hash, last->amount);
+				if(!memcmp(last->data, hash, sizeof(dag_hashlow_t))) {
+					dag_set_balance(hash, last->amount);
 
 					pthread_mutex_lock(&g_transport_mutex);
-					g_xdag_last_received = current_time;
+					g_dag_last_received = current_time;
 					pthread_mutex_unlock(&g_transport_mutex);
 
 					ndata = 0;
 
-					maxndata = sizeof(struct xdag_field);
-				} else if(maxndata == 2 * sizeof(struct xdag_field)) {
-					const uint64_t task_index = g_xdag_pool_task_index + 1;
-					struct xdag_pool_task *task = &g_xdag_pool_task[task_index & 1];
+					maxndata = sizeof(struct dag_field);
+				} else if(maxndata == 2 * sizeof(struct dag_field)) {
+					const uint64_t task_index = g_dag_pool_task_index + 1;
+					struct xdag_pool_task *task = &g_dag_pool_task[task_index & 1];
 
 					task->task_time = xdag_main_time();
 					xdag_hash_set_state(task->ctx, data[0].data,
-						sizeof(struct xdag_block) - 2 * sizeof(struct xdag_field));
-					xdag_hash_update(task->ctx, data[1].data, sizeof(struct xdag_field));
-					xdag_hash_update(task->ctx, hash, sizeof(xdag_hashlow_t));
+						sizeof(struct dag_block) - 2 * sizeof(struct dag_field));
+					xdag_hash_update(task->ctx, data[1].data, sizeof(struct dag_field));
+					xdag_hash_update(task->ctx, hash, sizeof(dag_hashlow_t));
 
-					xdag_generate_random_array(task->nonce.data, sizeof(xdag_hash_t));
+					xdag_generate_random_array(task->nonce.data, sizeof(dag_hash_t));
 
-					memcpy(task->nonce.data, hash, sizeof(xdag_hashlow_t));
-					memcpy(task->lastfield.data, task->nonce.data, sizeof(xdag_hash_t));
+					memcpy(task->nonce.data, hash, sizeof(dag_hashlow_t));
+					memcpy(task->lastfield.data, task->nonce.data, sizeof(dag_hash_t));
 
 					xdag_hash_final(task->ctx, &task->nonce.amount, sizeof(uint64_t), task->minhash.data);
 
-					g_xdag_pool_task_index = task_index;
+					g_dag_pool_task_index = task_index;
 					task_time = time(0);
 
 					xdag_info("Task  : t=%llx N=%llu", task->task_time << 16 | 0xffff, task_index);
 
 					ndata = 0;
-					maxndata = sizeof(struct xdag_field);
+					maxndata = sizeof(struct dag_field);
 				} else {
-					maxndata = 2 * sizeof(struct xdag_field);
+					maxndata = 2 * sizeof(struct dag_field);
 				}
 			}
 		}
 
 		if(p.revents & POLLOUT) {
-			const uint64_t task_index = g_xdag_pool_task_index;
-			struct xdag_pool_task *task = &g_xdag_pool_task[task_index & 1];
+			const uint64_t task_index = g_dag_pool_task_index;
+			struct xdag_pool_task *task = &g_dag_pool_task[task_index & 1];
 			uint64_t *h = task->minhash.data;
 
 			share_time = time(0);
@@ -308,7 +308,7 @@ begin:
 	return 0;
 
 err:
-	xdag_err("Miner: %s (error %d)", mess, res);
+	dag_err("Miner: %s (error %d)", mess, res);
 
 	pthread_mutex_lock(&g_miner_mutex);
 
@@ -326,19 +326,19 @@ err:
 
 static void *mining_thread(void *arg)
 {
-	xdag_hash_t hash;
-	struct xdag_field last;
+	dag_hash_t hash;
+	struct dag_field last;
 	const int nthread = (int)(uintptr_t)arg;
 	uint64_t oldntask = 0;
 	uint64_t nonce;
 
-	while(!g_xdag_sync_on && !g_stop_mining) {
+	while(!g_dag_sync_on && !g_stop_mining) {
 		sleep(1);
 	}
 
 	while(!g_stop_mining) {
-		const uint64_t ntask = g_xdag_pool_task_index;
-		struct xdag_pool_task *task = &g_xdag_pool_task[ntask & 1];
+		const uint64_t ntask = g_dag_pool_task_index;
+		struct xdag_pool_task *task = &g_dag_pool_task[ntask & 1];
 
 		if(!ntask) {
 			sleep(1);
@@ -347,40 +347,40 @@ static void *mining_thread(void *arg)
 
 		if(ntask != oldntask) {
 			oldntask = ntask;
-			memcpy(last.data, task->nonce.data, sizeof(xdag_hash_t));
+			memcpy(last.data, task->nonce.data, sizeof(dag_hash_t));
 			nonce = last.amount + nthread;
 		}
 
 		last.amount = xdag_hash_final_multi(task->ctx, &nonce, 4096, g_xdag_mining_threads, hash);
-		g_xdag_extstats.nhashes += 4096;
+		g_dag_extstats.nhashes += 4096;
 
-		xdag_set_min_share(task, last.data, hash);
+		dag_set_min_share(task, last.data, hash);
 	}
 
 	return 0;
 }
 
-/* changes the number of mining threads */
-int xdag_mining_start(int n_mining_threads)
+/* 更改挖掘线程的数量 */
+int dag_mining_start(int n_mining_threads)
 {
 	pthread_t th;
 
-	if(n_mining_threads == g_xdag_mining_threads) {
+	if(n_mining_threads == g_dag_mining_threads) {
 
 	} else if(!n_mining_threads) {
 		g_stop_mining = 1;
-		g_xdag_mining_threads = 0;
-	} else if(!g_xdag_mining_threads) {
+		g_dag_mining_threads = 0;
+	} else if(!g_dag_mining_threads) {
 		g_stop_mining = 0;
-	} else if(g_xdag_mining_threads > n_mining_threads) {
+	} else if(g_dag_mining_threads > n_mining_threads) {
 		g_stop_mining = 1;
 		sleep(5);
 		g_stop_mining = 0;
-		g_xdag_mining_threads = 0;
+		gdag_mining_threads = 0;
 	}
 
-	while(g_xdag_mining_threads < n_mining_threads) {
-		g_xdag_mining_threads++;
+	while(g_dag_mining_threads < n_mining_threads) {
+		g_dag_mining_threads++;
 		int err = pthread_create(&th, 0, mining_thread, (void*)(uintptr_t)g_xdag_mining_threads);
 		if(err != 0) {
 			printf("create mining_thread failed, error : %s\n", strerror(err));
