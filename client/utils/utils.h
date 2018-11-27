@@ -23,11 +23,11 @@
 extern "C" {
 #endif
 
-extern void xdag_init_path(char *base);
-extern FILE* xdag_open_file(const char *path, const char *mode);
-extern void xdag_close_file(FILE *f);
-extern int xdag_file_exists(const char *path);
-extern int xdag_mkdir(const char *path);
+extern void dag_init_path(char *base);
+extern FILE* dag_open_file(const char *path, const char *mode);
+extern void dag_close_file(FILE *f);
+extern int dag_file_exists(const char *path);
+extern int dag_mkdir(const char *path);
 
 /* dead lock detector */
 
@@ -61,10 +61,10 @@ do {\
 #define XDAG_MUTEX_UNLOCK(x) pthread_mutex_unlock(&x)
 #endif
 
-void xdag_str_toupper(char *str);
-void xdag_str_tolower(char *str);
-char *xdag_basename(char *path);
-char *xdag_filename(char *_filename);
+void dag_str_toupper(char *str);
+void dag_str_tolower(char *str);
+char *dag_basename(char *path);
+char *dag_filename(char *_filename);
 
 // replaces all occurences of non-printable characters (code < 33 || code > 126) in `string` with specified `symbol`
 // length - max length of string to be processed, if -1 - whole string will be processed

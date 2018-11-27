@@ -287,7 +287,7 @@ int dag_transport_start(int flags, int nthreads, const char *bindto, int npairs,
 
 	res = dnet_init(argc, (char**)argv);
 	if (!res) {
-		version = strchr(XDAG_VERSION, '-');
+		version = strchr(DAG_VERSION, '-');
 		if (version) dnet_set_self_version(version + 1);
 	}
 

@@ -1262,7 +1262,7 @@ begin:
 				}
 
 				if (t - (g_xdag_xfer_last << 10) <= 2 * MAIN_CHAIN_PERIOD + 4) {
-					g_xdag_state = XDAG_STATE_XFER;
+					g_xdag_state = DAG_STATE_XFER;
 				} else if (g_light_mode) {
 					g_xdag_state = (g_xdag_mining_threads > 0 ?
 						(g_xdag_testnet ? XDAG_STATE_MTST : XDAG_STATE_MINE)

@@ -90,7 +90,7 @@ cJSON * method_xdag_version(struct xdag_rpc_context *ctx, cJSON *params, cJSON *
 	cJSON *ret = NULL;
 	cJSON *item = cJSON_CreateObject();
 	
-	cJSON_AddItemToObject(item, "version", cJSON_CreateString(XDAG_VERSION));
+	cJSON_AddItemToObject(item, "version", cJSON_CreateString(DAG_VERSION));
 	
 	ret = cJSON_CreateArray();
 	cJSON_AddItemToArray(ret, item);
@@ -321,7 +321,7 @@ cJSON * method_xdag_get_account(struct xdag_rpc_context *ctx, cJSON *params, cJS
 
 	cJSON *ret = NULL;
 	if(ctx->error_code == 0) {
-		if(g_xdag_state < XDAG_STATE_XFER) {
+		if(g_xdag_state < DAG_STATE_XFER) {
 			ctx->error_code = 1;
 			ctx->error_message = strdup("Not ready to show a balance.");
 		} else {
@@ -369,7 +369,7 @@ cJSON * method_xdag_get_balance(struct xdag_rpc_context * ctx, cJSON *params, cJ
 		}
 	}
 	
-	if(g_xdag_state < XDAG_STATE_XFER) {
+	if(g_xdag_state < DAG_STATE_XFER) {
 		ctx->error_code = 1;
 		ctx->error_message = strdup("Not ready to show a balance.");
 		return NULL;
@@ -642,7 +642,7 @@ cJSON * method_xdag_do_xfer(struct xdag_rpc_context * ctx, cJSON *params, cJSON 
 			}
 #endif
 
-			g_xdag_state = XDAG_STATE_XFER;
+			g_xdag_state = DAG_STATE_XFER;
 			g_xdag_xfer_last = time(0);
 			xdag_traverse_our_blocks(&xfer, &xfer_callback);
 

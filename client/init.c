@@ -52,7 +52,7 @@ void printUsage(char* appName);
 
 int dag_init(int argc, char **argv, int isGui)
 {
-    xdag_init_path(argv[0]);
+    dag_init_path(argv[0]); //根据第一个输入参数来确定文件的名称，并初始化文件变量
 
 	const char *addrports[256] = {0}, *bindto = 0, *pubaddr = 0, *pool_arg = 0, *miner_address = 0;
 	int transport_flags = 0, transport_threads = -1, n_addrports = 0, mining_threads_count = 0,
@@ -68,22 +68,27 @@ int dag_init(int argc, char **argv, int isGui)
 	signal(SIGTERM, SIG_IGN);
 #endif
 
-	char *filename = xdag_filename(argv[0]);
+	char *filename = dag_filename(argv[0]); //根据输入参数的第一值，初始化文件文件名称
 
-	g_progname = strdup(filename);
-	g_coinname = strdup(filename);
-	free(filename);
+	g_progname = strdup(filename); //根据您文件名称定义工程名称
+	g_coinname = strdup(filename); //根据文件名称定义通证名称
+	free(filename); // 释放定义的内存
 
-	xdag_str_toupper(g_coinname);
-	xdag_str_tolower(g_progname);
+	///*前面主要的工作是采用第一个输入参数定义项目的名称和存储文件的名称
 
+	dag_str_toupper(g_coinname); //转化为大写命名
+	dag_str_tolower(g_progname); //转换为小写命名
+
+	//是不是打来GUI，如果不打开，打印版本号，目前第一个DAG版本定义为1.0.0
 	if (!isGui) {
-		printf("%s client/server, version %s.\n", g_progname, XDAG_VERSION);
+		printf("%s client/server, version %s.\n", g_progname, DAG_VERSION);
 	}
 
-	g_xdag_run = 1;
-	xdag_show_state(0);
+	g_dag_run = 1; //标志DAG为运行的状态
+	dag_show_state(0); //设置DAG显示状态为0
 
+
+	//提取挖矿地址pool_arg
 	for (int i = 1; i < argc; ++i) {
 		if (argv[i][0] != '-') {
 			if ((!argv[i][1] || argv[i][2]) && strchr(argv[i], ':')) {
@@ -96,7 +101,7 @@ int dag_init(int argc, char **argv, int isGui)
 			continue;
 		}
 		
-		if (ARG_EQUAL(argv[i], "-a", "")) { /* miner address */
+		if (ARG_EQUAL(argv[i], "-a", "")) { /* 获取挖矿用户地址miner_address*/
 			if (++i < argc) miner_address = argv[i];
 		} else if(ARG_EQUAL(argv[i], "-c", "")) { /* another full node address */
 			if (++i < argc && n_addrports < 256)
@@ -224,7 +229,7 @@ int dag_init(int argc, char **argv, int isGui)
 	memset(&g_xdag_stats, 0, sizeof(g_dag_stats));
 	memset(&g_xdag_extstats, 0, sizeof(g_dag_extstats));
 
-	xdag_mess("Starting %s, version %s", g_progname, XDAG_VERSION);
+	xdag_mess("Starting %s, version %s", g_progname, DAG_VERSION);
 	xdag_mess("Starting synchonization engine...");
 	if (xdag_sync_init()) return -1;
 	xdag_mess("Starting dnet transport...");
@@ -277,6 +282,7 @@ int dag_set_password_callback(int(*callback)(const char *prompt, char *buf, unsi
     return dag_user_crypt_action((uint32_t *)(void *)callback, 0, 0, 6);
 }
 
+//打印参数说明
 void printUsage(char* appName)
 {
 	printf("Usage: %s flags [pool_ip:port]\n"

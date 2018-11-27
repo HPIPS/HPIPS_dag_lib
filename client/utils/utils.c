@@ -285,9 +285,10 @@ void test_deadlock(void)
 	check_deadlock();
 }
 
-static char g_xdag_current_path[4096] = {0};
+static char g_dag_current_path[4096] = {0};
 
-void xdag_init_path(char *path)
+//初始化文件函数
+void dag_init_path(char *path)
 {
 #ifdef _WIN32
 	char szPath[MAX_PATH] = {0};
@@ -298,7 +299,7 @@ void xdag_init_path(char *path)
 	GetFullPathName((LPTSTR)szPath, sizeof(szBuffer) / sizeof(*szBuffer), (LPTSTR)szBuffer, (LPTSTR*)&pszFile);
 	*pszFile = 0;
 
-	strcpy(g_xdag_current_path, szBuffer);
+	strcpy(g_dag_current_path, szBuffer);
 #else
 	char pathcopy[PATH_MAX] = {0};
 	strcpy(pathcopy, path);
@@ -306,23 +307,23 @@ void xdag_init_path(char *path)
 	if (*prefix != '/' && *prefix != '\\') {
 		char buf[PATH_MAX] = {0};
 		getcwd(buf, PATH_MAX);
-		sprintf(g_xdag_current_path, "%s/%s", buf, prefix);
+		sprintf(g_dag_current_path, "%s/%s", buf, prefix);
 	} else {
-		sprintf(g_xdag_current_path, "%s", prefix);
+		sprintf(g_dag_current_path, "%s", prefix);
 	}
 #endif
 
-	const size_t pathLen = strlen(g_xdag_current_path);
-	if (pathLen == 0 || g_xdag_current_path[pathLen - 1] != *DELIMITER) {
-		g_xdag_current_path[pathLen] = *DELIMITER;
-		g_xdag_current_path[pathLen + 1] = 0;
+	const size_t pathLen = strlen(g_dag_current_path);
+	if (pathLen == 0 || g_dag_current_path[pathLen - 1] != *DELIMITER) {
+		g_dag_current_path[pathLen] = *DELIMITER;
+		g_dag_current_path[pathLen + 1] = 0;
 	}
 }
 
-FILE* xdag_open_file(const char *path, const char *mode)
+FILE* dag_open_file(const char *path, const char *mode)  //打开文件函数
 {
 	char abspath[1024] = {0};
-	sprintf(abspath, "%s%s", g_xdag_current_path, path);
+	sprintf(abspath, "%s%s", g_dag_current_path, path);
 	FILE* f = fopen(abspath, mode);
 	return f;
 }
@@ -332,7 +333,7 @@ void dag_close_file(FILE *f)
 	fclose(f);
 }
 
-int xdag_file_exists(const char *path)
+int dag_file_exists(const char *path)
 {
 	char abspath[1024] = {0};
 	sprintf(abspath, "%s%s", g_xdag_current_path, path);
@@ -340,7 +341,7 @@ int xdag_file_exists(const char *path)
 	return !stat(abspath, &st);
 }
 
-int xdag_mkdir(const char *path)
+int dag_mkdir(const char *path)
 {
 	char abspath[1024] = {0};
 	sprintf(abspath, "%s%s", g_xdag_current_path, path);
@@ -352,7 +353,8 @@ int xdag_mkdir(const char *path)
 #endif	
 }
 
-void xdag_str_toupper(char *str)
+///*转换为大写命名
+void dag_str_toupper(char *str)
 {
 	while(*str) {
 		*str = toupper((unsigned char)*str);
@@ -360,7 +362,8 @@ void xdag_str_toupper(char *str)
 	}
 }
 
-void xdag_str_tolower(char *str)
+///*转换为小写命名
+void dag_str_tolower(char *str)
 {
 	while(*str) {
 		*str = tolower((unsigned char)*str);
@@ -368,7 +371,7 @@ void xdag_str_tolower(char *str)
 	}
 }
 
-char *xdag_basename(char *path)
+char *dag_basename(char *path)
 {
 #if defined(_WIN32)
 	char *ptr;
@@ -381,9 +384,9 @@ char *xdag_basename(char *path)
 #endif
 }
 
-char *xdag_filename(char *_filename)
+char *dag_filename(char *_filename)
 {
-	char *filename = xdag_basename(_filename);
+	char *filename = dag_basename(_filename);
 	char *ext = strchr(filename, '.');
 
 	if(ext) {

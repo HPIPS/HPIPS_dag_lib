@@ -354,7 +354,7 @@ void processAccountCommand(char *nextParam, FILE *out)
 	if(cmd) {
 		sscanf(cmd, "%d", &d.count);
 	}
-	if(g_xdag_state < XDAG_STATE_XFER) {
+	if(g_xdag_state < DAG_STATE_XFER) {
 		fprintf(out, "Not ready to show balances. Type 'state' command to see the reason.\n");
 	}
 	xdag_traverse_our_blocks(&d, &account_callback);
@@ -363,7 +363,7 @@ void processAccountCommand(char *nextParam, FILE *out)
 // 进程平衡命令
 void processBalanceCommand(char *nextParam, FILE *out)
 {
-	if(g_xdag_state < XDAG_STATE_XFER) {
+	if(g_xdag_state < DAG_STATE_XFER) {
 		fprintf(out, "Not ready to show a balance. Type 'state' command to see the reason.\n");
 	} else {
 		xdag_hash_t hash;
@@ -817,7 +817,7 @@ int dag_do_xfer(void *outv, const char *amount, const char *address, const char 
 
 	xdag_wallet_default_key(&xfer.keys[XFER_MAX_IN]);
 	xfer.outsig = 1;
-	g_xdag_state = XDAG_STATE_XFER;
+	g_xdag_state = DAG_STATE_XFER;
 	g_xdag_xfer_last = time(0);
 	xdag_traverse_our_blocks(&xfer, &xfer_callback);
 	if(out) {
@@ -940,13 +940,14 @@ int out_balances()
 	return 0;
 }
 
-int xdag_show_state(xdag_hash_t hash)
+///*设置DAG显示状态函数
+int dag_show_state(dag_hash_t hash)
 {
 	char balance[64] = {0}, address[64] = {0}, state[256] = {0};
-	if(!g_xdag_show_state) {
+	if(!g_dag_show_state) {
 		return -1;
 	}
-	if(g_xdag_state < XDAG_STATE_XFER) {
+	if(g_dag_state < XDAG_STATE_XFER) {
 		strcpy(balance, "Not ready");
 	} else {
 		sprintf(balance, "%.9Lf", amount2xdags(xdag_get_balance(0)));
@@ -954,10 +955,10 @@ int xdag_show_state(xdag_hash_t hash)
 	if(!hash) {
 		strcpy(address, "Not ready");
 	} else {
-		xdag_hash2address(hash, address);
+		dag_hash2address(hash, address);
 	}
 	strcpy(state, get_state());
-	return (*g_xdag_show_state)(state, balance, address);
+	return (*g_dag_show_state)(state, balance, address);
 }
 
 //输出参数说明文件
