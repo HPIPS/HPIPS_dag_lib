@@ -15,8 +15,8 @@ enum disconnect_type
 	DISCONNECT_ALL = 3
 };
 
-extern xdag_hash_t g_xdag_mined_hashes[CONFIRMATIONS_COUNT];
-extern xdag_hash_t g_xdag_mined_nonce[CONFIRMATIONS_COUNT];
+extern dag_hash_t g_xdag_mined_hashes[CONFIRMATIONS_COUNT];
+extern dag_hash_t g_xdag_mined_nonce[CONFIRMATIONS_COUNT];
 extern dag_remark_t g_pool_tag;
 extern int g_pool_has_tag;
 

@@ -38,7 +38,7 @@ extern int dag_request_blocks(xtime_t start_time, xtime_t end_time, void *data,
 									void *(*callback)(void *, void *));
 
 /* 用另一个主机的散列请求块 */
-extern int dag_request_block(xdag_hash_t hash, void *conn);
+extern int dag_request_block(dag_hash_t hash, void *conn);
 
 /* 请求来自远程主机的块，并将块的总和放入“和”数组中， 
  * 块按从开始时间到结束时间的间隔过滤，分成16个部分；

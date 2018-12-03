@@ -13,10 +13,10 @@ extern "C" {
 extern int dag_address_init(void);
 
 /* 转换address到hash */
-extern int dag_address2hash(const char *address, xdag_hash_t hash);
+extern int dag_address2hash(const char *address, dag_hash_t hash);
 
 /* 转换hash到address */
-extern void dag_hash2address(const xdag_hash_t hash, char *address);
+extern void dag_hash2address(const dag_hash_t hash, char *address);
 	
 #ifdef __cplusplus
 };

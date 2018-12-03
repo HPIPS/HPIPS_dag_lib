@@ -15,14 +15,14 @@
 extern "C" {
 #endif
 
-// convert cheato to xdag
-extern long double amount2xdags(xdag_amount_t);
+// cheato 转换到 dag
+extern long double amount2xdags(dag_amount_t);
 
-// convert xdag to cheato
-extern xdag_amount_t xdags2amount(const char*);
+// dag 转换到 cheato
+extern dag_amount_t xdags2amount(const char*);
 
 // calculate difficulty from hash
-xdag_diff_t xdag_hash_difficulty(xdag_hash_t);
+dag_diff_t xdag_hash_difficulty(dag_hash_t);
 
 // convert diff to logarithm representation
 long double xdag_diff2log(xdag_diff_t);
@@ -32,7 +32,7 @@ long double xdag_log_difficulty2hashrate(long double);
 
 // 从上次记录的HASHRATE_LAST_MAX_TIME 难度计算哈希率
 // DIFF实际上是指向元素的xdAgDeffixt数组的HASHRATE_LAST_MAX_TIME指针
-long double dag_hashrate(xdag_diff_t *diff);
+long double xdag_hashrate(dag_diff_t *diff);
 	
 #ifdef __cplusplus
 };
