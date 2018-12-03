@@ -874,7 +874,7 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 	pthread_mutex_lock(&g_create_block_mutex);
 	struct dag_block block[2];
 	int i, j, res, mining, defkeynum, keysnum[DAG_BLOCK_FIELDS], nkeys, nkeysnum = 0, outsigkeyind = -1, has_pool_tag = 0;
-	struct xdag_public_key *defkey = xdag_wallet_default_key(&defkeynum), *keys = xdag_wallet_our_keys(&nkeys), *key;
+	struct dag_public_key *defkey = xdag_wallet_default_key(&defkeynum), *keys = xdag_wallet_our_keys(&nkeys), *key;
 	dag_hash_t signatureHash;
 	dag_hash_t newBlockHash;
 	struct block_internal *ref, *pretop = pretop_block();
@@ -922,16 +922,16 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 
  begin:
 	res = res0;
-	memset(block, 0, sizeof(struct xdag_block));
+	memset(block, 0, sizeof(struct dag_block));
 	i = 1;
-	block[0].field[0].type = g_block_header_type | (mining ? (uint64_t)XDAG_FIELD_SIGN_IN << ((DAG_BLOCK_FIELDS - 1) * 4) : 0);
+	block[0].field[0].type = g_block_header_type | (mining ? (uint64_t)DAG_FIELD_SIGN_IN << ((DAG_BLOCK_FIELDS - 1) * 4) : 0);
 	block[0].field[0].time = send_time;
 	block[0].field[0].amount = fee;
 
 	if (g_light_mode) {
 		pthread_mutex_lock(&g_create_block_mutex);
 		if (res < DAG_BLOCK_FIELDS && ourfirst) {
-			setfld(XDAG_FIELD_OUT, ourfirst->hash, xdag_hashlow_t);
+			setfld(DAG_FIELD_OUT, ourfirst->hash, dag_hashlow_t);
 			res++;
 		}
 		pthread_mutex_unlock(&g_create_block_mutex);
@@ -939,13 +939,13 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 		pthread_mutex_lock(&block_mutex);
 		if (res < DAG_BLOCK_FIELDS && mining && pretop && pretop->time < send_time) {
 			log_block("Mintop", pretop->hash, pretop->time, pretop->storage_pos);
-			setfld(XDAG_FIELD_OUT, pretop->hash, xdag_hashlow_t);
+			setfld(DAG_FIELD_OUT, pretop->hash, dag_hashlow_t);
 			res++;
 		}
 		for (oref = g_orphan_first[0]; oref && res < DAG_BLOCK_FIELDS; oref = oref->next) {
 			ref = oref->orphan_bi;
 			if (ref->time < send_time) {
-				setfld(XDAG_FIELD_OUT, ref->hash, xdag_hashlow_t);
+				setfld(DAG_FIELD_OUT, ref->hash, dag_hashlow_t);
 				res++;
 			}
 		}
@@ -953,29 +953,29 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 	}
 
 	for (j = 0; j < inputsCount; ++j) {
-		setfld(XDAG_FIELD_IN, fields + j, dag_hash_t);
+		setfld(DAG_FIELD_IN, fields + j, dag_hash_t);
 	}
 
 	for (j = 0; j < outputsCount; ++j) {
-		setfld(XDAG_FIELD_OUT, fields + inputsCount + j, dag_hash_t);
+		setfld(DAG_FIELD_OUT, fields + inputsCount + j, dag_hash_t);
 	}
 
 	if(hasRemark) {
-		setfld(XDAG_FIELD_REMARK, fields + inputsCount + outputsCount, dag_remark_t);
+		setfld(DAG_FIELD_REMARK, fields + inputsCount + outputsCount, dag_remark_t);
 	}
 
 	if(mining && has_pool_tag) {
-		setfld(XDAG_FIELD_REMARK, g_pool_tag, dag_remark_t);
+		setfld(DAG_FIELD_REMARK, g_pool_tag, dag_remark_t);
 	}
 
 	for (j = 0; j < nkeysnum; ++j) {
 		key = keys + keysnum[j];
-		block[0].field[0].type |= (uint64_t)((j == outsigkeyind ? XDAG_FIELD_SIGN_OUT : XDAG_FIELD_SIGN_IN) * 0x11) << ((i + j + nkeysnum) * 4);
-		setfld(XDAG_FIELD_PUBLIC_KEY_0 + ((uintptr_t)key->pub & 1), (uintptr_t)key->pub & ~1l, dag_hash_t);
+		block[0].field[0].type |= (uint64_t)((j == outsigkeyind ? DAG_FIELD_SIGN_OUT : DAG_FIELD_SIGN_IN) * 0x11) << ((i + j + nkeysnum) * 4);
+		setfld(DAG_FIELD_PUBLIC_KEY_0 + ((uintptr_t)key->pub & 1), (uintptr_t)key->pub & ~1l, dag_hash_t);
 	}
 
 	if(outsigkeyind < 0) {
-		block[0].field[0].type |= (uint64_t)(XDAG_FIELD_SIGN_OUT * 0x11) << ((i + j + nkeysnum) * 4);
+		block[0].field[0].type |= (uint64_t)(DAG_FIELD_SIGN_OUT * 0x11) << ((i + j + nkeysnum) * 4);
 	}
 
 	for (j = 0; j < nkeysnum; ++j, i += 2) {
@@ -995,7 +995,7 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 		}
 	}
 
-	dag_hash(block, sizeof(struct xdag_block), newBlockHash);
+	dag_hash(block, sizeof(struct dag_block), newBlockHash);
 
 	if(mining) {
 		memcpy(g_xdag_mined_hashes[MAIN_TIME(send_time) & (CONFIRMATIONS_COUNT - 1)],
@@ -1010,9 +1010,9 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 		memcpy(block_hash_result, newBlockHash, sizeof(dag_hash_t));
 	}
 
-	struct xdag_block *new_block = (struct xdag_block *)malloc(sizeof(struct xdag_block));
+	struct xdag_block *new_block = (struct xdag_block *)malloc(sizeof(struct dag_block));
 	if(new_block) {
-		memcpy(new_block, block, sizeof(struct xdag_block));
+		memcpy(new_block, block, sizeof(struct dag_block));
 	}	
 	return new_block;
 }
@@ -1023,9 +1023,9 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 * 如果它大于当前值，则执行挖掘以生成最佳散列
 */
 int dag_create_and_send_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark,
-	xdag_amount_t fee, xtime_t send_time, dag_hash_t block_hash_result)
+	dag_amount_t fee, xtime_t send_time, dag_hash_t block_hash_result)
 {
-	struct xdag_block *block = xdag_create_block(fields, inputsCount, outputsCount, hasRemark, fee, send_time, block_hash_result);
+	struct dag_block *block = xdag_create_block(fields, inputsCount, outputsCount, hasRemark, fee, send_time, block_hash_result);
 	if(!block) {
 		return 0;
 	}
@@ -1043,10 +1043,10 @@ int dag_create_and_send_block(struct xdag_field *fields, int inputsCount, int ou
 	return res;
 }
 
-int do_mining(struct xdag_block *block, struct block_internal **pretop, xtime_t send_time)
+int do_mining(struct dag_block *block, struct block_internal **pretop, xtime_t send_time)
 {
-	uint64_t taskIndex = g_xdag_pool_task_index + 1;
-	struct xdag_pool_task *task = &g_xdag_pool_task[taskIndex & 1];
+	uint64_t taskIndex = g_dag_pool_task_index + 1;
+	struct dag_pool_task *task = &g_xdag_pool_task[taskIndex & 1];
 
 	dag_generate_random_array(block[0].field[DAG_BLOCK_FIELDS - 1].data, sizeof(dag_hash_t));
 
@@ -1115,7 +1115,7 @@ static void reset_callback(struct ldus_rbtree *node)
 // main thread which works with block
 static void *work_thread(void *arg)
 {
-	xtime_t t = XDAG_ERA, conn_time = 0, sync_time = 0, t0;
+	xtime_t t = DAG_ERA, conn_time = 0, sync_time = 0, t0;
 	int n_mining_threads = (int)(unsigned)(uintptr_t)arg, sync_thread_running = 0;
 	uint64_t nhashes0 = 0, nhashes = 0;
 	pthread_t th;
@@ -1174,11 +1174,11 @@ begin:
 		t0 = t;
 		t = xdag_get_xtimestamp();
 		nhashes0 = nhashes;
-		nhashes = g_xdag_extstats.nhashes;
-		nmain = g_xdag_stats.nmain;
+		nhashes = g_dag_extstats.nhashes;
+		nmain = g_dag_stats.nmain;
 
 		if (t > t0) {
-			g_xdag_extstats.hashrate_s = ((double)(nhashes - nhashes0) * 1024) / (t - t0);
+			g_dag_extstats.hashrate_s = ((double)(nhashes - nhashes0) * 1024) / (t - t0);
 		}
 
 		if (!g_block_production_on && !g_light_mode &&
@@ -1186,7 +1186,7 @@ begin:
 				g_xdag_state == XDAG_STATE_SYNC || g_xdag_state == XDAG_STATE_STST || 
 				g_xdag_state == XDAG_STATE_CONN || g_xdag_state == XDAG_STATE_CTST)) {
 			if (g_xdag_state == XDAG_STATE_SYNC || g_xdag_state == XDAG_STATE_STST || 
-					g_xdag_stats.nmain >= (MAIN_TIME(t) - dag_start_main_time())) {
+					g_dag_stats.nmain >= (MAIN_TIME(t) - dag_start_main_time())) {
 				g_block_production_on = 1;
 			} else if (last_nmain != nmain) {
 				last_nmain = nmain;
@@ -1206,7 +1206,7 @@ begin:
 		}
 
 		if (g_block_production_on && 
-				(nblk = (unsigned)g_xdag_extstats.nnoref / (XDAG_BLOCK_FIELDS - 5))) {
+				(nblk = (unsigned)g_dag_extstats.nnoref / (DAG_BLOCK_FIELDS - 5))) {
 			nblk = nblk / 61 + (nblk % 61 > (unsigned)rand() % 61);
 
 			while (nblk--) {
@@ -1239,17 +1239,17 @@ begin:
 			ourfirst = ourlast = 0;
 			g_orphan_first[0] = g_orphan_last[0] = 0;
 			g_orphan_first[1] = g_orphan_last[1] = 0;
-			memset(&g_xdag_stats, 0, sizeof(g_xdag_stats));
-			memset(&g_xdag_extstats, 0, sizeof(g_xdag_extstats));
+			memset(&g_dag_stats, 0, sizeof(g_dag_stats));
+			memset(&g_dag_extstats, 0, sizeof(g_dag_extstats));
 			pthread_mutex_unlock(&block_mutex);
 			conn_time = sync_time = 0;
 
 			goto begin;
 		} else {
 			pthread_mutex_lock(&g_transport_mutex);
-			if (t > (g_xdag_last_received << 10) && t - (g_xdag_last_received << 10) > 3 * MAIN_CHAIN_PERIOD) {
-				g_xdag_state = (g_light_mode ? (g_xdag_testnet ? XDAG_STATE_TTST : XDAG_STATE_TRYP)
-					: (g_xdag_testnet ? XDAG_STATE_WTST : XDAG_STATE_WAIT));
+			if (t > (g_dag_last_received << 10) && t - (g_dag_last_received << 10) > 3 * MAIN_CHAIN_PERIOD) {
+				g_xdag_state = (g_light_mode ? (g_dag_testnet ? XDAG_STATE_TTST : XDAG_STATE_TRYP)
+					: (g_dag_testnet ? XDAG_STATE_WTST : XDAG_STATE_WAIT));
 				conn_time = sync_time = 0;
 			} else {
 				if (!conn_time) {
@@ -1257,20 +1257,20 @@ begin:
 				}
 
 				if (!g_light_mode && t - conn_time >= 2 * MAIN_CHAIN_PERIOD
-					&& !memcmp(&g_xdag_stats.difficulty, &g_xdag_stats.max_difficulty, sizeof(xdag_diff_t))) {
+					&& !memcmp(&g_dag_stats.difficulty, &g_dag_stats.max_difficulty, sizeof(dag_diff_t))) {
 					sync_time = t;
 				}
 
-				if (t - (g_xdag_xfer_last << 10) <= 2 * MAIN_CHAIN_PERIOD + 4) {
-					g_xdag_state = DAG_STATE_XFER;
+				if (t - (g_dag_xfer_last << 10) <= 2 * MAIN_CHAIN_PERIOD + 4) {
+					g_xdag_state = XDAG_STATE_XFER;
 				} else if (g_light_mode) {
-					g_xdag_state = (g_xdag_mining_threads > 0 ?
-						(g_xdag_testnet ? XDAG_STATE_MTST : XDAG_STATE_MINE)
-						: (g_xdag_testnet ? XDAG_STATE_PTST : XDAG_STATE_POOL));
+					g_xdag_state = (g_dag_mining_threads > 0 ?
+						(g_dag_testnet ? XDAG_STATE_MTST : XDAG_STATE_MINE)
+						: (g_dag_testnet ? XDAG_STATE_PTST : XDAG_STATE_POOL));
 				} else if (t - sync_time > 8 * MAIN_CHAIN_PERIOD) {
-					g_xdag_state = (g_xdag_testnet ? XDAG_STATE_CTST : XDAG_STATE_CONN);
+					g_xdag_state = (g_dag_testnet ? XDAG_STATE_CTST : XDAG_STATE_CONN);
 				} else {
-					g_xdag_state = (g_xdag_testnet ? XDAG_STATE_STST : XDAG_STATE_SYNC);
+					g_xdag_state = (g_dag_testnet ? XDAG_STATE_STST : XDAG_STATE_SYNC);
 				}
 			}
 			pthread_mutex_unlock(&g_transport_mutex);
@@ -1306,7 +1306,7 @@ int dag_blocks_start(int is_pool, int mining_threads_count, int miner_address)
 		g_light_mode = 1;
 	}
 
-	if (xdag_mem_init(g_light_mode && !miner_address ? 0 : (((xdag_get_xtimestamp() - XDAG_ERA) >> 10) + (uint64_t)365 * 24 * 60 * 60) * 2 * sizeof(struct block_internal))) {
+	if (xdag_mem_init(g_light_mode && !miner_address ? 0 : (((xdag_get_xtimestamp() - DAG_ERA) >> 10) + (uint64_t)365 * 24 * 60 * 60) * 2 * sizeof(struct block_internal))) {
 		return -1;
 	}
 
@@ -1354,7 +1354,7 @@ int dag_get_our_block(dag_hash_t hash)
 
 /* 为每个自己的块调用回调 */
 int dag_traverse_our_blocks(void *data,
-    int (*callback)(void*, dag_hash_t, xdag_amount_t, xtime_t, int))
+    int (*callback)(void*, dag_hash_t, dag_amount_t, xtime_t, int))
 {
 	int res = 0;
 

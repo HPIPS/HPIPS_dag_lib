@@ -9,7 +9,7 @@
 #include <poll.h>
 #endif
 
-#define DATA_SIZE          (sizeof(struct xdag_field) / sizeof(uint32_t))
+#define DATA_SIZE          (sizeof(struct dag_field) / sizeof(uint32_t))
 #define BLOCK_HEADER_WORD  0x3fca9e2bu
 
 struct dag_pool_task {

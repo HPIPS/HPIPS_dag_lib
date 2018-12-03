@@ -34,7 +34,7 @@
 #define POOL_LIST_FILE         (g_xdag_testnet ? "pools-testnet.txt" : "pools.txt")
 
 struct miner {
-	struct xdag_field id;
+	struct dag_field id;
 	uint64_t nfield_in;
 	uint64_t nfield_out;
 };
@@ -81,7 +81,7 @@ extern int dag_initialize_miner(const char *pool_address)
 
 static int send_to_pool(struct dag_field *fld, int nfld)
 {
-	struct dag_field f[XDAG_BLOCK_FIELDS];
+	struct dag_field f[DAG_BLOCK_FIELDS];
 	dag_hash_t h;
 	struct miner *m = &g_local_miner;
 	int todo = nfld * sizeof(struct dag_field), done = 0;
@@ -332,13 +332,13 @@ static void *mining_thread(void *arg)
 	uint64_t oldntask = 0;
 	uint64_t nonce;
 
-	while(!g_dag_sync_on && !g_stop_mining) {
+	while(!g_xdag_sync_on && !g_stop_mining) {
 		sleep(1);
 	}
 
 	while(!g_stop_mining) {
 		const uint64_t ntask = g_dag_pool_task_index;
-		struct xdag_pool_task *task = &g_dag_pool_task[ntask & 1];
+		struct dag_pool_task *task = &g_dag_pool_task[ntask & 1];
 
 		if(!ntask) {
 			sleep(1);
