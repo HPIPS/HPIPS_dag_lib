@@ -49,7 +49,7 @@ typedef struct {
 extern int g_block_production_on;
 
 // Function declarations
-int account_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, int n_our_key);
+int account_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time, int n_our_key);
 
 void processAccountCommand(char *nextParam, FILE *out);
 void processBalanceCommand(char *nextParam, FILE *out);
@@ -238,7 +238,7 @@ int xdag_com_internal_stats(char * args, FILE* out)
 
 int xdag_com_run(char * args, FILE* out)
 {
-	g_xdag_run = 1;
+	g_dag_run = 1;
 	return 0;
 }
 
@@ -297,12 +297,12 @@ XDAG_COMMAND* find_xdag_command(char *name)
 void startCommandProcessing(int transportFlags)
 {
 	char cmd[DAG_COMMAND_MAX] = {0};
-	if(!(transportFlags & XDAG_DAEMON)) printf("Type command, help for example.\n");
+	if(!(transportFlags & DAG_DAEMON)) printf("Type command, help for example.\n");
 
 	xdag_init_commands();
 
 	for(;;) {
-		if(transportFlags & XDAG_DAEMON) {
+		if(transportFlags & DAG_DAEMON) {
 			sleep(100);
 		} else {
 			read_command(cmd);
@@ -354,7 +354,7 @@ void processAccountCommand(char *nextParam, FILE *out)
 	if(cmd) {
 		sscanf(cmd, "%d", &d.count);
 	}
-	if(g_xdag_state < DAG_STATE_XFER) {
+	if(g_dag_state < XDAG_STATE_XFER) {
 		fprintf(out, "Not ready to show balances. Type 'state' command to see the reason.\n");
 	}
 	xdag_traverse_our_blocks(&d, &account_callback);
@@ -363,11 +363,11 @@ void processAccountCommand(char *nextParam, FILE *out)
 // 进程平衡命令
 void processBalanceCommand(char *nextParam, FILE *out)
 {
-	if(g_xdag_state < DAG_STATE_XFER) {
+	if(g_dag_state < XDAG_STATE_XFER) {
 		fprintf(out, "Not ready to show a balance. Type 'state' command to see the reason.\n");
 	} else {
-		xdag_hash_t hash;
-		xdag_amount_t balance;
+		dag_hash_t hash;
+		dag_amount_t balance;
 		char *cmd = strtok_r(nextParam, " \t\r\n", &nextParam);
 		if(cmd) {
 			xdag_address2hash(cmd, hash);
@@ -383,7 +383,7 @@ void processBalanceCommand(char *nextParam, FILE *out)
 void processBlockCommand(char *nextParam, FILE *out)
 {
 	int c;
-	xdag_hash_t hash;
+	dag_hash_t hash;
 	char *cmd = strtok_r(nextParam, " \t\r\n", &nextParam);
 	if(cmd) {
 		int incorrect = 0;
@@ -451,12 +451,12 @@ void processMiningCommand(char *nextParam, FILE *out)
 	int nthreads;
 	char *cmd = strtok_r(nextParam, " \t\r\n", &nextParam);
 	if(!cmd) {
-		fprintf(out, "%d mining threads running\n", g_xdag_mining_threads);
+		fprintf(out, "%d mining threads running\n", g_dag_mining_threads);
 	} else if(sscanf(cmd, "%d", &nthreads) != 1 || nthreads < 0) {
 		fprintf(out, "Illegal number.\n");
 	} else {
 		xdag_mining_start(nthreads);
-		fprintf(out, "%d mining threads running\n", g_xdag_mining_threads);
+		fprintf(out, "%d mining threads running\n", g_dag_mining_threads);
 	}
 }
 
@@ -543,16 +543,16 @@ void processStatsCommand(FILE *out)
 			" chain difficulty: %llx%016llx of %llx%016llx\n"
 			" %9s supply: %.9Lf of %.9Lf\n"
 			"4 hr hashrate MHs: %.2Lf of %.2Lf\n",
-			g_xdag_stats.nhosts, g_xdag_stats.total_nhosts,
-			(long long)g_xdag_stats.nblocks, (long long)g_xdag_stats.total_nblocks,
-			(long long)g_xdag_stats.nmain, (long long)g_xdag_stats.total_nmain,
-			(long long)g_xdag_extstats.nextra,
-			(long long)g_xdag_extstats.nnoref, g_xdag_extstats.nwaitsync,
-			xdag_diff_args(g_xdag_stats.difficulty),
-			xdag_diff_args(g_xdag_stats.max_difficulty), g_coinname,
-			amount2xdags(xdag_get_supply(g_xdag_stats.nmain)),
-			amount2xdags(xdag_get_supply(g_xdag_stats.total_nmain)),
-			xdag_hashrate(g_xdag_extstats.hashrate_ours), xdag_hashrate(g_xdag_extstats.hashrate_total)
+			g_dag_stats.nhosts, g_dag_stats.total_nhosts,
+			(long long)g_dag_stats.nblocks, (long long)g_dag_stats.total_nblocks,
+			(long long)g_dag_stats.nmain, (long long)g_dag_stats.total_nmain,
+			(long long)g_dag_extstats.nextra,
+			(long long)g_dag_extstats.nnoref, g_dag_extstats.nwaitsync,
+			xdag_diff_args(g_dag_stats.difficulty),
+			xdag_diff_args(g_dag_stats.max_difficulty), g_coinname,
+			amount2xdags(dag_get_supply(g_dag_stats.nmain)),
+			amount2xdags(dag_get_supply(g_dag_stats.total_nmain)),
+			xdag_hashrate(g_dag_extstats.hashrate_ours), xdag_hashrate(g_dag_extstats.hashrate_total)
 		);
 	}
 }
@@ -575,7 +575,7 @@ void processInternalStatsCommand(FILE *out)
 		"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n",
 		(g_use_tmpfile ? "Active" : "Inactive" ), (g_block_production_on ? "Started" : "Waiting"), 
 		(USE_OPTIMIZED_EC ? "Active" : "Inactive" ), 
-		g_xdag_extstats.cache_size, g_xdag_extstats.cache_usage, g_xdag_extstats.cache_hitrate*100
+		g_dag_extstats.cache_size, g_dag_extstats.cache_usage, g_dag_extstats.cache_hitrate*100
 	);
 }
 
@@ -713,7 +713,7 @@ void processAutoRefreshCommand(char *nextParam, FILE *out)
 
 void processReloadCommand(char *nextParam, FILE *out)
 {
-	g_xdag_state = XDAG_STATE_REST;
+	g_dag_state = XDAG_STATE_REST;
 }
 
 const char *get_state()
@@ -723,10 +723,10 @@ const char *get_state()
 #include "state.h"
 #undef xdag_state
 	};
-	return states[g_xdag_state];
+	return states[g_dag_state];
 }
 
-int account_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, int n_our_key)
+int account_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time, int n_our_key)
 {
 	char address[33] = {0};
 	struct account_callback_data *d = (struct account_callback_data *)data;
@@ -734,7 +734,7 @@ int account_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t
 		return -1;
 	}
 	xdag_hash2address(hash, address);
-	if(g_xdag_state < XDAG_STATE_XFER)
+	if(g_dag_state < XDAG_STATE_XFER)
 		fprintf(d->out, "%s  key %d\n", address, n_our_key);
 	else
 		fprintf(d->out, "%s %20.9Lf  key %d\n", address, amount2xdags(amount), n_our_key);
@@ -746,12 +746,12 @@ static int make_transaction_block(struct xfer_callback_data *xferData)
 	char address[33] = {0};
 
 	if(xferData->fieldsCount != XFER_MAX_IN) {
-		memcpy(xferData->fields + xferData->fieldsCount, xferData->fields + XFER_MAX_IN, sizeof(xdag_hashlow_t));
+		memcpy(xferData->fields + xferData->fieldsCount, xferData->fields + XFER_MAX_IN, sizeof(dag_hashlow_t));
 	}
 	xferData->fields[xferData->fieldsCount].amount = xferData->todo;
 
 	if(xferData->hasRemark) {
-		memcpy(xferData->fields + xferData->fieldsCount + xferData->hasRemark, xferData->remark, sizeof(xdag_remark_t));
+		memcpy(xferData->fields + xferData->fieldsCount + xferData->hasRemark, xferData->remark, sizeof(dag_remark_t));
 	}
 
 	int res = xdag_create_and_send_block(xferData->fields, xferData->fieldsCount, 1, xferData->hasRemark, 0, 0, xferData->transactionBlockHash);
@@ -817,8 +817,8 @@ int dag_do_xfer(void *outv, const char *amount, const char *address, const char 
 
 	xdag_wallet_default_key(&xfer.keys[XFER_MAX_IN]);
 	xfer.outsig = 1;
-	g_xdag_state = DAG_STATE_XFER;
-	g_xdag_xfer_last = time(0);
+	g_dag_state = XDAG_STATE_XFER;
+	g_dag_xfer_last = time(0);
 	xdag_traverse_our_blocks(&xfer, &xfer_callback);
 	if(out) {
 		xdag_hash2address(xfer.fields[XFER_MAX_IN].hash, address_buf);
@@ -829,10 +829,10 @@ int dag_do_xfer(void *outv, const char *amount, const char *address, const char 
 	return 0;
 }
 
-int xfer_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, int n_our_key)
+int xfer_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time, int n_our_key)
 {
 	struct xfer_callback_data *xferData = (struct xfer_callback_data*)data;
-	xdag_amount_t todo = xferData->remains;
+	dag_amount_t todo = xferData->remains;
 	int i;
 	if(!amount) {
 		return -1;
@@ -851,7 +851,7 @@ int xfer_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t ti
 	if(xferData->keys[XFER_MAX_IN] == n_our_key) {
 		xferData->outsig = 0;
 	}
-	if(Nfields(xferData) > XDAG_BLOCK_FIELDS) {
+	if(Nfields(xferData) > DAG_BLOCK_FIELDS) {
 		if(make_transaction_block(xferData)) {
 			return -1;
 		}
@@ -863,12 +863,12 @@ int xfer_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t ti
 	if(amount < todo) {
 		todo = amount;
 	}
-	memcpy(xferData->fields + xferData->fieldsCount, hash, sizeof(xdag_hashlow_t));
+	memcpy(xferData->fields + xferData->fieldsCount, hash, sizeof(dag_hashlow_t));
 	xferData->fields[xferData->fieldsCount++].amount = todo;
 	xferData->todo += todo;
 	xferData->remains -= todo;
 	xdag_log_xfer(hash, xferData->fields[XFER_MAX_IN].hash, todo);
-	if(!xferData->remains || Nfields(xferData) == XDAG_BLOCK_FIELDS) {
+	if(!xferData->remains || Nfields(xferData) == DAG_BLOCK_FIELDS) {
 		if(make_transaction_block(xferData)) {
 			return -1;
 		}
@@ -879,7 +879,7 @@ int xfer_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t ti
 	return 0;
 }
 
-void xdag_log_xfer(xdag_hash_t from, xdag_hash_t to, xdag_amount_t amount)
+void xdag_log_xfer(dag_hash_t from, dag_hash_t to, dag_amount_t amount)
 {
 	char address_from[33] = {0}, address_to[33] = {0};
 	xdag_hash2address(from, address_from);
@@ -887,20 +887,20 @@ void xdag_log_xfer(xdag_hash_t from, xdag_hash_t to, xdag_amount_t amount)
 	xdag_mess("Xfer : from %s to %s xfer %.9Lf %s", address_from, address_to, amount2xdags(amount), g_coinname);
 }
 
-static int out_balances_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t time)
+static int out_balances_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time)
 {
 	struct out_balances_data *d = (struct out_balances_data *)data;
-	struct xdag_field f;
-	memcpy(f.hash, hash, sizeof(xdag_hashlow_t));
+	struct dag_field f;
+	memcpy(f.hash, hash, sizeof(dag_hashlow_t));
 	f.amount = amount;
 	if(!f.amount) {
 		return 0;
 	}
 	if(d->blocksCount == d->maxBlocksCount) {
 		d->maxBlocksCount = (d->maxBlocksCount ? d->maxBlocksCount * 2 : 0x100000);
-		d->blocks = realloc(d->blocks, d->maxBlocksCount * sizeof(struct xdag_field));
+		d->blocks = realloc(d->blocks, d->maxBlocksCount * sizeof(struct dag_field));
 	}
-	memcpy(d->blocks + d->blocksCount, &f, sizeof(struct xdag_field));
+	memcpy(d->blocks + d->blocksCount, &f, sizeof(struct dag_field));
 	d->blocksCount++;
 	return 0;
 }
@@ -908,8 +908,8 @@ static int out_balances_callback(void *data, xdag_hash_t hash, xdag_amount_t amo
 static int out_sort_callback(const void *l, const void *r)
 {
 	char address_l[33] = {0}, address_r[33] = {0};
-	xdag_hash2address(((struct xdag_field *)l)->data, address_l);
-	xdag_hash2address(((struct xdag_field *)r)->data, address_r);
+	xdag_hash2address(((struct dag_field *)l)->data, address_l);
+	xdag_hash2address(((struct dag_field *)r)->data, address_r);
 	return strcmp(address_l, address_r);
 }
 
@@ -932,7 +932,7 @@ int out_balances()
 	memset(&d, 0, sizeof(struct out_balances_data));
 	xdag_load_blocks(xdag_start_main_time() << 16, xdag_main_time() << 16, &i, &add_block_callback);
 	xdag_traverse_all_blocks(&d, out_balances_callback);
-	qsort(d.blocks, d.blocksCount, sizeof(struct xdag_field), out_sort_callback);
+	qsort(d.blocks, d.blocksCount, sizeof(struct dag_field), out_sort_callback);
 	for(i = 0; i < d.blocksCount; ++i) {
 		xdag_hash2address(d.blocks[i].data, address);
 		printf("%s  %20.9Lf\n", address, amount2xdags(d.blocks[i].amount));
@@ -1008,7 +1008,7 @@ void dagSetCountMiningTread(int miningThreadsCount)
 //获取Hash比率
 double dagGetHashRate(void)
 {
-	return g_xdag_extstats.hashrate_s / (1024 * 1024);
+	return g_dag_extstats.hashrate_s / (1024 * 1024);
 }
 
 int read_command(char *cmd)

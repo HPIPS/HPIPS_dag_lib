@@ -1046,25 +1046,25 @@ int dag_create_and_send_block(struct xdag_field *fields, int inputsCount, int ou
 int do_mining(struct dag_block *block, struct block_internal **pretop, xtime_t send_time)
 {
 	uint64_t taskIndex = g_dag_pool_task_index + 1;
-	struct dag_pool_task *task = &g_xdag_pool_task[taskIndex & 1];
+	struct dag_pool_task *task = &g_dag_pool_task[taskIndex & 1];
 
 	dag_generate_random_array(block[0].field[DAG_BLOCK_FIELDS - 1].data, sizeof(dag_hash_t));
 
 	task->task_time = MAIN_TIME(send_time);
 
 	dag_hash_init(task->ctx0);
-	dag_hash_update(task->ctx0, block, sizeof(struct xdag_block) - 2 * sizeof(struct xdag_field));
+	dag_hash_update(task->ctx0, block, sizeof(struct dag_block) - 2 * sizeof(struct dag_field));
 	dag_hash_get_state(task->ctx0, task->task[0].data);
-	dag_hash_update(task->ctx0, block[0].field[DAG_BLOCK_FIELDS - 2].data, sizeof(struct xdag_field));
+	dag_hash_update(task->ctx0, block[0].field[DAG_BLOCK_FIELDS - 2].data, sizeof(struct dag_field));
 	memcpy(task->ctx, task->ctx0, xdag_hash_ctx_size());
 
-	dag_hash_update(task->ctx, block[0].field[DAG_BLOCK_FIELDS - 1].data, sizeof(struct xdag_field) - sizeof(uint64_t));
-	memcpy(task->task[1].data, block[0].field[DAG_BLOCK_FIELDS - 2].data, sizeof(struct xdag_field));
-	memcpy(task->nonce.data, block[0].field[DAG_BLOCK_FIELDS - 1].data, sizeof(struct xdag_field));
-	memcpy(task->lastfield.data, block[0].field[DAG_BLOCK_FIELDS - 1].data, sizeof(struct xdag_field));
+	dag_hash_update(task->ctx, block[0].field[DAG_BLOCK_FIELDS - 1].data, sizeof(struct dag_field) - sizeof(uint64_t));
+	memcpy(task->task[1].data, block[0].field[DAG_BLOCK_FIELDS - 2].data, sizeof(struct dag_field));
+	memcpy(task->nonce.data, block[0].field[DAG_BLOCK_FIELDS - 1].data, sizeof(struct dag_field));
+	memcpy(task->lastfield.data, block[0].field[DAG_BLOCK_FIELDS - 1].data, sizeof(struct dag_field));
 
 	dag_hash_final(task->ctx, &task->nonce.amount, sizeof(uint64_t), task->minhash.data);
-	g_xdag_pool_task_index = taskIndex;
+	g_dag_pool_task_index = taskIndex;
 
 	while(xdag_get_xtimestamp() <= send_time) {
 		sleep(1);
@@ -1079,7 +1079,7 @@ int do_mining(struct dag_block *block, struct block_internal **pretop, xtime_t s
 	}
 
 	pthread_mutex_lock((pthread_mutex_t*)g_ptr_share_mutex);
-	memcpy(block[0].field[XDAG_BLOCK_FIELDS - 1].data, task->lastfield.data, sizeof(struct xdag_field));
+	memcpy(block[0].field[DAG_BLOCK_FIELDS - 1].data, task->lastfield.data, sizeof(struct dag_field));
 	pthread_mutex_unlock((pthread_mutex_t*)g_ptr_share_mutex);
 
 	return 1;
@@ -1124,7 +1124,7 @@ static void *work_thread(void *arg)
 
 begin:
 	// loading block from the local storage
-	g_xdag_state = XDAG_STATE_LOAD;
+	g_dag_state = XDAG_STATE_LOAD;
 	xdag_mess("Loading blocks from local storage...");
 
 	xtime_t start = xdag_get_xtimestamp();
@@ -1135,8 +1135,8 @@ begin:
 	xdag_mess("Finish loading blocks, time cost %ldms", xdag_get_xtimestamp() - start);
 
 	// waiting for command "run"
-	while (!g_xdag_run) {
-		g_xdag_state = XDAG_STATE_STOP;
+	while (!g_dag_run) {
+		g_dag_state = XDAG_STATE_STOP;
 		sleep(1);
 	}
 
@@ -1182,10 +1182,10 @@ begin:
 		}
 
 		if (!g_block_production_on && !g_light_mode &&
-				(g_xdag_state == XDAG_STATE_WAIT || g_xdag_state == XDAG_STATE_WTST ||
-				g_xdag_state == XDAG_STATE_SYNC || g_xdag_state == XDAG_STATE_STST || 
-				g_xdag_state == XDAG_STATE_CONN || g_xdag_state == XDAG_STATE_CTST)) {
-			if (g_xdag_state == XDAG_STATE_SYNC || g_xdag_state == XDAG_STATE_STST || 
+				(g_dag_state == XDAG_STATE_WAIT || g_dag_state == XDAG_STATE_WTST ||
+				g_dag_state == XDAG_STATE_SYNC || g_dag_state == XDAG_STATE_STST || 
+				g_dag_state == XDAG_STATE_CONN || g_dag_state == XDAG_STATE_CTST)) {
+			if (g_dag_state == XDAG_STATE_SYNC || g_dag_state == XDAG_STATE_STST || 
 					g_dag_stats.nmain >= (MAIN_TIME(t) - dag_start_main_time())) {
 				g_block_production_on = 1;
 			} else if (last_nmain != nmain) {
@@ -1216,7 +1216,7 @@ begin:
 
 		pthread_mutex_lock(&block_mutex);
 
-		if (g_xdag_state == XDAG_STATE_REST) {
+		if (g_dag_state == XDAG_STATE_REST) {
 			g_xdag_sync_on = 0;
 			pthread_mutex_unlock(&block_mutex);
 			xdag_mining_start(0);
@@ -1248,7 +1248,7 @@ begin:
 		} else {
 			pthread_mutex_lock(&g_transport_mutex);
 			if (t > (g_dag_last_received << 10) && t - (g_dag_last_received << 10) > 3 * MAIN_CHAIN_PERIOD) {
-				g_xdag_state = (g_light_mode ? (g_dag_testnet ? XDAG_STATE_TTST : XDAG_STATE_TRYP)
+				g_dag_state = (g_light_mode ? (g_dag_testnet ? XDAG_STATE_TTST : XDAG_STATE_TRYP)
 					: (g_dag_testnet ? XDAG_STATE_WTST : XDAG_STATE_WAIT));
 				conn_time = sync_time = 0;
 			} else {
@@ -1262,15 +1262,15 @@ begin:
 				}
 
 				if (t - (g_dag_xfer_last << 10) <= 2 * MAIN_CHAIN_PERIOD + 4) {
-					g_xdag_state = XDAG_STATE_XFER;
+					g_dag_state = XDAG_STATE_XFER;
 				} else if (g_light_mode) {
-					g_xdag_state = (g_dag_mining_threads > 0 ?
+					g_dag_state = (g_dag_mining_threads > 0 ?
 						(g_dag_testnet ? XDAG_STATE_MTST : XDAG_STATE_MINE)
 						: (g_dag_testnet ? XDAG_STATE_PTST : XDAG_STATE_POOL));
 				} else if (t - sync_time > 8 * MAIN_CHAIN_PERIOD) {
-					g_xdag_state = (g_dag_testnet ? XDAG_STATE_CTST : XDAG_STATE_CONN);
+					g_dag_state = (g_dag_testnet ? XDAG_STATE_CTST : XDAG_STATE_CONN);
 				} else {
-					g_xdag_state = (g_dag_testnet ? XDAG_STATE_STST : XDAG_STATE_SYNC);
+					g_dag_state = (g_dag_testnet ? XDAG_STATE_STST : XDAG_STATE_SYNC);
 				}
 			}
 			pthread_mutex_unlock(&g_transport_mutex);
@@ -1665,7 +1665,7 @@ int dag_print_block_info(dag_hash_t hash, FILE *out)
 	if (bi->flags & BI_MAIN) {
 		xdag_hash2address(h, address);
 		fprintf(out, "   earning: %s  %10u.%09u  %s\n", address,
-			pramount(MAIN_START_AMOUNT >> ((MAIN_TIME(bi->time) - MAIN_TIME(XDAG_ERA)) >> MAIN_BIG_PERIOD_LOG)),
+			pramount(MAIN_START_AMOUNT >> ((MAIN_TIME(bi->time) - MAIN_TIME(DAG_ERA)) >> MAIN_BIG_PERIOD_LOG)),
 			time_buf);
 	}
 	

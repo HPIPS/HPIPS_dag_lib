@@ -1,7 +1,7 @@
 /* block processing, T13.654-T14.618 $DVS:time$ */
 
-#ifndef XDAG_BLOCK_H
-#define XDAG_BLOCK_H
+#ifndef DAG_BLOCK_H
+#define DAG_BLOCK_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -111,7 +111,7 @@ extern int dag_traverse_all_blocks(void *data, int (*callback)(void *data, dag_h
 	dag_amount_t amount, xtime_t time));
 
 // 创建新的块
-extern struct xdag_block* dag_create_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
+extern struct dag_block* dag_create_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
 	dag_amount_t fee, xtime_t send_time, dag_hash_t block_hash_result);
 
 // 创建并发布一个块
