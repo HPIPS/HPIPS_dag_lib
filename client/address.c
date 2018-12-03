@@ -22,7 +22,7 @@ int dag_address_init(void)
 }
 
 // 转换address到hash
-int dag_address2hash(const char *address, xdag_hash_t hash)
+int dag_address2hash(const char *address, dag_hash_t hash)
 {
 	uint8_t *fld = (uint8_t*)hash;
 	int i, c, d, n;
@@ -51,7 +51,7 @@ int dag_address2hash(const char *address, xdag_hash_t hash)
 }
 
 // 转换hash到address
-void dag_hash2address(const xdag_hash_t hash, char *address)
+void dag_hash2address(const dag_hash_t hash, char *address)
 {
 	int c, d;
 	const uint8_t *fld = (const uint8_t*)hash;

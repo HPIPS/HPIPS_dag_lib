@@ -30,7 +30,7 @@ static int validate_address(const char* pool_address, struct sockaddr_in *peerAd
 	char *lasts;
 	char buf[0x100] = { 0 };
 
-	// 填写服务器地址
+	// 填写矿池通讯地址（处理网络通信的地址）
 	memset(peerAddr, 0, sizeof(struct sockaddr_in));
 	peerAddr->sin_family = AF_INET;
 
@@ -98,7 +98,7 @@ int dag_connect_pool(const char* pool_address, const char** error_message)
 	return sock;
 }
 
-//Dga 关闭链接函数
+//Dga 关闭链接函数（退出函数）
 void dag_connection_close(int socket)
 {
 	if(socket != INVALID_SOCKET) {
