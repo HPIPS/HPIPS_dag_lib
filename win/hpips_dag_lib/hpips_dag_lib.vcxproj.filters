@@ -283,5 +283,6 @@
     <None Include="..\..\dnet\dnet_keys.bin">
       <Filter>dnet</Filter>
     </None>
+    <None Include="..\..\doc\HPIPS_DAG_逻辑导图.mm" />
   </ItemGroup>
 </Project>

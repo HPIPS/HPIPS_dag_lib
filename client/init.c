@@ -247,7 +247,7 @@ int dag_init(int argc, char **argv, int isGui)
 	//dag日志初始化
 	if (dag_log_init()) return -1;
 	
-	//初始化主机主机设置
+	//初始化主机设置
 	if (!is_miner) {
 		dag_mess("Reading hosts database...");
 		if (dag_netdb_init(pubaddr, n_addrports, addrports)) return -1;
