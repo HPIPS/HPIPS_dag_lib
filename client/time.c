@@ -8,16 +8,16 @@
 time_t g_time_limit = DEF_TIME_LIMIT, g_xdag_era = DAG_MAIN_ERA;
 extern int g_dag_testnet;
 
-// returns a time period index, where a period is 64 seconds long
+// 返回一个时间周期索引，其中周期为64秒长。
 time_t dag_main_time(void)
 {
 	return MAIN_TIME(dag_get_xtimestamp());
 }
 
-// returns the time period index corresponding to the start of the network
+// 返回与网络启动相对应的时间周期索引
 time_t dag_start_main_time(void)
 {
-	return MAIN_TIME(DAG_ERA);
+	return MAIN_TIME(DAG_ERA); //
 }
 
 ///*Dag 时间参数初始化
@@ -37,9 +37,9 @@ void dag_xtime_to_string(time_t time, char *buf)
 	struct tm tm;
 	char tmp[64] = {0};
 	time_t t = time >> 10;
-	localtime_r(&t, &tm);
-	strftime(tmp, 60, "%Y-%m-%d %H:%M:%S", &tm);
-	sprintf(buf, "%s.%03d", tmp, (int)((time & 0x3ff) * 1000) >> 10);
+	localtime_r(&t, &tm); //将时间转换本地时间
+	strftime(tmp, 60, "%Y-%m-%d %H:%M:%S", &tm); //格式化地址
+	sprintf(buf, "%s.%03d", tmp, (int)((time & 0x3ff) * 1000) >> 10); //输出文件的指针
 }
 
 // convert time to string representation
@@ -51,15 +51,18 @@ void xdag_time_to_string(time_t time, char* buf)
 	strftime(buf, 50, "%Y-%m-%d %H:%M:%S", &tm);
 }
 
+//返回时间周期索引
 time_t dag_get_xtimestamp(void)
 {
 	struct timeval tp;
 
+	//获取当天时间函数
 	gettimeofday(&tp, 0);
 
 	return (uint64_t)(unsigned long)tp.tv_sec << 10 | ((tp.tv_usec << 10) / 1000000);
 }
 
+//返回时间函数到毫秒级别
 uint64_t dag_get_time_ms(void)
 {
 	struct timeval tp;

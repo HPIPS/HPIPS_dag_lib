@@ -4,6 +4,7 @@
 #include <sys/time.h>
 #include <termios.h>
 
+//获得今天的时间
 int gettimeofday(struct timeval * tp, struct timezone * tzp)
 {
 	// Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
