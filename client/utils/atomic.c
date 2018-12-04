@@ -16,7 +16,7 @@ switch(sizeof(*object)) { \
 	case 8: \
 		return _InterlockedExchange64((volatile long long*)object, desired); \
 	default: \
-		xdag_err("This atomic data size %d is not supported on windows", sizeof(*object)); \
+		dag_err("This atomic data size %d is not supported on windows", sizeof(*object)); \
 		return 0; \
 }
 
@@ -69,7 +69,7 @@ switch(sizeof(*object)) { \
 		} \
 		return success; } \
 	default: \
-		xdag_err("This atomic data size %d is not supported on windows", sizeof(*object)); \
+		dag_err("This atomic data size %d is not supported on windows", sizeof(*object)); \
 		return 0; \
 }
 

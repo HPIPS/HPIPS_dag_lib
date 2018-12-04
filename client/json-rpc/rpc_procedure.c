@@ -107,14 +107,14 @@ int dag_rpc_service_register_procedure(dag_rpc_function function_pointer, char *
 	LL_FOREACH(g_procedures, elem)
 	{
 		if(!strcmp(elem->procedure.name, name)) {
-			xdag_err("rpc server : procedure %s already existed.", name);
+			dag_err("rpc server : procedure %s already existed.", name);
 			return -1;
 		}
 	}
 
 	struct rpc_procedure_element *new_elem = malloc(sizeof(struct rpc_procedure_element));
 	if(!new_elem) {
-		xdag_err("rpc server : malloc failed!");
+		dag_err("rpc server : malloc failed!");
 		return -1;
 	}
 	memset(new_elem, 0, sizeof(struct rpc_procedure_element));

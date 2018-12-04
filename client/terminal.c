@@ -111,7 +111,7 @@ void *terminal_thread(void *arg)
 	struct sockaddr_un addr;
 	
 	if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
-		xdag_err("Can't create unix domain socket errno:%d", errno);
+		dag_err("Can't create unix domain socket errno:%d", errno);
 		return 0;
 	}
 	memset(&addr, 0, sizeof(addr));
@@ -119,12 +119,12 @@ void *terminal_thread(void *arg)
 	strcpy(addr.sun_path, UNIX_SOCK);
 	unlink(UNIX_SOCK);
 	if (bind(sock, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
-		xdag_err("Can't bind unix domain socket errno:%d", errno);
+		dag_err("Can't bind unix domain socket errno:%d", errno);
 		return 0;
 	}
 #else	
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		xdag_err("Can't create domain socket errno:%d", WSAGetLastError());
+		dag_err("Can't create domain socket errno:%d", WSAGetLastError());
 		return 0;
 	}
 	struct sockaddr_in addrLocal;
@@ -137,7 +137,7 @@ void *terminal_thread(void *arg)
 	}
 #endif
 	if (listen(sock, 100) == -1) {
-		xdag_err("Unix domain socket listen errno:%d", errno);
+		dag_err("Unix domain socket listen errno:%d", errno);
 		return 0;
 	}
 	while (1) {
@@ -166,13 +166,13 @@ void *terminal_thread(void *arg)
 #if !defined(_WIN32) && !defined(_WIN64)
 			FILE *fd = fdopen(clientSock, "w");
 			if (!fd) {
-				xdag_err("Can't fdopen unix domain socket errno:%d", errno);
+				dag_err("Can't fdopen unix domain socket errno:%d", errno);
 				break;
 			}
 #else
 			FILE *fd = tmpfile();
 			if (!fd) {
-				xdag_err("Can't create a temporary file");
+				dag_err("Can't create a temporary file");
 				break;
 			}
 #endif

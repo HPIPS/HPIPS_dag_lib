@@ -150,28 +150,28 @@ static void *rpc_service_thread(void *arg)
 	
 	int sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if(sock == INVALID_SOCKET) {
-		xdag_err("rpc service : can't create socket %s", strerror(errno));
+		dag_err("rpc service : can't create socket %s", strerror(errno));
 	}
 
 	int reuse_opt = 1;
 	struct linger linger_opt = {1, 0};
 	if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse_opt, sizeof(reuse_opt)) < 0) {
-		xdag_err("rpc service : can't set SO_REUSEADDR flag on socket %d, error : %s", sock, strerror(errno));
+		dag_err("rpc service : can't set SO_REUSEADDR flag on socket %d, error : %s", sock, strerror(errno));
 		return 0;
 	}
 
 	if(setsockopt(sock, SOL_SOCKET, SO_LINGER, (char*)&linger_opt, sizeof(linger_opt)) < 0) {
-		xdag_err("rpc service : can't set SO_LINGER flag on socket %d, error : %s", sock, strerror(errno));
+		dag_err("rpc service : can't set SO_LINGER flag on socket %d, error : %s", sock, strerror(errno));
 		return 0;
 	}
 
 	if(bind(sock, (struct sockaddr*)&peeraddr, sizeof(peeraddr))) {
-		xdag_err("rpc service : socket bind failed. error : %s", strerror(errno));
+		dag_err("rpc service : socket bind failed. error : %s", strerror(errno));
 		return 0;
 	}
 	
 	if(listen(sock, 100) == -1) {
-		xdag_err("rpc service : socket listen failed. error : %s", strerror(errno));
+		dag_err("rpc service : socket listen failed. error : %s", strerror(errno));
 		return 0;
 	}
 
@@ -198,7 +198,7 @@ static void *rpc_service_thread(void *arg)
 			ready = 1;
 			int client_fd = accept(sock, (struct sockaddr*)&peeraddr, &peeraddr_len);
 			if(client_fd < 0) {
-				xdag_err("rpc service : accept failed on socket %d, error : %s", sock, strerror(errno));
+				dag_err("rpc service : accept failed on socket %d, error : %s", sock, strerror(errno));
 				continue;
 			}
 
@@ -262,14 +262,14 @@ static void *rpc_service_thread(void *arg)
 				pthread_t th;
 				int err = pthread_create(&th, 0, rpc_handle_thread, conn);
 				if(err) {
-					xdag_err("rpc service : create thread failed. error : %s", strerror(err));
+					dag_err("rpc service : create thread failed. error : %s", strerror(err));
 					close_connection(conn);
 					continue;
 				}
 
 				err = pthread_detach(th);
 				if(err) {
-					xdag_err("rpc service : detach thread failed. error : %s", strerror(err));
+					dag_err("rpc service : detach thread failed. error : %s", strerror(err));
 				}
 				p->fd = -1;
 			}

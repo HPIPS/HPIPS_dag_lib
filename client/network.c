@@ -81,7 +81,7 @@ int dag_connect_pool(const char* pool_address, const char** error_message)
 		return INVALID_SOCKET;
 	}
 	if(fcntl(sock, F_SETFD, FD_CLOEXEC) == -1) {
-		xdag_err("pool : can't set FD_CLOEXEC flag on socket %d, %s\n", sock, strerror(errno));
+		dag_err("pool : can't set FD_CLOEXEC flag on socket %d, %s\n", sock, strerror(errno));
 	}
 
 	//将“LINGER”超时设置为零，关闭监听套接字

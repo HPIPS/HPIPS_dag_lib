@@ -395,12 +395,12 @@ static int open_pool_connection(const char *pool_arg)
 	// Create a socket
 	int sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if(sock == INVALID_SOCKET) {
-		xdag_err("pool: cannot create a socket");
+		dag_err("pool: cannot create a socket");
 		return INVALID_SOCKET;
 	}
 
 	if(fcntl(sock, F_SETFD, FD_CLOEXEC) == -1) {
-		xdag_err("pool: can't set FD_CLOEXEC flag on socket %d, %s\n", sock, strerror(errno));
+		dag_err("pool: can't set FD_CLOEXEC flag on socket %d, %s\n", sock, strerror(errno));
 	}
 
 	// Fill in the address of server
@@ -413,7 +413,7 @@ static int open_pool_connection(const char *pool_arg)
 	}
 	pool_arg = strtok_r(buf, " \t\r\n:", &nextParam);
 	if(!pool_arg) {
-		xdag_err("pool: host is not given");
+		dag_err("pool: host is not given");
 		return INVALID_SOCKET;
 	}
 
@@ -422,14 +422,14 @@ static int open_pool_connection(const char *pool_arg)
 	// Resolve port
 	pool_arg = strtok_r(0, " \t\r\n:", &nextParam);
 	if(!pool_arg) {
-		xdag_err("pool: port is not given");
+		dag_err("pool: port is not given");
 		return INVALID_SOCKET;
 	}
 	peeraddr.sin_port = htons(atoi(pool_arg));
 
 	int res = bind(sock, (struct sockaddr*)&peeraddr, sizeof(peeraddr));
 	if(res) {
-		xdag_err("pool: cannot bind a socket (error %s)", strerror(res));
+		dag_err("pool: cannot bind a socket (error %s)", strerror(res));
 		return INVALID_SOCKET;
 	}
 
@@ -503,14 +503,14 @@ void *pool_net_thread(void *arg)
 
 	int sock = open_pool_connection(pool_arg);
 	if(sock == INVALID_SOCKET) {
-		xdag_err("Pool: open connection error!");
+		dag_err("Pool: open connection error!");
 		return 0;
 	}
 
 	// Now, listen for a connection
 	int res = listen(sock, MAX_CONNECTIONS_COUNT);    // "1" is the maximal length of the queue
 	if(res) {
-		xdag_err("pool: cannot listen");
+		dag_err("pool: cannot listen");
 		return 0;
 	}
 
@@ -519,7 +519,7 @@ void *pool_net_thread(void *arg)
 		// no timeout limit...)
 		int fd = accept(sock, (struct sockaddr*)&peeraddr, &peeraddr_len);
 		if(fd < 0) {
-			xdag_err("pool: cannot accept connection");
+			dag_err("pool: cannot accept connection");
 			return 0;
 		}
 
@@ -743,7 +743,7 @@ static void clear_nonces_hashtable(struct miner_pool_data *miner)
 static int share_can_be_accepted(struct miner_pool_data *miner, dag_hash_t share, uint64_t task_index)
 {
 	if(!miner) {
-		xdag_err("conn_data->miner is null");
+		dag_err("conn_data->miner is null");
 		return 0;
 	}
 	struct nonce_hash *eln;

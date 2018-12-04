@@ -60,13 +60,13 @@ int xdag_rpc_command_host_add(const char *host)
 	struct in_addr addr = {0};
 
 	if(!validate_ipv4(host)) {
-		xdag_err("ip address is invalid");
+		dag_err("ip address is invalid");
 		return -1;
 	}
 
 	LL_COUNT(g_rpc_white_host, new_white_host, white_num);
 	if(white_num >= RPC_WHITE_MAX) {
-		xdag_err("white list number is up to maximum");
+		dag_err("white list number is up to maximum");
 		return -2;
 	}
 
@@ -81,7 +81,7 @@ int xdag_rpc_command_host_add(const char *host)
 
 	new_white_host = malloc(sizeof(rpc_white_element));
 	if(NULL == new_white_host){
-		xdag_err("memory is not enough.");
+		dag_err("memory is not enough.");
 		return -4;
 	}
 

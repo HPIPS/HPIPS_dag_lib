@@ -33,7 +33,7 @@ static int correct_storage_sum(const char *path, int pos, const struct dag_stora
 
 	if (f) {
 		if (fread(sums, sizeof(struct dag_storage_sum), 256, f) != 256) {
-			xdag_close_file(f); xdag_err("Storage: sums file %s corrupted", path);
+			xdag_close_file(f); dag_err("Storage: sums file %s corrupted", path);
 			return -1;
 		}
 		rewind(f);
@@ -53,7 +53,7 @@ static int correct_storage_sum(const char *path, int pos, const struct dag_stora
 
 		if (sums[pos].size || sums[pos].sum) {
 			sums[pos].size = sums[pos].sum = 0;
-			xdag_err("Storage: corrupted, sums file %s, pos %x", path, pos);
+			dag_err("Storage: corrupted, sums file %s, pos %x", path, pos);
 		}
 	}
 
@@ -61,7 +61,7 @@ static int correct_storage_sum(const char *path, int pos, const struct dag_stora
 	sums[pos].sum += sum->sum;
 	
 	if (fwrite(sums, sizeof(struct dag_storage_sum), 256, f) != 256) {
-		xdag_close_file(f); xdag_err("Storage: can't write file %s", path); return -1;
+		xdag_close_file(f); dag_err("Storage: can't write file %s", path); return -1;
 	}
 	
 	xdag_close_file(f);

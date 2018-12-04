@@ -120,17 +120,17 @@ static struct orphan_block *g_orphan_first[ORPHAN_HASH_SIZE], *g_orphan_last[ORP
 
 //functions
 void cache_retarget(int32_t, int32_t);
-void cache_add(struct xdag_block*, dag_hash_t);
-int32_t check_signature_out_cached(struct block_internal*, struct xdag_public_key*, const int, int32_t*, int32_t*);
-int32_t check_signature_out(struct block_internal*, struct xdag_public_key*, const int);
-static int32_t find_and_verify_signature_out(struct xdag_block*, struct xdag_public_key*, const int);
-int do_mining(struct xdag_block *block, struct block_internal **pretop, xtime_t send_time);
+void cache_add(struct dag_block*, dag_hash_t);
+int32_t check_signature_out_cached(struct block_internal*, struct dag_public_key*, const int, int32_t*, int32_t*);
+int32_t check_signature_out(struct block_internal*, struct dag_public_key*, const int);
+static int32_t find_and_verify_signature_out(struct dag_block*, struct dag_public_key*, const int);
+int do_mining(struct dag_block *block, struct block_internal **pretop, xtime_t send_time);
 void remove_orphan(struct block_internal*,int);
-void add_orphan(struct block_internal*,struct xdag_block*);
+void add_orphan(struct block_internal*,struct dag_block*);
 static inline size_t remark_acceptance(dag_remark_t);
 static int add_remark_bi(struct block_internal*, dag_remark_t);
 static void add_backref(struct block_internal*, struct block_internal*);
-static inline int get_nfield(struct xdag_block*, int);
+static inline int get_nfield(struct dag_block*, int);
 static inline const char* get_remark(struct block_internal*);
 static int load_remark(struct block_internal*);
 static void order_ourblocks_by_amount(struct block_internal *bi);
@@ -483,8 +483,8 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 
 	if(block_by_hash(tmpNodeBlock.hash)) return 0;
 
-	if(xdag_type(newBlock, 0) != g_block_header_type) {
-		i = xdag_type(newBlock, 0);
+	if(dag_type(newBlock, 0) != g_block_header_type) {
+		i = dag_type(newBlock, 0);
 		err = 1;
 		goto end;
 	}
@@ -499,7 +499,7 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 	}
 
 	for(i = 1; i < DAG_BLOCK_FIELDS; ++i) {
-		switch((type = xdag_type(newBlock, i))) {
+		switch((type = dag_type(newBlock, i))) {
 			case DAG_FIELD_NONCE:
 				break;
 			case DAG_FIELD_IN:
@@ -717,7 +717,7 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 	if(!(transportHeader & (sizeof(struct dag_block) - 1))) {
 		tmpNodeBlock.storage_pos = transportHeader;
 	} else if (!(tmpNodeBlock.flags & BI_EXTRA)) {
-		tmpNodeBlock.storage_pos = xdag_storage_save(newBlock);
+		tmpNodeBlock.storage_pos = dag_storage_save(newBlock);
 	} else {
 		/* do not store extra block right now */
 		tmpNodeBlock.storage_pos = -2l;
@@ -810,7 +810,7 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 
 end:
 	for(j = 0; j < keysCount; ++j) {
-		xdag_free_key(public_keys[j].key);
+		dag_free_key(public_keys[j].key);
 	}
 
 	if(err > 0) {
@@ -840,7 +840,7 @@ void *add_block_callback(void *block, void *data)
 	pthread_mutex_unlock(&block_mutex);
 
 	if(res >= 0) {
-		xdag_sync_pop_block(b);
+		dag_sync_pop_block(b);
 	}
 
 	return 0;
@@ -874,7 +874,7 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 	pthread_mutex_lock(&g_create_block_mutex);
 	struct dag_block block[2];
 	int i, j, res, mining, defkeynum, keysnum[DAG_BLOCK_FIELDS], nkeys, nkeysnum = 0, outsigkeyind = -1, has_pool_tag = 0;
-	struct dag_public_key *defkey = xdag_wallet_default_key(&defkeynum), *keys = xdag_wallet_our_keys(&nkeys), *key;
+	struct dag_public_key *defkey = dag_wallet_default_key(&defkeynum), *keys = dag_wallet_our_keys(&nkeys), *key;
 	dag_hash_t signatureHash;
 	dag_hash_t newBlockHash;
 	struct block_internal *ref, *pretop = pretop_block();
@@ -901,7 +901,7 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 	int res0 = 1 + inputsCount + outputsCount + hasRemark + 3 * nkeysnum + (outsigkeyind < 0 ? 2 : 0);
 
 	if (res0 > DAG_BLOCK_FIELDS) {
-		xdag_err("create block failed, exceed max number of fields.");
+		dag_err("create block failed, exceed max number of fields.");
 		return NULL;
 	}
 
@@ -1771,7 +1771,7 @@ void cache_retarget(int32_t cache_hit, int32_t cache_miss)
 	}
 }
 
-void cache_add(struct xdag_block* block, dag_hash_t hash)
+void cache_add(struct dag_block* block, dag_hash_t hash)
 {
 	if(g_dag_extstats.cache_usage <= CACHE_MAX_SIZE) {
 		struct cache_block *cacheBlock = malloc(sizeof(struct cache_block));
@@ -2038,7 +2038,7 @@ static int add_remark_bi(struct block_internal* bi, dag_remark_t strbuf)
 	size_t size = remark_acceptance(strbuf);
 	char *remark_tmp = xdag_malloc(size + 1);
 	if(remark_tmp == NULL) {
-		xdag_err("xdag_malloc failed, [function add_remark_bi]");
+		dag_err("xdag_malloc failed, [function add_remark_bi]");
 		return 0;
 	}
 	memset(remark_tmp, 0, size + 1);
@@ -2060,7 +2060,7 @@ static void add_backref(struct block_internal* blockRef, struct block_internal* 
 	if( tmp == NULL || tmp->backrefs[N_BACKREFS - 1]) {
 		struct block_backrefs *blockRefs_to_insert = xdag_malloc(sizeof(struct block_backrefs));
 		if(blockRefs_to_insert == NULL) {
-			xdag_err("xdag_malloc failed. [function add_backref]");
+			dag_err("xdag_malloc failed. [function add_backref]");
 			return;
 		}
 		memset(blockRefs_to_insert, 0, sizeof(struct block_backrefs));
@@ -2106,7 +2106,7 @@ static int load_remark(struct block_internal* bi) {
 
 	int remark_field = get_nfield(bref, DAG_FIELD_REMARK);
 	if (remark_field < 0) {
-		xdag_err("Remark field not found [function: load_remark]");
+		dag_err("Remark field not found [function: load_remark]");
 		pthread_mutex_lock(&block_mutex);
 		bi->flags &= ~BI_REMARK;
 		pthread_mutex_unlock(&block_mutex);

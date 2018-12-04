@@ -338,7 +338,7 @@ static void *refresh_thread(void *arg)
 					}
 					pthread_mutex_unlock(&g_white_list_mutex);
 				} else {
-					xdag_err("white-list format is incorrect. \n%s", resp);
+					dag_err("white-list format is incorrect. \n%s", resp);
 				}
 
 				dag_info("\n%s", resp);
@@ -384,7 +384,7 @@ int dag_netdb_init(const char *our_host_str, int npairs, const char **addr_port_
 		return -1;
 	}
 	if(pthread_detach(t)) {
-		xdag_err("detach moniter_thread failed.");
+		dag_err("detach moniter_thread failed.");
 	}
 
 	if(pthread_create(&t, 0, refresh_thread, 0)) {
@@ -392,7 +392,7 @@ int dag_netdb_init(const char *our_host_str, int npairs, const char **addr_port_
 		return -1;
 	}
 	if(pthread_detach(t)) {
-		xdag_err("detach refresh_thread failed.");
+		dag_err("detach refresh_thread failed.");
 	}
 
 	return 0;

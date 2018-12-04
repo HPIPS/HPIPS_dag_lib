@@ -97,7 +97,7 @@ extern int g_bi_index_enable;
 extern int dag_blocks_start(int is_pool, int mining_threads_count, int miner_address);
 
 // 检查并向存储块中添加块。在错误的情况下返回非零值。
-extern int dag_add_block(struct xdag_block *b);
+extern int dag_add_block(struct dag_block *b);
 
 // 返回我们的初始块。如果没有块，则创建第一个块。
 extern int dag_get_our_block(dag_hash_t hash);

@@ -115,12 +115,12 @@ static void check_ring(struct mutex_thread_vertex * graph, struct mutex_thread_v
 		}
 
 		if(found_ring) {
-			xdag_err("Dead lock found!");
+			dag_err("Dead lock found!");
 			LL_FOREACH(path, path_elem)
 			{
-				xdag_err("thread %12llx mutex %s ->", path_elem->tid, path_elem->mutex_name);
+				dag_err("thread %12llx mutex %s ->", path_elem->tid, path_elem->mutex_name);
 			}
-			xdag_err("thread %12llx mutex %s", list_elem->tid, list_elem->mutex_name);
+			dag_err("thread %12llx mutex %s", list_elem->tid, list_elem->mutex_name);
 			continue;
 		}
 
@@ -246,13 +246,13 @@ void start_check_deadlock_thread(void)
 
 	int err = pthread_create(&th, 0, check_deadlock_thread, NULL);
 	if(err != 0) {
-		xdag_err("create check_deadlock_thread failed! error : %s", strerror(err));
+		dag_err("create check_deadlock_thread failed! error : %s", strerror(err));
 		return;
 	}
 
 	err = pthread_detach(th);
 	if(err != 0) {
-		xdag_err("detach check_deadlock_thread failed! error : %s", strerror(err));
+		dag_err("detach check_deadlock_thread failed! error : %s", strerror(err));
 		return;
 	}
 }

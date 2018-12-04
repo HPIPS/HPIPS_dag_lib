@@ -364,7 +364,7 @@ static int do_request(int type, xtime_t start_time, xtime_t end_time, void *data
 			reply_data = NULL;
 			reply_callback = NULL;
 			if(ret != EAGAIN && ret != ETIMEDOUT) {
-				xdag_err("pthread_cond_timedwait failed [function: do_request, ret = %d]", ret);
+				dag_err("pthread_cond_timedwait failed [function: do_request, ret = %d]", ret);
 			}
 			break;
 		}
