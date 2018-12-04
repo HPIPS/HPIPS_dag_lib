@@ -17,6 +17,7 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/param.h>
+//#include <windows.h>
 #include "dirname.h"
 
 char *

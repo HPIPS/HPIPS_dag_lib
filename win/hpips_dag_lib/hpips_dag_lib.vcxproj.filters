@@ -135,9 +135,6 @@
     <ClInclude Include="..\..\client\utils\atomic.h">
       <Filter>cilent\utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\client\utils\dirname.h">
-      <Filter>cilent\utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\client\utils\linenoise.h">
       <Filter>cilent\utils</Filter>
     </ClInclude>
@@ -255,9 +252,6 @@
       <Filter>cilent\mining</Filter>
     </ClCompile>
     <ClCompile Include="..\..\client\utils\atomic.c">
-      <Filter>cilent\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\client\utils\dirname.c">
       <Filter>cilent\utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\client\utils\linenoise.c">

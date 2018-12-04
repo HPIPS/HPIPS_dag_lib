@@ -11,17 +11,17 @@
 #include "utils/log.h"
 #include "utils/utils.h"
 
-#define WALLET_FILE (g_xdag_testnet ? "wallet-testnet.dat" : "wallet.dat")
+#define WALLET_FILE (g_dag_testnet ? "wallet-testnet.dat" : "wallet.dat")
 
 struct key_internal {
-	xdag_hash_t pub, priv;
+	dag_hash_t pub, priv;
 	void *key;
 	struct key_internal *prev;
 	uint8_t pub_bit;
 };
 
 static struct key_internal *def_key = 0;
-static struct xdag_public_key *keys_arr = 0;
+static struct dag_public_key *keys_arr = 0;
 static pthread_mutex_t wallet_mutex = PTHREAD_MUTEX_INITIALIZER;
 int nkeys = 0, maxnkeys = 0;
 
