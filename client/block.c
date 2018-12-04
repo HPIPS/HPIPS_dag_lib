@@ -847,7 +847,7 @@ void *add_block_callback(void *block, void *data)
 }
 
 /* 检查并向存储添加块。 出错时返回非零值。 */
-int dag_add_block(struct xdag_block *b)
+int dag_add_block(struct dag_block *b)
 {
 	pthread_mutex_lock(&block_mutex);
 	int res = add_block_nolock(b, g_time_limit);

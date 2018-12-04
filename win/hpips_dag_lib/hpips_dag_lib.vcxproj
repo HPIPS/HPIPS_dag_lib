@@ -178,7 +178,6 @@
     <ClInclude Include="..\..\client\uthash\uthash.h" />
     <ClInclude Include="..\..\client\uthash\utlist.h" />
     <ClInclude Include="..\..\client\utils\atomic.h" />
-    <ClInclude Include="..\..\client\utils\linenoise.h" />
     <ClInclude Include="..\..\client\utils\log.h" />
     <ClInclude Include="..\..\client\utils\utils.h" />
     <ClInclude Include="..\..\client\wallet.h" />
@@ -219,7 +218,6 @@
     <ClCompile Include="..\..\client\time.c" />
     <ClCompile Include="..\..\client\transport.c" />
     <ClCompile Include="..\..\client\utils\atomic.c" />
-    <ClCompile Include="..\..\client\utils\linenoise.c" />
     <ClCompile Include="..\..\client\utils\log.c" />
     <ClCompile Include="..\..\client\utils\utils.c" />
     <ClCompile Include="..\..\client\wallet.c" />

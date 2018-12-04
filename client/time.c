@@ -5,17 +5,17 @@
 #include "system.h"
 #include "utils/utils.h"
 
-time_t g_time_limit = DEF_TIME_LIMIT, g_xdag_era = DAG_MAIN_ERA;
+xtime_t g_time_limit = DEF_TIME_LIMIT, g_xdag_era = DAG_MAIN_ERA;
 extern int g_dag_testnet;
 
 // 返回一个时间周期索引，其中周期为64秒长。
-time_t dag_main_time(void)
+xtime_t dag_main_time(void)
 {
 	return MAIN_TIME(dag_get_xtimestamp());
 }
 
 // 返回与网络启动相对应的时间周期索引
-time_t dag_start_main_time(void)
+xtime_t dag_start_main_time(void)
 {
 	return MAIN_TIME(DAG_ERA); //
 }
@@ -32,11 +32,11 @@ int dag_time_init(void)
 
 // convert xtime_t to string representation
 // minimal length of string buffer `buf` should be 60
-void dag_xtime_to_string(time_t time, char *buf)
+void dag_xtime_to_string(xtime_t time, char *buf)
 {
 	struct tm tm;
 	char tmp[64] = {0};
-	time_t t = time >> 10;
+	xtime_t t = time >> 10;
 	localtime_r(&t, &tm); //将时间转换本地时间
 	strftime(tmp, 60, "%Y-%m-%d %H:%M:%S", &tm); //格式化地址
 	sprintf(buf, "%s.%03d", tmp, (int)((time & 0x3ff) * 1000) >> 10); //输出文件的指针
@@ -44,7 +44,7 @@ void dag_xtime_to_string(time_t time, char *buf)
 
 // convert time to string representation
 // minimal length of string buffer `buf` should be 50
-void xdag_time_to_string(time_t time, char* buf)
+void xdag_time_to_string(xtime_t time, char* buf)
 {
 	struct tm tm;
 	localtime_r(&time, &tm);
@@ -52,7 +52,7 @@ void xdag_time_to_string(time_t time, char* buf)
 }
 
 //返回时间周期索引
-time_t dag_get_xtimestamp(void)
+xtime_t dag_get_xtimestamp(void)
 {
 	struct timeval tp;
 

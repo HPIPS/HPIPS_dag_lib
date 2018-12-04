@@ -8,7 +8,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include <sys/stat.h>
-#include <semaphore.h>
+#include <windows.h>
 #include <fcntl.h>
 #include "../system.h"
 #include "log.h"

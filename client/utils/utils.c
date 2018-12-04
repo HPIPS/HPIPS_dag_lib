@@ -336,7 +336,7 @@ void dag_close_file(FILE *f)
 int dag_file_exists(const char *path)
 {
 	char abspath[1024] = {0};
-	sprintf(abspath, "%s%s", g_xdag_current_path, path);
+	sprintf(abspath, "%s%s", g_dag_current_path, path);
 	struct stat st;
 	return !stat(abspath, &st);
 }
@@ -344,7 +344,7 @@ int dag_file_exists(const char *path)
 int dag_mkdir(const char *path)
 {
 	char abspath[1024] = {0};
-	sprintf(abspath, "%s%s", g_xdag_current_path, path);
+	sprintf(abspath, "%s%s", g_dag_current_path, path);
 
 #if defined(_WIN32)
 	return _mkdir(abspath);

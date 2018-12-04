@@ -22,24 +22,24 @@
 extern "C" {
 #endif
 
-extern time_t g_dag_era;
+extern xtime_t g_dag_era;
 
 // 返回一个时间周期索引，其中周期为64秒长。
-time_t dag_main_time(void);
+xtime_t dag_main_time(void);
 
 //返回与网络启动相对应的时间周期索引
-time_t dag_start_main_time(void);
+xtime_t dag_start_main_time(void);
 
 //初始化时间模型
 int dag_time_init(void);
 
 //转换xTimeTyt到字符串表示
 // 字符串缓冲区“BUF”的最小长度应该是60。
-void dag_xtime_to_string(time_t time, char *buf);
+void dag_xtime_to_string(xtime_t time, char *buf);
 
 // convert time_t to string representation
 // minimal length of string buffer `buf` should be 50
-void dag_time_to_string(time_t time, char* buf);
+void dag_time_to_string(xtime_t time, char* buf);
 
 extern time_t dag_get_xtimestamp(void);
 
