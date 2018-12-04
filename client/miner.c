@@ -259,7 +259,7 @@ begin:
 					const uint64_t task_index = g_dag_pool_task_index + 1;
 					struct dag_pool_task *task = &g_dag_pool_task[task_index & 1];
 
-					task->task_time = xdag_main_time();
+					task->task_time = dag_main_time();
 					xdag_hash_set_state(task->ctx, data[0].data,
 						sizeof(struct dag_block) - 2 * sizeof(struct dag_field));
 					xdag_hash_update(task->ctx, data[1].data, sizeof(struct dag_field));

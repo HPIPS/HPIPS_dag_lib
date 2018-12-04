@@ -47,7 +47,7 @@ static int add_key(dag_hash_t priv)
 		
 		memcpy(priv32, k->priv, sizeof(dag_hash_t));
 		
-		xdag_user_crypt_action(priv32, nkeys, sizeof(dag_hash_t) / sizeof(uint32_t), 1);
+		dag_user_crypt_action(priv32, nkeys, sizeof(dag_hash_t) / sizeof(uint32_t), 1);
 		
 		if (fwrite(priv32, sizeof(dag_hash_t), 1, f) != 1) {
 			xdag_close_file(f);

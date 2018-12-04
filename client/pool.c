@@ -267,7 +267,7 @@ void *general_mining_thread(void *arg)
 	dag_mess("Starting main blocks creation...");
 
 	while(!g_stop_general_mining) {
-		xdag_create_and_send_block(0, 0, 0, 0, 0, xdag_main_time() << 16 | 0xffff, NULL);
+		dag_create_and_send_block(0, 0, 0, 0, 0, dag_main_time() << 16 | 0xffff, NULL);
 	}
 
 	dag_mess("Stopping general mining thread...");
@@ -590,7 +590,7 @@ static void close_connection(connection_list_element *connection, const char *me
 
 	if(conn_data->miner) {
 		char address_buf[33] = {0};
-		xdag_hash2address((state == MINER_ARCHIVE ? id.data : conn_data->miner->id.data), address_buf);
+		dag_hash2address((state == MINER_ARCHIVE ? id.data : conn_data->miner->id.data), address_buf);
 		dag_info("Pool: miner %s disconnected from %u.%u.%u.%u:%u by %s", address_buf,
 			ip & 0xff, ip >> 8 & 0xff, ip >> 16 & 0xff, ip >> 24 & 0xff, ntohs(port), message);
 	} else {
@@ -686,7 +686,7 @@ static int register_new_miner(connection_list_element *connection)
 	if(position < 0) {
 		char address_buf[33] = {0};
 		char message[100] = {0};
-		xdag_hash2address((const uint64_t*)conn_data->data, address_buf);
+		dag_hash2address((const uint64_t*)conn_data->data, address_buf);
 		sprintf(message, "Miner's address is unknown (%s)", address_buf);
 		close_connection(connection, message);
 		return 0;
@@ -1067,7 +1067,7 @@ void *pool_block_thread(void *arg)
 			processed = 1;
 			b->field[0].transport_header = 2;
 
-			int res = xdag_add_block(b);
+			int res = dag_add_block(b);
 			if(res > 0) {
 				xdag_send_new_block(b);
 			}
@@ -1257,7 +1257,7 @@ static void transfer_payment(struct miner_pool_data *miner, dag_amount_t payment
 	fields[*field_index].amount = payment_sum;
 	fields[0].amount += payment_sum;
 
-	xdag_log_xfer(fields[0].data, fields[*field_index].data, payment_sum);
+	dag_log_xfer(fields[0].data, fields[*field_index].data, payment_sum);
 
 	if(++*field_index == payments_per_block) {
 		struct dag_block *payment_block = xdag_create_block(fields, 1, *field_index - 1, 0, 0, 0, NULL);
@@ -1339,7 +1339,7 @@ int pay_miners(xtime_t time)
 	int key = xdag_get_key(hash);
 	if(key < 0) return -4;
 
-	if(!xdag_wallet_default_key(&defkey)) return -5;
+	if(!dag_wallet_default_key(&defkey)) return -5;
 
 	const int payments_per_block = (key == defkey ? 12 : 10);
 
@@ -1380,7 +1380,7 @@ void remove_inactive_miners(void)
 	LL_FOREACH_SAFE(g_miner_list_head, elt, eltmp)
 	{
 		if(elt->miner_data.state == MINER_ARCHIVE && miner_calculate_unpaid_shares(&elt->miner_data) == 0.0) {
-			xdag_hash2address(elt->miner_data.id.data, address);
+			dag_hash2address(elt->miner_data.id.data, address);
 
 			LL_DELETE(g_miner_list_head, elt);
 			clear_nonces_hashtable(&elt->miner_data);
@@ -1420,7 +1420,7 @@ static int print_miner(FILE *out, int index, struct miner_pool_data *miner, int 
 {
 	char ip_port_str[32] = {0}, in_out_str[64] = {0};
 	char address_buf[33] = {0};
-	xdag_hash2address(miner->id.data, address_buf);
+	dag_hash2address(miner->id.data, address_buf);
 
 	fprintf(out, "%3d. %s  %s  %-21s  %-16s  %-13lf  -             %Lf\n", index, address_buf,
 		miner_state_to_string(miner->state), "-", "-", miner_calculate_unpaid_shares(miner), xdag_log_difficulty2hashrate(miner->mean_log_difficulty));
@@ -1475,7 +1475,7 @@ static void print_connection(FILE *out, int index, struct connection_pool_data *
 		(unsigned long long)conn_data->nfield_out * sizeof(struct dag_field));
 
 	if(conn_data->miner) {
-		xdag_hash2address(conn_data->miner->id.data, address);
+		dag_hash2address(conn_data->miner->id.data, address);
 	} else {
 		strncpy(address, "-                               ", 49);
 	}

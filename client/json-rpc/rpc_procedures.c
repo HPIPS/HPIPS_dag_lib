@@ -189,7 +189,7 @@ cJSON * method_xdag_stats(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id
 
 	char buf[128] = {0};
 	if(g_is_miner) {
-		sprintf(buf, "%.2lf MHs", xdagGetHashRate());
+		sprintf(buf, "%.2lf MHs", dagGetHashRate());
 		cJSON *json_hashrate = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "hashrate", json_hashrate);
 	} else {
@@ -279,7 +279,7 @@ int rpc_account_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime
 	if(d->count-- <=0) return -1;
 	
 	char address_buf[33] = {0};
-	xdag_hash2address(hash, address_buf);
+	dag_hash2address(hash, address_buf);
 
 	cJSON *address = cJSON_CreateString(address_buf);
 	char str[128] = {0};
@@ -421,7 +421,7 @@ int rpc_get_block_info_callback(void *data, int flags, dag_hash_t hash, dag_amou
 	}
 
 	char address_buf[33] = {0};
-	xdag_hash2address(hash, address_buf);
+	dag_hash2address(hash, address_buf);
 	cJSON *json_address = cJSON_CreateString(address_buf);
 	cJSON_AddItemToObject(callback_data, "address", json_address);
 
@@ -468,7 +468,7 @@ int rpc_get_block_links_callback(void *data, const char *direction, dag_hash_t h
 	cJSON *link = cJSON_CreateObject();
 
 	char address_buf[33] = {0};
-	xdag_hash2address(hash, address_buf);
+	dag_hash2address(hash, address_buf);
 	cJSON *json_address = cJSON_CreateString(address_buf);
 	cJSON_AddItemToObject(link, "address", json_address);
 
@@ -632,7 +632,7 @@ cJSON * method_dag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *i
 			ctx->error_code = 1;
 			ctx->error_message = strdup("Xfer: incorrect address.");
 		} else {
-			xdag_wallet_default_key(&xfer.keys[XFER_MAX_IN]);
+			dag_wallet_default_key(&xfer.keys[XFER_MAX_IN]);
 			xfer.outsig = 1;
 
 #if REMARK_ENABLED
@@ -647,7 +647,7 @@ cJSON * method_dag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *i
 			dag_traverse_our_blocks(&xfer, &fer_callback);
 
 			char address_buf[33] = {0};
-			xdag_hash2address(xfer.transactionBlockHash, address_buf);
+			dag_hash2address(xfer.transactionBlockHash, address_buf);
 
 			cJSON *ret = NULL;
 			cJSON *item = cJSON_CreateObject();
@@ -701,7 +701,7 @@ int rpc_transactions_callback(void *data, int type, int flags, dag_hash_t hash, 
 	cJSON *json_direction = cJSON_CreateString(type ? "output" : "input");
 	
 	char address_buf[33] = {0};
-	xdag_hash2address(hash, address_buf);
+	dag_hash2address(hash, address_buf);
 	cJSON *json_address = cJSON_CreateString(address_buf);
 	
 	char str[128] = {0};
@@ -845,7 +845,7 @@ int dag_rpc_init_procedures(void)
 	rpc_register_func(xdag_get_block_info);
 
 	if(g_rpc_xfer_enable) {
-		rpc_register_func(xdag_do_xfer);
+		rpc_register_func(dag_do_xfer);
 	}
 
 	rpc_register_func(xdag_get_transactions);
