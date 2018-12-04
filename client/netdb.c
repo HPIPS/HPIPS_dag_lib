@@ -341,7 +341,7 @@ static void *refresh_thread(void *arg)
 					xdag_err("white-list format is incorrect. \n%s", resp);
 				}
 
-				xdag_info("\n%s", resp);
+				dag_info("\n%s", resp);
 				free(resp);
 			}
 		}

@@ -547,7 +547,7 @@ void *pool_net_thread(void *arg)
 		++g_connections_count;
 		pthread_mutex_unlock(&g_connections_mutex);
 
-		xdag_info("Pool  : miner %d connected from %u.%u.%u.%u:%u", g_connections_count,
+		dag_info("Pool  : miner %d connected from %u.%u.%u.%u:%u", g_connections_count,
 			ip & 0xff, ip >> 8 & 0xff, ip >> 16 & 0xff, ip >> 24 & 0xff, ntohs(port));
 	}
 
@@ -591,10 +591,10 @@ static void close_connection(connection_list_element *connection, const char *me
 	if(conn_data->miner) {
 		char address_buf[33] = {0};
 		xdag_hash2address((state == MINER_ARCHIVE ? id.data : conn_data->miner->id.data), address_buf);
-		xdag_info("Pool: miner %s disconnected from %u.%u.%u.%u:%u by %s", address_buf,
+		dag_info("Pool: miner %s disconnected from %u.%u.%u.%u:%u by %s", address_buf,
 			ip & 0xff, ip >> 8 & 0xff, ip >> 16 & 0xff, ip >> 24 & 0xff, ntohs(port), message);
 	} else {
-		xdag_info("Pool: disconnected from %u.%u.%u.%u:%u by %s",
+		dag_info("Pool: disconnected from %u.%u.%u.%u:%u by %s",
 			ip & 0xff, ip >> 8 & 0xff, ip >> 16 & 0xff, ip >> 24 & 0xff, ntohs(port), message);
 	}
 
@@ -1103,7 +1103,7 @@ void *pool_payment_thread(void *arg)
 			int res = pay_miners(current_task_time - CONFIRMATIONS_COUNT + 1);
 			remove_inactive_miners();
 
-			xdag_info("%s: %016llx%016llx%016llx%016llx t=%llx res=%d", (res ? "Nopaid" : "Paid  "),
+			dag_info("%s: %016llx%016llx%016llx%016llx t=%llx res=%d", (res ? "Nopaid" : "Paid  "),
 				hash[3], hash[2], hash[1], hash[0], (current_task_time - CONFIRMATIONS_COUNT + 1) << 16 | 0xffff, res);
 		}
 
@@ -1386,7 +1386,7 @@ void remove_inactive_miners(void)
 			clear_nonces_hashtable(&elt->miner_data);
 			free(elt);
 
-			xdag_info("Pool: miner %s is removed from miners list", address);
+			dag_info("Pool: miner %s is removed from miners list", address);
 		}
 	}
 	pthread_mutex_unlock(&g_connections_mutex);

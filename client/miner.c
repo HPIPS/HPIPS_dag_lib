@@ -275,7 +275,7 @@ begin:
 					g_dag_pool_task_index = task_index;
 					task_time = time(0);
 
-					xdag_info("Task  : t=%llx N=%llu", task->task_time << 16 | 0xffff, task_index);
+					dag_info("Task  : t=%llx N=%llu", task->task_time << 16 | 0xffff, task_index);
 
 					ndata = 0;
 					maxndata = sizeof(struct dag_field);
@@ -294,7 +294,7 @@ begin:
 			res = send_to_pool(&task->lastfield, 1);
 			pthread_mutex_unlock(&g_miner_mutex);
 
-			xdag_info("Share : %016llx%016llx%016llx%016llx t=%llx res=%d",
+			dag_info("Share : %016llx%016llx%016llx%016llx t=%llx res=%d",
 				h[3], h[2], h[1], h[0], task->task_time << 16 | 0xffff, res);
 
 			if(res) {

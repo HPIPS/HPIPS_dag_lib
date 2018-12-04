@@ -111,7 +111,7 @@ int xdag_mem_init(size_t size)
 		free(tfile_node);
 		return -1;
 	}
-	xdag_info("Temporary file created: %s\n", tfile_node->tmpfile);
+	dag_info("Temporary file created: %s\n", tfile_node->tmpfile);
 
 	tfile_node->mem = mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, tfile_node->fd, 0);
 	if (tfile_node->mem == MAP_FAILED) {
