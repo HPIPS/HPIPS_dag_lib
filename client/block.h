@@ -111,11 +111,11 @@ extern int dag_traverse_all_blocks(void *data, int (*callback)(void *data, dag_h
 	dag_amount_t amount, xtime_t time));
 
 // 创建新的块
-extern struct dag_block* dag_create_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
+extern struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
 	dag_amount_t fee, xtime_t send_time, dag_hash_t block_hash_result);
 
 // 创建并发布一个块
-extern int dag_create_and_send_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
+extern int dag_create_and_send_block(struct dag_field *fields, int inputsCount, int outputsCount, int hasRemark, 
 	dag_amount_t fee, xtime_t send_time, dag_hash_t block_hash_result);
 
 // 返回指定地址的余额如果返回只是零

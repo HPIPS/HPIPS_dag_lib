@@ -293,7 +293,7 @@ int xdag_log_init(void)
 		}
 	}
 
-	xdag_mess("Initializing log system...");
+	dag_mess("Initializing log system...");
 	
 	return 0;
 }

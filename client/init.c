@@ -265,7 +265,7 @@ int dag_init(int argc, char **argv, int isGui)
 
 	//rpc ³õÊ¼»¯
 	if(is_rpc) {
-		xdag_mess("Initializing RPC service...");
+		dag_mess("Initializing RPC service...");
 		if(!!dag_rpc_service_start(rpc_port)) return -1;
 	}
 	dag_mess("Starting blocks engine...");
@@ -279,7 +279,7 @@ int dag_init(int argc, char **argv, int isGui)
 
 	if (!isGui) {
 		if (is_pool || (transport_flags & DAG_DAEMON) > 0) {
-			xdag_mess("Starting terminal server...");
+			dag_mess("Starting terminal server...");
 			pthread_t th;
 			const int err = pthread_create(&th, 0, &terminal_thread, 0);
 			if(err != 0) {

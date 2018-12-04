@@ -882,9 +882,9 @@ int fer_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time,
 void dag_log_xfer(dag_hash_t from, dag_hash_t to, dag_amount_t amount)
 {
 	char address_from[33] = {0}, address_to[33] = {0};
-	xdag_hash2address(from, address_from);
-	xdag_hash2address(to, address_to);
-	xdag_mess("Xfer : from %s to %s xfer %.9Lf %s", address_from, address_to, amount2xdags(amount), g_coinname);
+	dag_hash2address(from, address_from);
+	dag_hash2address(to, address_to);
+	dag_mess("Xfer : from %s to %s xfer %.9Lf %s", address_from, address_to, amount2xdags(amount), g_coinname);
 }
 
 static int out_balances_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time)

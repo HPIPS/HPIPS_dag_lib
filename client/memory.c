@@ -179,7 +179,7 @@ void *xdag_malloc(size_t size)
 	return res;
 }
 
-void xdag_free(void *mem)
+void dag_free(void *mem)
 {
 	if(!g_use_tmpfile) {
 		free(mem);

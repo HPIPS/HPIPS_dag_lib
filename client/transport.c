@@ -396,7 +396,7 @@ int dag_request_sums(xtime_t start_time, xtime_t end_time, struct xdag_storage_s
 }
 
 /* sends a new block to network */
-int dag_send_new_block(struct xdag_block *b)
+int dag_send_new_block(struct dag_block *b)
 {
 	if(!g_is_miner) {
 		dnet_send_xdag_packet(b, (void*)(uintptr_t)NEW_BLOCK_TTL);

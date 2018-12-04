@@ -735,7 +735,7 @@ int rpc_transactions_callback(void *data, int type, int flags, dag_hash_t hash, 
 
 cJSON * method_dag_get_transactions(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
 {
-	xdag_mess("rpc call method get_transactions, version %s", version);
+	dag_mess("rpc call method get_transactions, version %s", version);
 	
 	char address[128] = {0};
 	int page = 0;

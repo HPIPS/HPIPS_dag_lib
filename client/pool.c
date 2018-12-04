@@ -264,13 +264,13 @@ void *general_mining_thread(void *arg)
 		sleep(1);
 	}
 
-	xdag_mess("Starting main blocks creation...");
+	dag_mess("Starting main blocks creation...");
 
 	while(!g_stop_general_mining) {
 		xdag_create_and_send_block(0, 0, 0, 0, 0, xdag_main_time() << 16 | 0xffff, NULL);
 	}
 
-	xdag_mess("Stopping general mining thread...");
+	dag_mess("Stopping general mining thread...");
 
 	return 0;
 }
@@ -499,7 +499,7 @@ void *pool_net_thread(void *arg)
 		sleep(1);
 	}
 
-	xdag_mess("Pool starts to accept connections...");
+	dag_mess("Pool starts to accept connections...");
 
 	int sock = open_pool_connection(pool_arg);
 	if(sock == INVALID_SOCKET) {

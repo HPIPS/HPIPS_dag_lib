@@ -319,13 +319,13 @@ static void *refresh_thread(void *arg)
 		sleep(1);
 	}
 
-	xdag_mess("start refresh_thread");
+	dag_mess("start refresh_thread");
 
 	for (;;) {
 		time_t prev_time = time(0);
 
 		if(!g_prevent_auto_refresh) {
-			xdag_mess("try to refresh white-list...");
+			dag_mess("try to refresh white-list...");
 
 			char *resp = http_get(WHITE_URL);
 			if(resp) {

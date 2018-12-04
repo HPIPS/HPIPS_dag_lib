@@ -906,10 +906,10 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 	}
 
 	if (!send_time) {
-		send_time = xdag_get_xtimestamp();
+		send_time = dag_get_xtimestamp();
 		mining = 0;
 	} else {
-		mining = (send_time > xdag_get_xtimestamp() && res0 + 1 <= DAG_BLOCK_FIELDS);
+		mining = (send_time > dag_get_xtimestamp() && res0 + 1 <= DAG_BLOCK_FIELDS);
 	}
 
 	res0 += mining;
@@ -981,12 +981,12 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 	for (j = 0; j < nkeysnum; ++j, i += 2) {
 		key = keys + keysnum[j];
 		hash_for_signature(block, key, signatureHash);
-		xdag_sign(key->key, signatureHash, block[0].field[i].data, block[0].field[i + 1].data);
+		dag_sign(key->key, signatureHash, block[0].field[i].data, block[0].field[i + 1].data);
 	}
 
 	if (outsigkeyind < 0) {
 		hash_for_signature(block, defkey, signatureHash);
-		xdag_sign(defkey->key, signatureHash, block[0].field[i].data, block[0].field[i + 1].data);
+		dag_sign(defkey->key, signatureHash, block[0].field[i].data, block[0].field[i + 1].data);
 	}
 
 	if (mining) {
@@ -1022,7 +1022,7 @@ struct dag_block* dag_create_block(struct dag_field *fields, int inputsCount, in
 * 在以下'noutput'字段中类似 - 输出，费用; send_time（发送块的时间）;
 * 如果它大于当前值，则执行挖掘以生成最佳散列
 */
-int dag_create_and_send_block(struct xdag_field *fields, int inputsCount, int outputsCount, int hasRemark,
+int dag_create_and_send_block(struct dag_field *fields, int inputsCount, int outputsCount, int hasRemark,
 	dag_amount_t fee, xtime_t send_time, dag_hash_t block_hash_result)
 {
 	struct dag_block *block = dag_create_block(fields, inputsCount, outputsCount, hasRemark, fee, send_time, block_hash_result);
@@ -1066,7 +1066,7 @@ int do_mining(struct dag_block *block, struct block_internal **pretop, xtime_t s
 	dag_hash_final(task->ctx, &task->nonce.amount, sizeof(uint64_t), task->minhash.data);
 	g_dag_pool_task_index = taskIndex;
 
-	while(xdag_get_xtimestamp() <= send_time) {
+	while(dag_get_xtimestamp() <= send_time) {
 		sleep(1);
 		pthread_mutex_lock(&g_create_block_mutex);
 		struct block_internal *pretop_new = pretop_block();
@@ -1103,9 +1103,9 @@ static void reset_callback(struct ldus_rbtree *node)
 		to_free = tmp;
 	}
 	if((bi->flags & BI_REMARK) && bi->remark != (uintptr_t)NULL) {
-		xdag_free((char*)bi->remark);
+		dag_free((char*)bi->remark);
 	}
-	xdag_free(bi);
+	dag_free(bi);
 
 	if(g_bi_index_enable) {
 		free(node);
@@ -1143,7 +1143,7 @@ begin:
 	// launching of synchronization thread
 	g_xdag_sync_on = 1;
 	if (!g_light_mode && !sync_thread_running) {
-		xdag_mess("Starting sync thread...");
+		dag_mess("Starting sync thread...");
 		int err = pthread_create(&th, 0, sync_thread, 0);
 		if(err != 0) {
 			printf("create sync_thread failed, error : %s\n", strerror(err));

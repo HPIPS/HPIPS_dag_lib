@@ -184,7 +184,7 @@ static void *rpc_service_thread(void *arg)
 		g_fds[i].fd = -1;
 	}
 
-	xdag_mess("RPC service startd.");
+	dag_mess("RPC service startd.");
 
 	int ready = 0;
 	while (0 == g_rpc_stop) {
