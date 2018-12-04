@@ -438,11 +438,11 @@ void processLevelCommand(char *nextParam, FILE *out)
 	unsigned level;
 	char *cmd = strtok_r(nextParam, " \t\r\n", &nextParam);
 	if(!cmd) {
-		fprintf(out, "%d\n", xdag_set_log_level(-1));
+		fprintf(out, "%d\n", dag_set_log_level(-1));
 	} else if(sscanf(cmd, "%u", &level) != 1 || level > XDAG_TRACE) {
 		fprintf(out, "Illegal level.\n");
 	} else {
-		xdag_set_log_level(level);
+		dag_set_log_level(level);
 	}
 }
 
@@ -916,7 +916,7 @@ static int out_sort_callback(const void *l, const void *r)
 static void *add_block_callback(void *block, void *data)
 {
 	unsigned *i = (unsigned *)data;
-	dag_add_block((struct xdag_block *)block);
+	dag_add_block((struct dag_block *)block);
 	if(!(++*i % 10000)) printf("blocks: %u\n", *i);
 	return 0;
 }
@@ -926,12 +926,12 @@ int out_balances()
 	char address[33] = {0};
 	struct out_balances_data d;
 	unsigned i = 0;
-	xdag_set_log_level(0);
-	xdag_mem_init((dag_main_time() - xdag_start_main_time()) << 17);
-	xdag_crypt_init(0);
+	dag_set_log_level(0);
+	dag_mem_init((dag_main_time() - dag_start_main_time()) << 17);
+	dag_crypt_init(0);
 	memset(&d, 0, sizeof(struct out_balances_data));
-	xdag_load_blocks(xdag_start_main_time() << 16, dag_main_time() << 16, &i, &add_block_callback);
-	xdag_traverse_all_blocks(&d, out_balances_callback);
+	dag_load_blocks(dag_start_main_time() << 16, dag_main_time() << 16, &i, &add_block_callback);
+	dag_traverse_all_blocks(&d, out_balances_callback);
 	qsort(d.blocks, d.blocksCount, sizeof(struct dag_field), out_sort_callback);
 	for(i = 0; i < d.blocksCount; ++i) {
 		dag_hash2address(d.blocks[i].data, address);

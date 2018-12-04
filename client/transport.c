@@ -47,7 +47,7 @@ static void *dag_send_thread(void *arg)
 {
 	struct dag_send_data *d = (struct dag_send_data *)arg;
 
-	d->b.field[0].time = xdag_load_blocks(d->b.field[0].time, d->b.field[0].end_time, d->connection, &dnet_send_xdag_packet);
+	d->b.field[0].time = dag_load_blocks(d->b.field[0].time, d->b.field[0].end_time, d->connection, &dnet_send_xdag_packet);
 	d->b.field[0].type = DAG_FIELD_NONCE | DAG_MESSAGE_BLOCKS_REPLY << 4;
 
 	memcpy(&d->b.field[2], &g_dag_stats, sizeof(g_dag_stats));
@@ -326,7 +326,7 @@ static int do_request(int type, xtime_t start_time, xtime_t end_time, void *data
 	b.field[0].time = start_time;
 	b.field[0].end_time = end_time;
 	
-	xdag_generate_random_array(&id, sizeof(uint64_t));
+	dag_generate_random_array(&id, sizeof(uint64_t));
 
 	memset(&b.field[1], 0,  sizeof(struct dag_field));
 	*(uint64_t*)b.field[1].hash = id;

@@ -73,7 +73,7 @@ uint64_t dag_hash_final_multi(void *ctxv, uint64_t *nonce, int attempts, int ste
 		sha256_update(&ctx, (uint8_t*)hash0, sizeof(dag_hash_t));
 		sha256_final(&ctx, (uint8_t*)hash0);
 
-		if (!i || xdag_cmphash(hash0, hash) < 0) {
+		if (!i || dag_cmphash(hash0, hash) < 0) {
 			memcpy(hash, hash0, sizeof(dag_hash_t));
 			min_nonce = *nonce;
 		}
@@ -179,7 +179,7 @@ uint64_t xdag_hash_final_multi(void *ctxv, uint64_t *nonce, int attempts, int st
 			hash032[5] = htonl(mctx.F[i]);
 			hash032[6] = htonl(mctx.G[i]);
 			hash032[7] = htonl(mctx.H[i]);
-			if ((!i && !j) || xdag_cmphash(hash0, hash) < 0) {
+			if ((!i && !j) || dag_cmphash(hash0, hash) < 0) {
 				memcpy(hash, hash0, sizeof(dag_hash_t));
 				min_nonce = nonce0;
 			}

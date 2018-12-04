@@ -293,13 +293,13 @@ int xdag_pool_set_config(const char *pool_config)
 
 		if(max_connection_count_input < 0) {
 			max_connection_count_input = 0;
-			xdag_warn("pool: wrong connections count");
+			dag_warn("pool: wrong connections count");
 		} else if(max_connection_count_input > MAX_CONNECTIONS_COUNT) {
 			max_connection_count_input = MAX_CONNECTIONS_COUNT;
-			xdag_warn("pool: exceed max connections count %d", MAX_CONNECTIONS_COUNT);
+			dag_warn("pool: exceed max connections count %d", MAX_CONNECTIONS_COUNT);
 		} else if(max_connection_count_input > open_max - 64) {
 			max_connection_count_input = open_max - 64;
-			xdag_warn("pool: exceed max open files %d", open_max - 64);
+			dag_warn("pool: exceed max open files %d", open_max - 64);
 		}
 		g_max_connections_count = max_connection_count_input;
 	}
@@ -453,7 +453,7 @@ static int connection_can_be_accepted(int sock, struct sockaddr_in *peeraddr)
 
 	//firstly we check that total count of connection did not exceed max count of connection
 	if(g_connections_count >= g_max_connections_count) {
-		xdag_warn("Max connections %d exceed, new connections are not accepted.", g_max_connections_count);
+		dag_warn("Max connections %d exceed, new connections are not accepted.", g_max_connections_count);
 		return 0;
 	}
 
@@ -464,7 +464,7 @@ static int connection_can_be_accepted(int sock, struct sockaddr_in *peeraddr)
 		if(elt->connection_data.ip == peeraddr->sin_addr.s_addr) {
 			if(++count >= g_max_miner_ip_count) {
 				int ip = elt->connection_data.ip;
-				xdag_warn("Max connection %d for ip %u.%u.%u.%u:%u exceed, new connections are not accepted.",
+				dag_warn("Max connection %d for ip %u.%u.%u.%u:%u exceed, new connections are not accepted.",
 					g_max_miner_ip_count, ip & 0xff, ip >> 8 & 0xff, ip >> 16 & 0xff, ip >> 24 & 0xff,
 					ntohs(elt->connection_data.port));
 				return 0;
@@ -477,7 +477,7 @@ static int connection_can_be_accepted(int sock, struct sockaddr_in *peeraddr)
 		if(elt->connection_data.ip == peeraddr->sin_addr.s_addr) {
 			if(++count >= g_max_miner_ip_count) {
 				int ip = elt->connection_data.ip;
-				xdag_warn("Max connection %d for ip %u.%u.%u.%u:%u exceed, new connections are not accepted.",
+				dag_warn("Max connection %d for ip %u.%u.%u.%u:%u exceed, new connections are not accepted.",
 					g_max_miner_ip_count, ip & 0xff, ip >> 8 & 0xff, ip >> 16 & 0xff, ip >> 24 & 0xff,
 					ntohs(elt->connection_data.port));
 				return 0;
@@ -867,8 +867,8 @@ static int process_received_share(connection_list_element *connection)
 
 	if(share_can_be_accepted(conn_data->miner, (uint64_t*)conn_data->data, task_index)) {
 		dag_hash_t hash;
-		xdag_hash_final(task->ctx0, conn_data->data, sizeof(struct dag_field), hash);
-		xdag_set_min_share(task, conn_data->miner->id.data, hash);
+		dag_hash_final(task->ctx0, conn_data->data, sizeof(struct dag_field), hash);
+		dag_set_min_share(task, conn_data->miner->id.data, hash);
 		update_mean_log_diff(conn_data, task, hash);
 		calculate_nopaid_shares(conn_data, task, hash);
 	}
@@ -1625,7 +1625,7 @@ void update_mean_log_diff(struct connection_pool_data *conn_data, struct dag_poo
 			}
 		}
 		memcpy(conn_data->last_min_hash, hash, sizeof(dag_hash_t));
-	} else if(xdag_cmphash(hash, conn_data->last_min_hash) < 0) {
+	} else if(dag_cmphash(hash, conn_data->last_min_hash) < 0) {
 		memcpy(conn_data->last_min_hash, hash, sizeof(dag_hash_t));
 	}
 
@@ -1638,7 +1638,7 @@ void update_mean_log_diff(struct connection_pool_data *conn_data, struct dag_poo
 			}
 		}
 		memcpy(conn_data->miner->last_min_hash, hash, sizeof(dag_hash_t));
-	} else if(xdag_cmphash(hash, conn_data->miner->last_min_hash) < 0) {
+	} else if(dag_cmphash(hash, conn_data->miner->last_min_hash) < 0) {
 		memcpy(conn_data->miner->last_min_hash, hash, sizeof(dag_hash_t));
 	}
 }

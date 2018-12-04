@@ -74,7 +74,7 @@ int xdag_rpc_command_host_add(const char *host)
 	LL_FOREACH(g_rpc_white_host, new_white_host)
 	{
 		if(new_white_host->addr.s_addr == addr.s_addr){
-			xdag_warn("host [%s] is in the rpc white list.",host);
+			dag_warn("host [%s] is in the rpc white list.",host);
 			return -3;
 		}
 	}
@@ -136,7 +136,7 @@ void xdag_rpc_command_host_query(char *result)
 
 void xdag_rpc_command_list_methods(char * result)
 {
-	xdag_rpc_service_list_procedures(result);
+	dag_rpc_service_list_procedures(result);
 }
 
 void xdag_rpc_command_disable_xfer(void)
@@ -146,13 +146,13 @@ void xdag_rpc_command_disable_xfer(void)
 	}
 	g_rpc_xfer_enable = 0;
 
-	xdag_rpc_service_stop();
+	dag_rpc_service_stop();
 
 	while (g_rpc_stop != 1) {
 		sleep(1);
 	}
 
-	xdag_rpc_service_start(g_rpc_port);
+	dag_rpc_service_start(g_rpc_port);
 }
 
 void xdag_rpc_command_enable_xfer(void)
@@ -163,13 +163,13 @@ void xdag_rpc_command_enable_xfer(void)
 
 	g_rpc_xfer_enable = 1;
 
-	xdag_rpc_service_stop();
+	dag_rpc_service_stop();
 
 	while (g_rpc_stop != 1) {
 		sleep(1);
 	}
 
-	xdag_rpc_service_start(g_rpc_port);
+	dag_rpc_service_start(g_rpc_port);
 }
 
 static void xdag_rpc_command_status(FILE *out)
@@ -208,7 +208,7 @@ int xdag_rpc_command(const char *cmd, FILE *out)
 	}
 
 	if(!strcmp(method, "stop")) {
-		xdag_rpc_service_stop();
+		dag_rpc_service_stop();
 		return 0;
 	} else if(!strcmp(method, "start")) {
 		char *sport = strtok_r(0, " \t\r\n", &nextParam);
@@ -217,7 +217,7 @@ int xdag_rpc_command(const char *cmd, FILE *out)
 			fprintf(out, "illegal port\n");
 			return -1;
 		}
-		if(!xdag_rpc_service_start(port)) {
+		if(!dag_rpc_service_start(port)) {
 			fprintf(out, "start rpc at port : %d\n", g_rpc_port);
 		} else {
 			fprintf(out, "start rpc failed.\n");
@@ -257,7 +257,7 @@ int xdag_rpc_command(const char *cmd, FILE *out)
 		xdag_rpc_command_host_clear();
 	} else if(!strcmp(method, "methods")) {
 		char list[1204] = {0};
-		xdag_rpc_service_list_procedures(list);
+		dag_rpc_service_list_procedures(list);
 		fprintf(out, "%s", list);
 	} else if(!strcmp(method, "xfer")) {
 		char *opt = strtok_r(0, " \t\r\n", &nextParam);

@@ -193,7 +193,7 @@ static int sort_callback(const void *l, const void *r)
 }
 
 /* Calls a callback for all blocks from the repository that are in specified time interval; returns the number of blocks */
-uint64_t xdag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void *(*callback)(void *, void *))
+uint64_t dag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void *(*callback)(void *, void *))
 {
 	struct dag_block *buf, *pbuf[bufsize];
 	struct dag_storage_sum s;

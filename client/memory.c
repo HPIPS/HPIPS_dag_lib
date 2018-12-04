@@ -64,7 +64,7 @@ static char g_tmpfile_path[PATH_MAX];
 static struct temp_file *g_last_tmpfile = NULL;
 void delete_actual_tmpfile(void);
 
-void xdag_mem_tempfile_path(const char *tempfile_path)
+void dag_mem_tempfile_path(const char *tempfile_path)
 {
 	if (!tempfile_path)
 		return;
@@ -72,7 +72,7 @@ void xdag_mem_tempfile_path(const char *tempfile_path)
 	strncpy(g_tmpfile_path, tempfile_path, PATH_MAX);
 }
 
-int xdag_mem_init(size_t size)
+int dag_mem_init(size_t size)
 {
 	struct temp_file *tfile_node = NULL;
 	if (!size) {
@@ -85,7 +85,7 @@ int xdag_mem_init(size_t size)
 
 	tfile_node = calloc(sizeof(struct temp_file),1);
 	if(tfile_node == NULL){
-		xdag_warn("Error: creation of tmp file failed because calloc failed [function: xdag_mem_init]");
+		dag_warn("Error: creation of tmp file failed because calloc failed [function: xdag_mem_init]");
 		return -1;
 	}
 
@@ -148,7 +148,7 @@ void *dag_malloc(size_t size)
 	}
 
 	if(g_last_tmpfile == NULL){
-		xdag_warn("Unexpected state [function xdag_malloc]");
+		dag_warn("Unexpected state [function xdag_malloc]");
 		return malloc(size);
 	}
 
@@ -161,7 +161,7 @@ void *dag_malloc(size_t size)
 
 	while (g_pos + size > g_fsize) {
 		if (g_fsize + MEM_PORTION > g_size) {
-			int res = xdag_mem_init(g_size);
+			int res = dag_mem_init(g_size);
 			if(res){
 				pthread_mutex_unlock(&g_mem_mutex);
 				return 0;

@@ -118,7 +118,7 @@ int dag_init(int argc, char **argv, int isGui)
 			return terminal();
 		} else if(ARG_EQUAL(argv[i], "-z", "")) { /* 内存形式  */
 			if (++i < argc) {
-				xdag_mem_tempfile_path(argv[i]);
+				dag_mem_tempfile_path(argv[i]);
 			}
 		} else if(ARG_EQUAL(argv[i], "-t", "")) { /* 连接测试网标志位 */
 			g_dag_testnet = 1;
@@ -144,7 +144,7 @@ int dag_init(int argc, char **argv, int isGui)
 				bindto = argv[i];
 		} else if(ARG_EQUAL(argv[i], "-v", "")) { /* 日志级别 */
 			if (++i < argc && sscanf(argv[i], "%d", &level) == 1) {
-				xdag_set_log_level(level);
+				dag_set_log_level(level);
 			} else {
 				printf("Illevel use of option -v\n");
 				return -1;
@@ -237,7 +237,7 @@ int dag_init(int argc, char **argv, int isGui)
 
 	dag_mess("Starting %s, version %s", g_progname, DAG_VERSION);
 	dag_mess("Starting synchonization engine...");
-	if (xdag_sync_init()) return -1;
+	if (dag_sync_init()) return -1;
 	dag_mess("Starting dnet transport...");
 	printf("Transport module: ");
 

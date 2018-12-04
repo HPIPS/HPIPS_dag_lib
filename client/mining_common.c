@@ -68,9 +68,9 @@ int dag_initialize_mining(const char *pool_arg, const char *miner_address)
 	if(crypt_start()) return -1;
 
 	if(!g_dag_pool) {
-		return xdag_initialize_miner(pool_arg);
+		return dag_initialize_miner(pool_arg);
 	} else {
-		return xdag_initialize_pool(pool_arg);
+		return dag_initialize_pool(pool_arg);
 	}
 }
 
@@ -80,7 +80,7 @@ void dag_set_min_share(struct dag_pool_task *task, dag_hash_t last, dag_hash_t h
 	if(dag_cmphash(hash, task->minhash.data) < 0) {
 		pthread_mutex_lock(&g_share_mutex);
 
-		if(xdag_cmphash(hash, task->minhash.data) < 0) {
+		if(dag_cmphash(hash, task->minhash.data) < 0) {
 			memcpy(task->minhash.data, hash, sizeof(dag_hash_t));
 			memcpy(task->lastfield.data, last, sizeof(dag_hash_t));
 		}

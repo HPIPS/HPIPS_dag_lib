@@ -36,7 +36,7 @@ dag_diff_t xdag_hash_difficulty(dag_hash_t hash)
 
 #if !defined(_WIN32) && !defined(_WIN64)
 	if(!res) {
-		xdag_warn("hash_difficulty higher part of hash is equal zero");	
+		dag_warn("hash_difficulty higher part of hash is equal zero");	
 		return max;
 	}
 #endif

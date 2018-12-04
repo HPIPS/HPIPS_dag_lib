@@ -260,17 +260,17 @@ begin:
 					struct dag_pool_task *task = &g_dag_pool_task[task_index & 1];
 
 					task->task_time = dag_main_time();
-					xdag_hash_set_state(task->ctx, data[0].data,
+					dag_hash_set_state(task->ctx, data[0].data,
 						sizeof(struct dag_block) - 2 * sizeof(struct dag_field));
-					xdag_hash_update(task->ctx, data[1].data, sizeof(struct dag_field));
-					xdag_hash_update(task->ctx, hash, sizeof(dag_hashlow_t));
+					dag_hash_update(task->ctx, data[1].data, sizeof(struct dag_field));
+					dag_hash_update(task->ctx, hash, sizeof(dag_hashlow_t));
 
-					xdag_generate_random_array(task->nonce.data, sizeof(dag_hash_t));
+					dag_generate_random_array(task->nonce.data, sizeof(dag_hash_t));
 
 					memcpy(task->nonce.data, hash, sizeof(dag_hashlow_t));
 					memcpy(task->lastfield.data, task->nonce.data, sizeof(dag_hash_t));
 
-					xdag_hash_final(task->ctx, &task->nonce.amount, sizeof(uint64_t), task->minhash.data);
+					dag_hash_final(task->ctx, &task->nonce.amount, sizeof(uint64_t), task->minhash.data);
 
 					g_dag_pool_task_index = task_index;
 					task_time = time(0);

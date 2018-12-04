@@ -174,7 +174,7 @@ int xdag_log(const char *logfile, int level, const char *format, ...)
 	return done;
 }
 
-extern char *xdag_log_array(const void *arr, unsigned size)
+extern char *dag_log_array(const void *arr, unsigned size)
 {
 	static int k = 0;
 	static char buf[4][0x1000];
@@ -189,7 +189,7 @@ extern char *xdag_log_array(const void *arr, unsigned size)
 }
 
 /* sets the maximum error level for output to the log, returns the previous level (0 - do not log anything, 9 - all) */
-extern int xdag_set_log_level(int level)
+extern int dag_set_log_level(int level)
 {
 	int level0 = log_level;
 

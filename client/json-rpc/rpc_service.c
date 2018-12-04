@@ -203,7 +203,7 @@ static void *rpc_service_thread(void *arg)
 			}
 
 			if(!xdag_rpc_command_host_check(peeraddr)) {
-				xdag_warn("rpc client is not in white list : %s, closed", inet_ntoa(peeraddr.sin_addr));
+				dag_warn("rpc client is not in white list : %s, closed", inet_ntoa(peeraddr.sin_addr));
 				struct xdag_rpc_connection *conn = (struct xdag_rpc_connection*)malloc(sizeof(struct xdag_rpc_connection));
 				memset(conn, 0, sizeof(struct xdag_rpc_connection));
 				g_fds[MAX_OPEN].fd = client_fd;
@@ -221,7 +221,7 @@ static void *rpc_service_thread(void *arg)
 				}
 
 				if(i == MAX_OPEN) {
-					xdag_warn("rpc service : too many connections, max connections : %d, close connection from %s", MAX_OPEN, inet_ntoa(peeraddr.sin_addr));
+					dag_warn("rpc service : too many connections, max connections : %d, close connection from %s", MAX_OPEN, inet_ntoa(peeraddr.sin_addr));
 					struct xdag_rpc_connection *conn = (struct xdag_rpc_connection*)malloc(sizeof(struct xdag_rpc_connection));
 					memset(conn, 0, sizeof(struct xdag_rpc_connection));
 					g_fds[MAX_OPEN].fd = client_fd;
@@ -336,7 +336,7 @@ int dag_rpc_service_start(int port)
 }
 
 /* stop xdag rpc service */
-int xdag_rpc_service_stop(void)
+int dag_rpc_service_stop(void)
 {
 	g_rpc_stop = 2;
 	xdag_rpc_command_host_clear(); //clear all white list.
