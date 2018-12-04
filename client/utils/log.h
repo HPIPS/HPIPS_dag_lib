@@ -38,26 +38,26 @@ extern int xdag_set_log_level(int level);
 #define DAG_LOG_FILE "dag.log"
 #define DNET_LOG_FILE "dnet.log"
 
-#define dag_fatal(...) dag_log(DAG_LOG_FILE, DAG_FATAL   , __VA_ARGS__)
-#define dag_crit(...)  dag_log(DAG_LOG_FILE, DAG_CRITICAL, __VA_ARGS__)
-#define dag_err(...)   dag_log(DAG_LOG_FILE, DAG_ERROR   , __VA_ARGS__)
-#define dag_warn(...)  dag_log(DAG_LOG_FILE, DAG_WARNING , __VA_ARGS__)
-#define dag_mess(...)  dag_log(DAG_LOG_FILE, DAG_MESSAGE , __VA_ARGS__)
-#define dag_info(...)  dag_log(DAG_LOG_FILE, DAG_INFO    , __VA_ARGS__)
+#define dag_fatal(...) dag_log(DAG_LOG_FILE, XDAG_FATAL   , __VA_ARGS__)
+#define dag_crit(...)  dag_log(DAG_LOG_FILE, XDAG_CRITICAL, __VA_ARGS__)
+#define dag_err(...)   dag_log(DAG_LOG_FILE, XDAG_ERROR   , __VA_ARGS__)
+#define dag_warn(...)  dag_log(DAG_LOG_FILE, XDAG_WARNING , __VA_ARGS__)
+#define dag_mess(...)  dag_log(DAG_LOG_FILE, XDAG_MESSAGE , __VA_ARGS__)
+#define dag_info(...)  dag_log(DAG_LOG_FILE, XDAG_INFO    , __VA_ARGS__)
 #ifndef NDEBUG
-#define dag_debug(...) dag_log(AG_LOG_FILE, DAG_DEBUG   , __VA_ARGS__)
+#define dag_debug(...) dag_log(AG_LOG_FILE, XDAG_DEBUG   , __VA_ARGS__)
 #else
 #define xdag_debug(...)
 #endif
 
-#define dnet_fatal(...) dag_log(DNET_LOG_FILE, DAG_FATAL   , __VA_ARGS__)
-#define dnet_crit(...)  dag_log(DNET_LOG_FILE, DAG_CRITICAL, __VA_ARGS__)
-#define dnet_err(...)   dag_log(DNET_LOG_FILE, DAG_ERROR   , __VA_ARGS__)
-#define dnet_warn(...)  dag_log(DNET_LOG_FILE, DAG_WARNING , __VA_ARGS__)
-#define dnet_mess(...)  dag_log(DNET_LOG_FILE, DAG_MESSAGE , __VA_ARGS__)
-#define dnet_info(...)  dag_log(DNET_LOG_FILE, DAG_INFO    , __VA_ARGS__)
+#define dnet_fatal(...) dag_log(DNET_LOG_FILE, XDAG_FATAL   , __VA_ARGS__)
+#define dnet_crit(...)  dag_log(DNET_LOG_FILE, XDAG_CRITICAL, __VA_ARGS__)
+#define dnet_err(...)   dag_log(DNET_LOG_FILE, XDAG_ERROR   , __VA_ARGS__)
+#define dnet_warn(...)  dag_log(DNET_LOG_FILE, XDAG_WARNING , __VA_ARGS__)
+#define dnet_mess(...)  dag_log(DNET_LOG_FILE, XDAG_MESSAGE , __VA_ARGS__)
+#define dnet_info(...)  dag_log(DNET_LOG_FILE, XDAG_INFO    , __VA_ARGS__)
 #ifndef NDEBUG
-#define dnet_debug(...) dag_log(DNET_LOG_FILE, DAG_DEBUG   , __VA_ARGS__)
+#define dnet_debug(...) dag_log(DNET_LOG_FILE, XDAG_DEBUG   , __VA_ARGS__)
 #else
 #define dnet_debug(...)
 #endif

@@ -193,59 +193,59 @@ cJSON * method_xdag_stats(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id
 		cJSON *json_hashrate = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "hashrate", json_hashrate);
 	} else {
-		sprintf(buf, "%u", g_xdag_stats.nhosts);
+		sprintf(buf, "%u", g_dag_stats.nhosts);
 		cJSON *json_nhost = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "hosts", json_nhost);
 
-		sprintf(buf, "%u", g_xdag_stats.total_nhosts);
+		sprintf(buf, "%u", g_dag_stats.total_nhosts);
 		cJSON *json_total_nhost = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "totalhosts", json_total_nhost);
 
-		sprintf(buf, "%llu", (long long)g_xdag_stats.nblocks);
+		sprintf(buf, "%llu", (long long)g_dag_stats.nblocks);
 		cJSON *json_nblock = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "blocks", json_nblock);
 
-		sprintf(buf, "%llu", (long long)g_xdag_stats.total_nblocks);
+		sprintf(buf, "%llu", (long long)g_dag_stats.total_nblocks);
 		cJSON *json_total_nblock = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "totalblocks", json_total_nblock);
 
-		sprintf(buf, "%llu", (long long)g_xdag_stats.nmain);
+		sprintf(buf, "%llu", (long long)g_dag_stats.nmain);
 		cJSON *json_nmain = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "mainblocks", json_nmain);
 
-		sprintf(buf, "%llu", (long long)g_xdag_stats.total_nmain);
+		sprintf(buf, "%llu", (long long)g_dag_stats.total_nmain);
 		cJSON *json_total_nmain = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "totalmainblocks", json_total_nmain);
 
-		sprintf(buf, "%llu", (long long)g_xdag_extstats.nnoref);
+		sprintf(buf, "%llu", (long long)g_dag_extstats.nnoref);
 		cJSON *json_nnoref = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "orphanblocks", json_nnoref);
 
-		sprintf(buf, "%llu", (long long)g_xdag_extstats.nwaitsync);
+		sprintf(buf, "%llu", (long long)g_dag_extstats.nwaitsync);
 		cJSON *json_nwaitsync = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "waitsyncblocks", json_nwaitsync);
 
-		sprintf(buf, "%llx%016llx", xdag_diff_args(g_xdag_stats.difficulty));
+		sprintf(buf, "%llx%016llx", xdag_diff_args(g_dag_stats.difficulty));
 		cJSON *json_diff = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "difficulty", json_diff);
 
-		sprintf(buf, "%llx%016llx", xdag_diff_args(g_xdag_stats.max_difficulty));
+		sprintf(buf, "%llx%016llx", xdag_diff_args(g_dag_stats.max_difficulty));
 		cJSON *json_max_diff = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "maxdifficulty", json_max_diff);
 
-		sprintf(buf, "%.9Lf", amount2xdags(xdag_get_supply(g_xdag_stats.nmain)));
+		sprintf(buf, "%.9Lf", amount2xdags(xdag_get_supply(g_dag_stats.nmain)));
 		cJSON *json_supply = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "supply", json_supply);
 
-		sprintf(buf, "%.9Lf", amount2xdags(xdag_get_supply(g_xdag_stats.total_nmain)));
+		sprintf(buf, "%.9Lf", amount2xdags(xdag_get_supply(g_dag_stats.total_nmain)));
 		cJSON *json_total_supply = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "totalsupply", json_total_supply);
 
-		sprintf(buf, "%.2Lf MHs", xdag_hashrate(g_xdag_extstats.hashrate_ours));
+		sprintf(buf, "%.2Lf MHs", xdag_hashrate(g_dag_extstats.hashrate_ours));
 		cJSON *json_hashrate = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "hashrate", json_hashrate);
 
-		sprintf(buf, "%.2Lf MHs", xdag_hashrate(g_xdag_extstats.hashrate_total));
+		sprintf(buf, "%.2Lf MHs", xdag_hashrate(g_dag_extstats.hashrate_total));
 		cJSON * json_total_hashrate = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "totalhashrate", json_total_hashrate);
 	}
@@ -273,7 +273,7 @@ struct rpc_account_callback_data {
 	int count;
 };
 
-int rpc_account_callback(void *data, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, int n_our_key)
+int rpc_account_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time, int n_our_key)
 {
 	struct rpc_account_callback_data *d = (struct rpc_account_callback_data*)data;
 	if(d->count-- <=0) return -1;

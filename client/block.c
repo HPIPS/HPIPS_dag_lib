@@ -1046,7 +1046,7 @@ int dag_create_and_send_block(struct xdag_field *fields, int inputsCount, int ou
 int do_mining(struct dag_block *block, struct block_internal **pretop, xtime_t send_time)
 {
 	uint64_t taskIndex = g_dag_pool_task_index + 1;
-	struct dag_pool_task *task = &g_xdag_pool_task[taskIndex & 1];
+	struct dag_pool_task *task = &g_dag_pool_task[taskIndex & 1];
 
 	dag_generate_random_array(block[0].field[DAG_BLOCK_FIELDS - 1].data, sizeof(dag_hash_t));
 

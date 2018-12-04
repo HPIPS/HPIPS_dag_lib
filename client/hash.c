@@ -98,14 +98,14 @@ typedef struct {
 
 extern void xsha256_multi_block(SHA256_MB_CTX *, const HASH_DESC *, int);
 
-uint64_t xdag_hash_final_multi(void *ctxv, uint64_t *nonce, int attempts, int step, xdag_hash_t hash)
+uint64_t xdag_hash_final_multi(void *ctxv, uint64_t *nonce, int attempts, int step, dag_hash_t hash)
 {
 	SHA256_MB_CTX mctx1, mctx2, mctx;
 	SHA256REF_CTX *ctx1 = (SHA256REF_CTX*)ctxv, ctx2[1];
 	HASH_DESC desc1[N], desc2[N];
 	uint64_t arr1[N * 16], arr2[N * 8];
 	uint8_t *array1 = (uint8_t*)arr1, *array2 = (uint8_t*)arr2;
-	xdag_hash_t hash0;
+	dag_hash_t hash0;
 	uint64_t min_nonce = 0, nonce0;
 	uint32_t *hash032 = (uint32_t*)(uint64_t*)hash0;
 	int i, j;
@@ -180,7 +180,7 @@ uint64_t xdag_hash_final_multi(void *ctxv, uint64_t *nonce, int attempts, int st
 			hash032[6] = htonl(mctx.G[i]);
 			hash032[7] = htonl(mctx.H[i]);
 			if ((!i && !j) || xdag_cmphash(hash0, hash) < 0) {
-				memcpy(hash, hash0, sizeof(xdag_hash_t));
+				memcpy(hash, hash0, sizeof(dag_hash_t));
 				min_nonce = nonce0;
 			}
 		}

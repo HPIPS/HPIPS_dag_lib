@@ -35,7 +35,7 @@ struct account_callback_data {
 };
 
 struct out_balances_data {
-	struct xdag_field *blocks;
+	struct dag_field *blocks;
 	unsigned blocksCount, maxBlocksCount;
 };
 

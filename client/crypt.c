@@ -168,11 +168,11 @@ void *dag_private_to_key(const dag_hash_t privkey, dag_hash_t pubkey, uint8_t *p
 
 	EC_POINT_mul(group, pub, priv, NULL, NULL, ctx);
 	EC_KEY_set_public_key(eckey, pub);
-	if(EC_POINT_point2oct(group, pub, POINT_CONVERSION_COMPRESSED, buf, sizeof(dag_hash_t) + 1, ctx) != sizeof(xdag_hash_t) + 1) {
+	if(EC_POINT_point2oct(group, pub, POINT_CONVERSION_COMPRESSED, buf, sizeof(dag_hash_t) + 1, ctx) != sizeof(dag_hash_t) + 1) {
 		goto fail;
 	}
 
-	memcpy(pubkey, buf + 1, sizeof(xdag_hash_t));
+	memcpy(pubkey, buf + 1, sizeof(dag_hash_t));
 	*pubkey_bit = *buf & 1;
 	res = 0;
 
@@ -282,7 +282,7 @@ int dag_sign(const void *key, const dag_hash_t hash, dag_hash_t sign_r, dag_hash
 	p = buf + 3, s = *p++;
 
 	if(s >= sizeof(dag_hash_t)) {
-		memcpy(sign_r, p + s - sizeof(dag_hash_t), sizeof(xdag_hash_t));
+		memcpy(sign_r, p + s - sizeof(dag_hash_t), sizeof(dag_hash_t));
 	} else {
 		memset(sign_r, 0, sizeof(dag_hash_t));
 		memcpy((uint8_t*)sign_r + sizeof(dag_hash_t) - s, p, s);
@@ -291,14 +291,14 @@ int dag_sign(const void *key, const dag_hash_t hash, dag_hash_t sign_r, dag_hash
 	p += s + 1, s = *p++;
 
 	if(s >= sizeof(dag_hash_t)) {
-		memcpy(sign_s, p + s - sizeof(dag_hash_t), sizeof(xdag_hash_t));
+		memcpy(sign_s, p + s - sizeof(dag_hash_t), sizeof(dag_hash_t));
 	} else {
 		memset(sign_s, 0, sizeof(dag_hash_t));
-		memcpy((uint8_t*)sign_s + sizeof(xdag_hash_t) - s, p, s);
+		memcpy((uint8_t*)sign_s + sizeof(dag_hash_t) - s, p, s);
 	}
 
-	dag_debug("Sign  : hash=[%s] sign=[%s] r=[%s], s=[%s]", xdag_log_hash(hash),
-		xdag_log_array(buf, sig_len), xdag_log_hash(sign_r), xdag_log_hash(sign_s));
+	//dag_debug("Sign  : hash=[%s] sign=[%s] r=[%s], s=[%s]", xdag_log_hash(hash),
+	//	xdag_log_array(buf, sig_len), xdag_log_hash(sign_r), xdag_log_hash(sign_s));
 
 	return 0;
 }

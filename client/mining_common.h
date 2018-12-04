@@ -22,7 +22,7 @@ struct dag_pool_task {
 extern "C" {
 #endif
 	
-extern struct xdag_pool_task g_dag_pool_task[2];
+extern struct dag_pool_task g_dag_pool_task[2];
 extern uint64_t g_dag_pool_task_index; /* 全局变量被实例化 */
 
 /* 互斥优化共享  */
