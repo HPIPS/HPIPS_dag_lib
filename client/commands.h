@@ -34,15 +34,15 @@ struct xfer_callback_data {
 };
 
 void startCommandProcessing(int transportFlags);
-int xdag_command(char *cmd, FILE *out);
+int dag_command(char *cmd, FILE *out);
 void dag_log_xfer(dag_hash_t from, dag_hash_t to, dag_amount_t amount);
 int out_balances(void);
 int dag_show_state(dag_hash_t hash);
 
-int xfer_callback(void *data, dag_hash_t hash, dag_amount_t amount, time_t time, int n_our_key);
+int fer_callback(void *data, dag_hash_t hash, dag_amount_t amount, time_t time, int n_our_key);
 
 int read_command(char* cmd);
 
-void xdag_init_commands(void);
+void dag_init_commands(void);
 
 #endif // !DAG_COMMANDS_H

@@ -1,7 +1,5 @@
-/* кошелёк, T13.681-T13.726 $DVS:time$ */
-
-#ifndef XDAG_WALLET_H
-#define XDAG_WALLET_H
+#ifndef DAG_WALLET_H
+#define DAG_WALLET_H
 
 #include "block.h"
 

@@ -75,7 +75,7 @@ void processRPCCommand(char *nextParam, FILE *out);
 void processAutoRefreshCommand(char *nextParam, FILE *out);
 void processReloadCommand(char *nextParam, FILE *out);
 
-int xdag_com_account(char *, FILE*);
+int dag_com_account(char *, FILE*);
 int xdag_com_balance(char *, FILE*);
 int xdag_com_block(char *, FILE*);
 int xdag_com_lastblocks(char *, FILE*);
@@ -104,7 +104,7 @@ int xdag_com_reload(char *, FILE*);
 XDAG_COMMAND* find_xdag_command(char*);
 
 XDAG_COMMAND commands[] = {
-	{ "account"     , 0, xdag_com_account },
+	{ "account"     , 0, dag_com_account },
 	{ "balance"     , 0, xdag_com_balance },
 	{ "block"       , 2, xdag_com_block },
 	{ "lastblocks"  , 2, xdag_com_lastblocks },
@@ -819,7 +819,7 @@ int dag_do_xfer(void *outv, const char *amount, const char *address, const char 
 	xfer.outsig = 1;
 	g_dag_state = XDAG_STATE_XFER;
 	g_dag_xfer_last = time(0);
-	xdag_traverse_our_blocks(&xfer, &xfer_callback);
+	xdag_traverse_our_blocks(&xfer, &fer_callback);
 	if(out) {
 		xdag_hash2address(xfer.fields[XFER_MAX_IN].hash, address_buf);
 		fprintf(out, "Xfer: transferred %.9Lf %s to the address %s.\n", amount2xdags(xfer.done), g_coinname, address_buf);
@@ -829,7 +829,7 @@ int dag_do_xfer(void *outv, const char *amount, const char *address, const char 
 	return 0;
 }
 
-int xfer_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time, int n_our_key)
+int fer_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time, int n_our_key)
 {
 	struct xfer_callback_data *xferData = (struct xfer_callback_data*)data;
 	dag_amount_t todo = xferData->remains;
@@ -879,7 +879,7 @@ int xfer_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time
 	return 0;
 }
 
-void xdag_log_xfer(dag_hash_t from, dag_hash_t to, dag_amount_t amount)
+void dag_log_xfer(dag_hash_t from, dag_hash_t to, dag_amount_t amount)
 {
 	char address_from[33] = {0}, address_to[33] = {0};
 	xdag_hash2address(from, address_from);
@@ -934,7 +934,7 @@ int out_balances()
 	xdag_traverse_all_blocks(&d, out_balances_callback);
 	qsort(d.blocks, d.blocksCount, sizeof(struct dag_field), out_sort_callback);
 	for(i = 0; i < d.blocksCount; ++i) {
-		xdag_hash2address(d.blocks[i].data, address);
+		dag_hash2address(d.blocks[i].data, address);
 		printf("%s  %20.9Lf\n", address, amount2xdags(d.blocks[i].amount));
 	}
 	return 0;
