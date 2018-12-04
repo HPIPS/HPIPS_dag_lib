@@ -376,7 +376,7 @@ int dag_mining_start(int n_mining_threads)
 		g_stop_mining = 1;
 		sleep(5);
 		g_stop_mining = 0;
-		gdag_mining_threads = 0;
+		g_dag_mining_threads = 0;
 	}
 
 	while(g_dag_mining_threads < n_mining_threads) {

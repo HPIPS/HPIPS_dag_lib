@@ -1,4 +1,3 @@
-/* синхронизация, T13.738-T14.582 $DVS:time$ */
 
 #include <stdlib.h>
 #include <string.h>

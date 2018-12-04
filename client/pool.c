@@ -156,7 +156,7 @@ static pthread_mutex_t g_pool_mutex = PTHREAD_MUTEX_INITIALIZER;
 int pay_miners(xtime_t time);
 void remove_inactive_miners(void);
 void block_queue_append_new(struct xdag_block *b);
-struct xdag_block *block_queue_first(void);
+struct dag_block *block_queue_first(void);
 
 void *general_mining_thread(void *arg);
 void *pool_net_thread(void *arg);

@@ -34,7 +34,7 @@ static uint64_t last_reply_id;
 static int reply_rcvd;
 static uint64_t reply_id_private;
 static int64_t reply_result;
-static void *xdag_update_rip_thread(void *);
+static void *dag_update_rip_thread(void *);
 
 struct dag_send_data {
 	struct dag_block b;
@@ -292,7 +292,7 @@ int dag_transport_start(int flags, int nthreads, const char *bindto, int npairs,
 	}
 
 	pthread_t t;
-	int err = pthread_create(&t, 0, xdag_update_rip_thread, NULL);
+	int err = pthread_create(&t, 0, dag_update_rip_thread, NULL);
 	if(err != 0) {
 		printf("create xdag_update_rip_thread failed, error : %s\n", strerror(err));
 		return -1;
@@ -434,7 +434,7 @@ int dag_request_block(dag_hash_t hash, void *conn)
 
 	memcpy(&b.field[1], hash, sizeof(dag_hash_t));
 	memcpy(&b.field[2], &g_dag_stats, sizeof(g_dag_stats));
-	add_main_timestamp((struct xdag_stats*)&b.field[2]);
+	add_main_timestamp((struct dag_stats*)&b.field[2]);
 
 	xdag_netdb_send((uint8_t*)&b.field[2] + sizeof(struct dag_stats),
 						 14 * sizeof(struct dag_field) - sizeof(struct dag_stats));
@@ -467,4 +467,3 @@ static void *dag_update_rip_thread(void *arg)
 	}
 	return 0;
 }
-
