@@ -31,7 +31,7 @@
 #define SECTOR0_BASE           0x1947f3acu
 #define SECTOR0_OFFSET         0x82e9d1b5u
 #define SEND_PERIOD            10                                  /* share period of sending shares */
-#define POOL_LIST_FILE         (g_xdag_testnet ? "pools-testnet.txt" : "pools.txt")
+#define POOL_LIST_FILE         (g_dag_testnet ? "pools-testnet.txt" : "pools.txt")
 
 struct miner {
 	struct dag_field id;
@@ -179,12 +179,12 @@ begin:
 		mess = "can't find the block";
 		goto err;
 	} else {
-		struct xdag_block *blk = xdag_storage_load(hash, t, pos, &b);
+		struct dag_block *blk = xdag_storage_load(hash, t, pos, &b);
 		if(!blk) {
 			mess = "can't load the block";
 			goto err;
 		}
-		if(blk != &b) memcpy(&b, blk, sizeof(struct xdag_block));
+		if(blk != &b) memcpy(&b, blk, sizeof(struct dag_block));
 	}
 
 	pthread_mutex_lock(&g_miner_mutex);
@@ -241,7 +241,7 @@ begin:
 			}
 			ndata += res;
 			if(ndata == maxndata) {
-				struct xdag_field *last = data + (ndata / sizeof(struct xdag_field) - 1);
+				struct dag_field *last = data + (ndata / sizeof(struct dag_field) - 1);
 
 				dfslib_uncrypt_array(g_crypt, (uint32_t*)last->data, DATA_SIZE, m->nfield_in++);
 
@@ -257,7 +257,7 @@ begin:
 					maxndata = sizeof(struct dag_field);
 				} else if(maxndata == 2 * sizeof(struct dag_field)) {
 					const uint64_t task_index = g_dag_pool_task_index + 1;
-					struct xdag_pool_task *task = &g_dag_pool_task[task_index & 1];
+					struct dag_pool_task *task = &g_dag_pool_task[task_index & 1];
 
 					task->task_time = xdag_main_time();
 					xdag_hash_set_state(task->ctx, data[0].data,
@@ -287,7 +287,7 @@ begin:
 
 		if(p.revents & POLLOUT) {
 			const uint64_t task_index = g_dag_pool_task_index;
-			struct xdag_pool_task *task = &g_dag_pool_task[task_index & 1];
+			struct dag_pool_task *task = &g_dag_pool_task[task_index & 1];
 			uint64_t *h = task->minhash.data;
 
 			share_time = time(0);
@@ -398,12 +398,12 @@ int dag_mining_start(int n_mining_threads)
 }
 
 /* send block to network via pool */
-int xdag_send_block_via_pool(struct xdag_block *b)
+int xdag_send_block_via_pool(struct dag_block *b)
 {
 	if(g_socket < 0) return -1;
 
 	pthread_mutex_lock(&g_miner_mutex);
-	int ret = send_to_pool(b->field, XDAG_BLOCK_FIELDS);
+	int ret = send_to_pool(b->field, DAG_BLOCK_FIELDS);
 	pthread_mutex_unlock(&g_miner_mutex);
 	return ret;
 }

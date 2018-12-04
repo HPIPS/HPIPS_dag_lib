@@ -45,7 +45,7 @@ extern int xdag_set_log_level(int level);
 #define dag_mess(...)  dag_log(DAG_LOG_FILE, XDAG_MESSAGE , __VA_ARGS__)
 #define dag_info(...)  dag_log(DAG_LOG_FILE, XDAG_INFO    , __VA_ARGS__)
 #ifndef NDEBUG
-#define dag_debug(...) dag_log(AG_LOG_FILE, XDAG_DEBUG   , __VA_ARGS__)
+#define dag_debug(...) dag_log(DAG_LOG_FILE, XDAG_DEBUG   , __VA_ARGS__)
 #else
 #define xdag_debug(...)
 #endif

@@ -137,7 +137,7 @@ static uint32_t g_max_connections_count = START_MINERS_COUNT, g_max_miner_ip_cou
 static uint32_t g_connections_per_miner_limit = DEFAUL_CONNECTIONS_PER_MINER_LIMIT;
 static uint32_t g_connections_count = 0;
 static double g_pool_fee = 0, g_pool_reward = 0, g_pool_direct = 0, g_pool_fund = 0;
-static struct xdag_block *g_firstb = 0, *g_lastb = 0;
+static struct dag_block *g_firstb = 0, *g_lastb = 0;
 
 static int g_stop_general_mining = 1;
 extern int g_block_production_on;
@@ -1577,7 +1577,7 @@ void* pool_remove_inactive_connections(void* arg)
 }
 
 /* append new generated block and new blocks received from miner to list */
-void block_queue_append_new(struct xdag_block *b)
+void block_queue_append_new(struct dag_block *b)
 {
 	if(!b) return;
 
@@ -1594,14 +1594,14 @@ void block_queue_append_new(struct xdag_block *b)
 }
 
 /* get the first new block in list */
-struct xdag_block *block_queue_first(void)
+struct dag_block *block_queue_first(void)
 {
-	struct xdag_block *b = 0;
+	struct dag_block *b = 0;
 	pthread_mutex_lock(&g_pool_mutex);
 
 	if(g_firstb) {
 		b = g_firstb;
-		g_firstb = (struct xdag_block *)(uintptr_t)b->field[0].transport_header;
+		g_firstb = (struct dag_block *)(uintptr_t)b->field[0].transport_header;
 		if(!g_firstb) g_lastb = 0;
 	} else {
 		b = 0;
@@ -1690,8 +1690,8 @@ static void print_connection_stats(struct connection_pool_data *conn_data, int c
 	fprintf(out, "\nConnection %d\n", connection_index);
 	fprintf(out, "IP and port: %u.%u.%u.%u:%u\n", ip & 0xff, ip >> 8 & 0xff, ip >> 16 & 0xff, ip >> 24 & 0xff, ntohs(conn_data->port));
 	fprintf(out, "Connected at: %s\n", time_buf);
-	fprintf(out, "In/out data: %llu/%llu\n", (unsigned long long)conn_data->nfield_in * sizeof(struct xdag_field),
-		(unsigned long long)conn_data->nfield_out * sizeof(struct xdag_field));
+	fprintf(out, "In/out data: %llu/%llu\n", (unsigned long long)conn_data->nfield_in * sizeof(struct dag_field),
+		(unsigned long long)conn_data->nfield_out * sizeof(struct dag_field));
 	if(conn_data->worker_name) {
 		fprintf(out, "Worker name: %s\n", conn_data->worker_name);
 	}

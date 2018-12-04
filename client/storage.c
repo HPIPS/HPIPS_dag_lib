@@ -12,7 +12,7 @@
 #include "utils/utils.h"
 
 #define STORAGE_DIR0            "storage%s"
-#define STORAGE_DIR0_ARGS(t)    (g_xdag_testnet ? "-testnet" : "")
+#define STORAGE_DIR0_ARGS(t)    (g_dag_testnet ? "-testnet" : "")
 #define STORAGE_DIR1            STORAGE_DIR0 DELIMITER "%02x"
 #define STORAGE_DIR1_ARGS(t)    STORAGE_DIR0_ARGS(t), (int)((t) >> 40)
 #define STORAGE_DIR2            STORAGE_DIR1 DELIMITER "%02x"
@@ -32,7 +32,7 @@ static int correct_storage_sum(const char *path, int pos, const struct dag_stora
 	FILE *f = xdag_open_file(path, "r+b");
 
 	if (f) {
-		if (fread(sums, sizeof(struct xdag_storage_sum), 256, f) != 256) {
+		if (fread(sums, sizeof(struct dag_storage_sum), 256, f) != 256) {
 			xdag_close_file(f); xdag_err("Storage: sums file %s corrupted", path);
 			return -1;
 		}
@@ -60,7 +60,7 @@ static int correct_storage_sum(const char *path, int pos, const struct dag_stora
 	sums[pos].size += sum->size;
 	sums[pos].sum += sum->sum;
 	
-	if (fwrite(sums, sizeof(struct xdag_storage_sum), 256, f) != 256) {
+	if (fwrite(sums, sizeof(struct dag_storage_sum), 256, f) != 256) {
 		xdag_close_file(f); xdag_err("Storage: can't write file %s", path); return -1;
 	}
 	
@@ -180,7 +180,7 @@ struct xdag_block *xdag_storage_load(dag_hash_t hash, xtime_t time, uint64_t pos
 	return buf;
 }
 
-#define bufsize (0x100000 / sizeof(struct xdag_block))
+#define bufsize (0x100000 / sizeof(struct dag_block))
 
 static int sort_callback(const void *l, const void *r)
 {
@@ -218,7 +218,7 @@ uint64_t xdag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void
 		FILE *f = xdag_open_file(path, "rb");
 		if (f) {
 			if (fseek(f, pos, SEEK_SET) < 0) todo = 0;
-			else todo = fread(buf, sizeof(struct xdag_block), bufsize, f);
+			else todo = fread(buf, sizeof(struct dag_block), bufsize, f);
 			dag_close_file(f);
 		} else {
 			todo = 0;
@@ -312,19 +312,19 @@ int xdag_load_sums(xtime_t start_time, xtime_t end_time, struct dag_storage_sum 
 
 	FILE *f = xdag_open_file(path, "rb");
 	if (f) {
-		fread(buf, sizeof(struct xdag_storage_sum), 256, f); xdag_close_file(f);
+		fread(buf, sizeof(struct dag_storage_sum), 256, f); xdag_close_file(f);
 	} else {
 		memset(buf, 0, sizeof(buf));
 	}
 
 	if (level & 1) {
-		memset(sums, 0, 16 * sizeof(struct xdag_storage_sum));
+		memset(sums, 0, 16 * sizeof(struct dag_storage_sum));
 
 		for (i = 0; i < 256; ++i) {
 			sums[i >> 4].size += buf[i].size, sums[i >> 4].sum += buf[i].sum;
 		}
 	} else {
-		memcpy(sums, buf + (start_time >> ((level + 4) * 4) & 0xf0), 16 * sizeof(struct xdag_storage_sum));
+		memcpy(sums, buf + (start_time >> ((level + 4) * 4) & 0xf0), 16 * sizeof(struct dag_storage_sum));
 	}
 
 	return 1;

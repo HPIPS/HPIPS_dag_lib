@@ -19,12 +19,12 @@
 #define MAX_BLOCKED_IPS     64
 #define MAX_WHITE_IPS       64
 #define MAX_ALLOWED_FROM_IP 4
-#define DATABASE            (g_xdag_testnet ? "netdb-testnet.txt" : "netdb.txt")
-#define DATABASEWHITE       (g_xdag_testnet ? "netdb-white-testnet.txt" : "netdb-white.txt")
+#define DATABASE            (g_dag_testnet ? "netdb-testnet.txt" : "netdb.txt")
+#define DATABASEWHITE       (g_dag_testnet ? "netdb-white-testnet.txt" : "netdb-white.txt")
 
 #define whitelist_url            "https://raw.githubusercontent.com/XDagger/xdag/master/client/netdb-white.txt"
 #define whitelist_url_testnet    "https://raw.githubusercontent.com/XDagger/xdag/master/client/netdb-white-testnet.txt"
-#define WHITE_URL                (g_xdag_testnet ? whitelist_url_testnet : whitelist_url)
+#define WHITE_URL                (g_dag_testnet ? whitelist_url_testnet : whitelist_url)
 
 int g_prevent_auto_refresh = 0;
 

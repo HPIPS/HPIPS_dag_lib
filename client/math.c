@@ -7,30 +7,30 @@
 #include "utils/log.h"
 
 // convert xdag_amount_t to long double
-inline long double amount2xdags(xdag_amount_t amount)
+inline long double amount2xdags(dag_amount_t amount)
 {
 	return xdag_amount2xdag(amount) + (long double)xdag_amount2cheato(amount) / 1000000000;
 }
 
 // convert xdag to cheato
-xdag_amount_t xdags2amount(const char *str)
+dag_amount_t xdags2amount(const char *str)
 {
 	long double sum;
 	if(sscanf(str, "%Lf", &sum) != 1 || sum <= 0) {
 		return 0;
 	}
 	long double flr = floorl(sum);
-	xdag_amount_t res = (xdag_amount_t)flr << 32;
+	dag_amount_t res = (dag_amount_t)flr << 32;
 	sum -= flr;
 	sum = ldexpl(sum, 32);
 	flr = ceill(sum);
-	return res + (xdag_amount_t)flr;
+	return res + (dag_amount_t)flr;
 }
 
-xdag_diff_t xdag_hash_difficulty(xdag_hash_t hash)
+dag_diff_t xdag_hash_difficulty(dag_hash_t hash)
 {
-	xdag_diff_t res = ((xdag_diff_t*)hash)[1];
-	xdag_diff_t max = xdag_diff_max;
+	dag_diff_t res = ((dag_diff_t*)hash)[1];
+	dag_diff_t max = xdag_diff_max;
 
 	xdag_diff_shr32(&res);
 
@@ -43,7 +43,7 @@ xdag_diff_t xdag_hash_difficulty(xdag_hash_t hash)
 	return xdag_diff_div(max, res);
 }
 
-long double xdag_diff2log(xdag_diff_t diff)
+long double xdag_diff2log(dag_diff_t diff)
 {
 	long double res = (long double)xdag_diff_to64(diff);
 	xdag_diff_shr32(&diff);
@@ -59,7 +59,7 @@ long double xdag_log_difficulty2hashrate(long double log_diff)
 	return ldexpl(expl(log_diff), -58)*(0.65);
 }
 
-long double dag_hashrate(xdag_diff_t *diff)
+long double dag_hashrate(dag_diff_t *diff)
 {
 	long double sum = 0;
 	for(int i = 0; i < HASHRATE_LAST_MAX_TIME; ++i) {

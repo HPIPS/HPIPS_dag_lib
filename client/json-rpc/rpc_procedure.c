@@ -40,7 +40,7 @@
 #define RPC_SERVER_MAX_CONNECTION -32001
 
 struct rpc_procedure_element {
-	struct xdag_rpc_procedure procedure;
+	struct dag_rpc_procedure procedure;
 	struct rpc_procedure_element *next;
 };
 struct rpc_procedure_element *g_procedures = NULL;
@@ -88,7 +88,7 @@ cJSON * make_result(cJSON * result, cJSON * id, char *version)
 	return result_root;
 }
 
-static void xdag_rpc_service_procedure_destroy(struct xdag_rpc_procedure *procedure)
+static void dag_rpc_service_procedure_destroy(struct dag_rpc_procedure *procedure)
 {
 	if(procedure->name){
 		free(procedure->name);
@@ -101,7 +101,7 @@ static void xdag_rpc_service_procedure_destroy(struct xdag_rpc_procedure *proced
 	}
 }
 
-int xdag_rpc_service_register_procedure(xdag_rpc_function function_pointer, char *name, void * data)
+int dag_rpc_service_register_procedure(dag_rpc_function function_pointer, char *name, void * data)
 {
 	struct rpc_procedure_element *elem;
 	LL_FOREACH(g_procedures, elem)
@@ -125,14 +125,14 @@ int xdag_rpc_service_register_procedure(xdag_rpc_function function_pointer, char
 	return 0;
 }
 
-int xdag_rpc_service_unregister_procedure(char *name)
+int dag_rpc_service_unregister_procedure(char *name)
 {
 	struct rpc_procedure_element *elem, *tmp;
 	int found = 0;
 	LL_FOREACH_SAFE(g_procedures, elem, tmp)
 	{
 		if(!strcmp(name, elem->procedure.name)) {
-			xdag_rpc_service_procedure_destroy(&(elem->procedure));
+			dag_rpc_service_procedure_destroy(&(elem->procedure));
 			LL_DELETE(g_procedures, elem);
 			free(elem);
 			found = 1;
@@ -140,12 +140,12 @@ int xdag_rpc_service_unregister_procedure(char *name)
 	}
 
 	if(!found) {
-		xdag_err("rpc server : procedure '%s' not found\n", name);
+		dag_err("rpc server : procedure '%s' not found\n", name);
 	}
 	return 0;
 }
 
-int xdag_rpc_service_list_procedures(char *result)
+int dag_rpc_service_list_procedures(char *result)
 {
 	char name[64] = {0};
 	struct rpc_procedure_element *elem;
@@ -158,12 +158,12 @@ int xdag_rpc_service_list_procedures(char *result)
 	return 0;
 }
 
-int xdag_rpc_service_clear_procedures(void)
+int dag_rpc_service_clear_procedures(void)
 {
 	struct rpc_procedure_element *elem, *tmp;
 	LL_FOREACH_SAFE(g_procedures, elem, tmp)
 	{
-		xdag_rpc_service_procedure_destroy(&(elem->procedure));
+		dag_rpc_service_procedure_destroy(&(elem->procedure));
 		LL_DELETE(g_procedures, elem);
 		free(elem);
 	}
@@ -174,8 +174,8 @@ cJSON * invoke_procedure(char *name, cJSON *params, cJSON *id, char *version)
 {
 	cJSON *returned = NULL;
 	int procedure_found = 0;
-	struct xdag_rpc_context ctx;
-	memset(&ctx, 0, sizeof(struct xdag_rpc_context));
+	struct dag_rpc_context ctx;
+	memset(&ctx, 0, sizeof(struct dag_rpc_context));
 
 	struct rpc_procedure_element *elem;
 	LL_FOREACH(g_procedures, elem)
@@ -209,7 +209,7 @@ cJSON * invoke_procedure(char *name, cJSON *params, cJSON *id, char *version)
 }
 
 /* handle rpc request */
-cJSON * xdag_rpc_handle_request(char* buffer)
+cJSON * dag_rpc_handle_request(char* buffer)
 {
 	cJSON *root = NULL, *result = NULL;
 	const char *end_ptr = NULL;
@@ -217,7 +217,7 @@ cJSON * xdag_rpc_handle_request(char* buffer)
 	if((root = cJSON_ParseWithOpts(buffer, &end_ptr, 0)) != NULL) {
 		
 		char * str_result = cJSON_Print(root);
-		xdag_debug("Valid JSON Received:\n%s\n", str_result);
+		dag_debug("Valid JSON Received:\n%s\n", str_result);
 		free(str_result);
 		
 		if(root->type == cJSON_Object) {

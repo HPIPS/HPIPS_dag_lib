@@ -347,7 +347,7 @@ cJSON * method_dag_get_account(struct dag_rpc_context *ctx, cJSON *params, cJSON
  "jsonrpc":"2.0", "result":[{"balance":"10.111111"}], "error":null, "id":1
  "version":"1.1", "result":[{"balance":"10.111111"}], "error":null, "id":1
  */
-cJSON * method_dag_get_balance(struct xdag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
+cJSON * method_dag_get_balance(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
 {
 	dag_debug("rpc call method xdag_get_balance, version %s", version);
 	char address[128] = {0};
@@ -644,7 +644,7 @@ cJSON * method_dag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *i
 
 			g_dag_state = XDAG_STATE_XFER;
 			g_dag_xfer_last = time(0);
-			xdag_traverse_our_blocks(&xfer, &xfer_callback);
+			xdag_traverse_our_blocks(&xfer, &fer_callback);
 
 			char address_buf[33] = {0};
 			xdag_hash2address(xfer.transactionBlockHash, address_buf);
@@ -682,7 +682,7 @@ struct rpc_transactions_callback_data {
 	int count;
 };
 
-int rpc_transactions_callback(void *data, int type, int flags, xdag_hash_t hash, xdag_amount_t amount, xtime_t time, const char* remark)
+int rpc_transactions_callback(void *data, int type, int flags, dag_hash_t hash, dag_amount_t amount, xtime_t time, const char* remark)
 {
 	struct rpc_transactions_callback_data *callback_data = (struct rpc_transactions_callback_data*)data;
 	

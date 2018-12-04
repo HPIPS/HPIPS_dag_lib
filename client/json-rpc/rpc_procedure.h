@@ -13,38 +13,38 @@
 #include "cJSON_Utils.h"
 #include "rpc_procedures.h"
 
-struct xdag_rpc_context{
+struct dag_rpc_context{
 	void *data;
 	int error_code;
 	char * error_message;
 	char rpc_version[8];
 } ;
 
-typedef cJSON* (*xdag_rpc_function)(struct xdag_rpc_context *context, cJSON *params, cJSON *id, char *version);
+typedef cJSON* (*dag_rpc_function)(struct dag_rpc_context *context, cJSON *params, cJSON *id, char *version);
 
-struct xdag_rpc_procedure {
+struct dag_rpc_procedure {
 	char * name;
-	xdag_rpc_function function;
+	dag_rpc_function function;
 	void *data;
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* register procedure */
-extern int xdag_rpc_service_register_procedure(xdag_rpc_function function_pointer, char *name, void *data);
+/* 登记程序 */
+extern int dag_rpc_service_register_procedure(dag_rpc_function function_pointer, char *name, void *data);
 
-/* unregister procedure */
-extern int xdag_rpc_service_unregister_procedure(char *name);
+/* 注销程序 */
+extern int dag_rpc_service_unregister_procedure(char *name);
 
-/* list registerd procedures */
-extern int xdag_rpc_service_list_procedures(char *);
+/* 列表登记程序 */
+extern int dag_rpc_service_list_procedures(char *);
 
-/* unregister all procedures */
-extern int xdag_rpc_service_clear_procedures(void);
+/* 取消所有程序的注册 */
+extern int dag_rpc_service_clear_procedures(void);
 
-/* handle rpc request */
-extern cJSON *xdag_rpc_handle_request(char* buffer);
+/* 处理RPC请求 */
+extern cJSON *dag_rpc_handle_request(char* buffer);
 
 #ifdef __cplusplus
 };
