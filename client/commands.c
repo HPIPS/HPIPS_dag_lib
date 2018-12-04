@@ -299,7 +299,7 @@ void startCommandProcessing(int transportFlags)
 	char cmd[DAG_COMMAND_MAX] = {0};
 	if(!(transportFlags & DAG_DAEMON)) printf("Type command, help for example.\n");
 
-	xdag_init_commands();
+	dag_init_commands();
 
 	for(;;) {
 		if(transportFlags & DAG_DAEMON) {
@@ -307,7 +307,7 @@ void startCommandProcessing(int transportFlags)
 		} else {
 			read_command(cmd);
 			if(strlen(cmd) > 0) {
-				int ret = xdag_command(cmd, stdout);
+				int ret = dag_command(cmd, stdout);
 				if(ret < 0) {
 					break;
 				}
@@ -357,7 +357,7 @@ void processAccountCommand(char *nextParam, FILE *out)
 	if(g_dag_state < XDAG_STATE_XFER) {
 		fprintf(out, "Not ready to show balances. Type 'state' command to see the reason.\n");
 	}
-	xdag_traverse_our_blocks(&d, &account_callback);
+	dag_traverse_our_blocks(&d, &account_callback);
 }
 
 // 进程平衡命令
@@ -370,10 +370,10 @@ void processBalanceCommand(char *nextParam, FILE *out)
 		dag_amount_t balance;
 		char *cmd = strtok_r(nextParam, " \t\r\n", &nextParam);
 		if(cmd) {
-			xdag_address2hash(cmd, hash);
-			balance = xdag_get_balance(hash);
+			dag_address2hash(cmd, hash);
+			balance = dag_get_balance(hash);
 		} else {
-			balance = xdag_get_balance(0);
+			balance = dag_get_balance(0);
 		}
 		fprintf(out, "Balance: %.9Lf %s\n", amount2xdags(balance), g_coinname);
 	}
@@ -455,7 +455,7 @@ void processMiningCommand(char *nextParam, FILE *out)
 	} else if(sscanf(cmd, "%d", &nthreads) != 1 || nthreads < 0) {
 		fprintf(out, "Illegal number.\n");
 	} else {
-		xdag_mining_start(nthreads);
+		dag_mining_start(nthreads);
 		fprintf(out, "%d mining threads running\n", g_dag_mining_threads);
 	}
 }
@@ -496,7 +496,7 @@ void processNetCommand(char *nextParam, FILE *out)
 		strcat(netcmd, cmd);
 		strcat(netcmd, " ");
 	}
-	xdag_net_command(netcmd, out);
+	dag_net_command(netcmd, out);
 }
 
 void processRPCCommand(char *nextParam, FILE *out)
@@ -788,13 +788,13 @@ int dag_do_xfer(void *outv, const char *amount, const char *address, const char 
 		}
 		return 1;
 	}
-	if(xfer.remains > xdag_get_balance(0)) {
+	if(xfer.remains > dag_get_balance(0)) {
 		if(out) {
 			fprintf(out, "Xfer: balance too small.\n");
 		}
 		return 1;
 	}
-	if(xdag_address2hash(address, xfer.fields[XFER_MAX_IN].hash)) {
+	if(dag_address2hash(address, xfer.fields[XFER_MAX_IN].hash)) {
 		if(out) {
 			fprintf(out, "Xfer: incorrect address.\n");
 		}
@@ -819,7 +819,7 @@ int dag_do_xfer(void *outv, const char *amount, const char *address, const char 
 	xfer.outsig = 1;
 	g_dag_state = XDAG_STATE_XFER;
 	g_dag_xfer_last = time(0);
-	xdag_traverse_our_blocks(&xfer, &fer_callback);
+	dag_traverse_our_blocks(&xfer, &fer_callback);
 	if(out) {
 		xdag_hash2address(xfer.fields[XFER_MAX_IN].hash, address_buf);
 		fprintf(out, "Xfer: transferred %.9Lf %s to the address %s.\n", amount2xdags(xfer.done), g_coinname, address_buf);
@@ -950,7 +950,7 @@ int dag_show_state(dag_hash_t hash)
 	if(g_dag_state < XDAG_STATE_XFER) {
 		strcpy(balance, "Not ready");
 	} else {
-		sprintf(balance, "%.9Lf", amount2xdags(xdag_get_balance(0)));
+		sprintf(balance, "%.9Lf", amount2xdags(dag_get_balance(0)));
 	}
 	if(!hash) {
 		strcpy(address, "Not ready");
@@ -1002,7 +1002,7 @@ void processHelpCommand(FILE *out)
 //设置挖矿基础指数
 void dagSetCountMiningTread(int miningThreadsCount)
 {
-	xdag_mining_start(miningThreadsCount);
+	dag_mining_start(miningThreadsCount);
 }
 
 //获取Hash比率

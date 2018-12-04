@@ -135,7 +135,7 @@ int xdag_mem_init(size_t size)
 	return 0;
 }
 
-void *xdag_malloc(size_t size)
+void *dag_malloc(size_t size)
 {
 	uint8_t *res;
 	

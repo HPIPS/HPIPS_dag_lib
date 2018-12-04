@@ -75,7 +75,7 @@ static int add_key(dag_hash_t priv)
 	keys_arr[nkeys].key = k->key;
 	keys_arr[nkeys].pub = (uint64_t*)((uintptr_t)&k->pub | k->pub_bit);
 
-	xdag_debug("Key %2d: priv=[%s] pub=[%02x:%s]", nkeys,
+	dag_debug("Key %2d: priv=[%s] pub=[%02x:%s]", nkeys,
 					dag_log_hash(k->priv), 0x02 + k->pub_bit,  dag_log_hash(k->pub));
 	
 	nkeys++;

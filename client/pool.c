@@ -880,7 +880,7 @@ static int receive_data_from_connection(connection_list_element *connection)
 {
 #if _DEBUG
 	int ip = connection->connection_data.ip;
-	xdag_debug("Pool  : receive data from %u.%u.%u.%u:%u",
+	dag_debug("Pool  : receive data from %u.%u.%u.%u:%u",
 		ip & 0xff, ip >> 8 & 0xff, ip >> 16 & 0xff, ip >> 24 & 0xff, ntohs(connection->connection_data.port));
 #endif
 
@@ -946,7 +946,7 @@ static int send_data_to_connection(connection_list_element *connection, int *pro
 		//TODO: optimize refreshing of balance
 		conn_data->balance_refreshed_time = current_time;
 		memcpy(data[0].data, conn_data->miner->id.data, sizeof(dag_hash_t));
-		data[0].amount = xdag_get_balance(data[0].data);
+		data[0].amount = dag_get_balance(data[0].data);
 		fields_count = 1;
 	}
 
@@ -1197,7 +1197,7 @@ static double precalculate_payments(uint64_t *hash, int confirmation_index, stru
 	if(g_pool_fund) {
 		if(g_fund_miner.state == MINER_UNKNOWN) {
 			xtime_t t;
-			if(!xdag_address2hash(FUND_ADDRESS, g_fund_miner.id.hash) && xdag_get_block_pos(g_fund_miner.id.hash, &t, 0) >= 0) {
+			if(!dag_address2hash(FUND_ADDRESS, g_fund_miner.id.hash) && xdag_get_block_pos(g_fund_miner.id.hash, &t, 0) >= 0) {
 				g_fund_miner.state = MINER_SERVICE;
 			}
 		}
@@ -1330,7 +1330,7 @@ int pay_miners(xtime_t time)
 	uint64_t *hash = g_xdag_mined_hashes[confirmation_index];
 	uint64_t *nonce = g_xdag_mined_nonce[confirmation_index];
 
-	data.balance = xdag_get_balance(hash);
+	data.balance = dag_get_balance(hash);
 	if(!data.balance) return -2;
 
 	data.pay = data.balance - (dag_amount_t)(g_pool_fee * data.balance);
@@ -1350,7 +1350,7 @@ int pay_miners(xtime_t time)
 	} else if (pos < 0) {
 		return -6;
 	} else {
-		struct xdag_block *block = xdag_storage_load(hash, time, pos, &buf);
+		struct xdag_block *block = dag_storage_load(hash, time, pos, &buf);
 		if(!block) return -7;
 	}
 
@@ -1527,7 +1527,7 @@ void disconnect_connections(enum disconnect_type type, char *value)
 	uint32_t ip = 0;
 
 	if(type == DISCONNECT_BY_ADRESS) {
-		xdag_address2hash(value, hash);
+		dag_address2hash(value, hash);
 	} else if(type == DISCONNECT_BY_IP) {
 		ip = inet_addr(value);
 	}
@@ -1761,7 +1761,7 @@ int xdag_print_miner_stats(const char* address, FILE *out)
 {
 	miner_list_element *elt;
 	dag_hash_t hash;
-	xdag_address2hash(address, hash);
+	dag_address2hash(address, hash);
 
 	int exists = 0;
 	pthread_mutex_lock(&g_connections_mutex);

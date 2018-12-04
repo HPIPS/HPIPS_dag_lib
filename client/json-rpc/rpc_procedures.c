@@ -86,7 +86,7 @@ cJSON * method_xdag_get_transactions(struct dag_rpc_context * ctx, cJSON *params
  */
 cJSON * method_xdag_version(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
 {
-	xdag_debug("rpc call method xdag_version, version %s",version);
+	dag_debug("rpc call method xdag_version, version %s",version);
 	cJSON *ret = NULL;
 	cJSON *item = cJSON_CreateObject();
 	
@@ -111,7 +111,7 @@ cJSON * method_xdag_version(struct dag_rpc_context *ctx, cJSON *params, cJSON *i
  */
 cJSON * method_xdag_state(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
 {
-	xdag_debug("rpc call method xdag_state, version %s",version);
+	dag_debug("rpc call method xdag_state, version %s",version);
 	cJSON *ret = NULL;
 	cJSON *item = cJSON_CreateObject();
 
@@ -183,7 +183,7 @@ cJSON * method_xdag_state(struct dag_rpc_context *ctx, cJSON *params, cJSON *id,
  */
 cJSON * method_xdag_stats(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
 {
-	xdag_debug("rpc call method xdag_stats, version %s",version);
+	dag_debug("rpc call method xdag_stats, version %s",version);
 	cJSON *ret = NULL;
 	cJSON *item = cJSON_CreateObject();
 
@@ -299,7 +299,7 @@ int rpc_account_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime
 
 cJSON * method_dag_get_account(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
 {
-	xdag_debug("rpc call method get_account, version %s",version);
+	dag_debug("rpc call method get_account, version %s",version);
 	struct rpc_account_callback_data cbdata;
 	cbdata.count = (g_is_miner ? 1 : 20);
 	if (params) {
@@ -327,7 +327,7 @@ cJSON * method_dag_get_account(struct dag_rpc_context *ctx, cJSON *params, cJSON
 		} else {
 			ret = cJSON_CreateArray();
 			cbdata.root = ret;
-			xdag_traverse_our_blocks(&cbdata, &rpc_account_callback);
+			dag_traverse_our_blocks(&cbdata, &rpc_account_callback);
 		}
 	}
 	
@@ -380,10 +380,10 @@ cJSON * method_dag_get_balance(struct dag_rpc_context * ctx, cJSON *params, cJSO
 		dag_amount_t balance;
 		
 		if(strlen(address)) {
-			xdag_address2hash(address, hash);
-			balance = xdag_get_balance(hash);
+			dag_address2hash(address, hash);
+			balance = dag_get_balance(hash);
 		} else {
-			balance = xdag_get_balance(0);
+			balance = dag_get_balance(0);
 		}
 		
 		char str[128] = {0};
@@ -486,7 +486,7 @@ int rpc_get_block_links_callback(void *data, const char *direction, dag_hash_t h
 
 cJSON * method_dag_get_block_info(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
 {
-	xdag_debug("rpc call method xdag_get_block_info, version %s", version);
+	dag_debug("rpc call method xdag_get_block_info, version %s", version);
 	char address[128] = {0};
 	if (params) {
 		if (cJSON_IsArray(params)) {
@@ -510,7 +510,7 @@ cJSON * method_dag_get_block_info(struct dag_rpc_context * ctx, cJSON *params, c
 	size_t len = strlen(address);
 
 	if(len == 32) {
-		if(xdag_address2hash(address, hash)) {
+		if(dag_address2hash(address, hash)) {
 			ctx->error_code = 1;
 			ctx->error_message = strdup("Address is incorrect.");
 			return NULL;
@@ -567,7 +567,7 @@ cJSON * method_dag_get_block_info(struct dag_rpc_context * ctx, cJSON *params, c
 cJSON * method_dag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *id, char *version)
 {
 	//todo: need password or not?
-	xdag_debug("rpc call method do_xfer, version %s", version);
+	dag_debug("rpc call method do_xfer, version %s", version);
 	
 	char amount[128] = {0};
 	char address[128] = {0};
@@ -625,10 +625,10 @@ cJSON * method_dag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *i
 		if(!xfer.remains) {
 			ctx->error_code = 1;
 			ctx->error_message = strdup("Xfer: nothing to transfer.");
-		} else if(xfer.remains > xdag_get_balance(0)) {
+		} else if(xfer.remains > dag_get_balance(0)) {
 			ctx->error_code = 1;
 			ctx->error_message = strdup("Xfer: balance too small.");
-		} else if(xdag_address2hash(address, xfer.fields[XFER_MAX_IN].hash)) {
+		} else if(dag_address2hash(address, xfer.fields[XFER_MAX_IN].hash)) {
 			ctx->error_code = 1;
 			ctx->error_message = strdup("Xfer: incorrect address.");
 		} else {
@@ -644,7 +644,7 @@ cJSON * method_dag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *i
 
 			g_dag_state = XDAG_STATE_XFER;
 			g_dag_xfer_last = time(0);
-			xdag_traverse_our_blocks(&xfer, &fer_callback);
+			dag_traverse_our_blocks(&xfer, &fer_callback);
 
 			char address_buf[33] = {0};
 			xdag_hash2address(xfer.transactionBlockHash, address_buf);
@@ -783,7 +783,7 @@ cJSON * method_dag_get_transactions(struct dag_rpc_context * ctx, cJSON *params,
 	size_t len = strlen(address);
 	
 	if(len == 32) {
-		if(xdag_address2hash(address, hash)) {
+		if(dag_address2hash(address, hash)) {
 			ctx->error_code = 1;
 			ctx->error_message = strdup("Address is incorrect.");
 			return NULL;
@@ -841,7 +841,7 @@ int dag_rpc_init_procedures(void)
 
 	/* register xdag_get_account, xdag_get_balance, xdag_do_xfer, xdag_get_transactions */
 	rpc_register_func(xdag_get_account);
-	rpc_register_func(xdag_get_balance);
+	rpc_register_func(dag_get_balance);
 	rpc_register_func(xdag_get_block_info);
 
 	if(g_rpc_xfer_enable) {

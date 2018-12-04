@@ -54,7 +54,7 @@ void apply_lock_before(uint64_t tid, pthread_mutex_t *mutex_ptr, const char *nam
 	elem->tid = tid;
 	elem->mutex_ptr = mutex_ptr;
 	strcpy(elem->mutex_name, name);
-	xdag_debug("check deadlock append (%12llx:%s) to try list\n", tid, name);
+	dag_debug("check deadlock append (%12llx:%s) to try list\n", tid, name);
 	LL_APPEND(try_list_mutex_thread, elem);
 	pthread_mutex_unlock(&g_detect_mutex);
 }
@@ -68,7 +68,7 @@ void apply_lock_after(uint64_t tid, pthread_mutex_t *mutex_ptr)
 	{
 		if(elem->tid == tid && elem->mutex_ptr == mutex_ptr) {
 			LL_DELETE(try_list_mutex_thread, elem);
-			xdag_debug("check deadlock move (%12llx:%s) from try to list\n", tid, elem->mutex_name);
+			dag_debug("check deadlock move (%12llx:%s) from try to list\n", tid, elem->mutex_name);
 			LL_APPEND(list_mutex_thread, elem);
 			break;
 		}
@@ -84,7 +84,7 @@ void apply_unlock(uint64_t tid, pthread_mutex_t *mutex_ptr)
 	LL_FOREACH_SAFE(list_mutex_thread, elem, tmp)
 	{
 		if(elem->tid == tid && elem->mutex_ptr == mutex_ptr) {
-			xdag_debug("check deadlock remove (%12llx:%s) from list\n", tid, elem->mutex_name);
+			dag_debug("check deadlock remove (%12llx:%s) from list\n", tid, elem->mutex_name);
 			LL_DELETE(list_mutex_thread, elem);
 			free(elem);
 			break;
@@ -183,7 +183,7 @@ static void check_deadlock(void)
 						LL_APPEND(graph, vertex);
 					}
 
-					xdag_debug("add dependence (%12llx:%s)->(%12llx:%s)\n", elem1->tid, elem1->mutex_name, elem2->tid, elem2->mutex_name);
+					dag_debug("add dependence (%12llx:%s)->(%12llx:%s)\n", elem1->tid, elem1->mutex_name, elem2->tid, elem2->mutex_name);
 
 					++vertex->in_degrees;
 
@@ -232,7 +232,7 @@ static void check_deadlock(void)
 static void* check_deadlock_thread(void* argv)
 {
 	while(1) {
-		xdag_debug("check dead lock thread loop...\n");
+		dag_debug("check dead lock thread loop...\n");
 		check_deadlock();
 		sleep(10);
 	}

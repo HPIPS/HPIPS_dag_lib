@@ -244,7 +244,7 @@ cJSON * dag_rpc_handle_request(char* buffer)
 						if(id != NULL) {
 							id_copy = (id->type == cJSON_String) ? cJSON_CreateString(id->valuestring):cJSON_CreateNumber(id->valueint);
 						}
-						xdag_debug("Method Invoked: %s\n", method->valuestring);
+						dag_debug("Method Invoked: %s\n", method->valuestring);
 						
 						result = invoke_procedure(method->valuestring, params, id_copy, version);
 					}

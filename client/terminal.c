@@ -45,7 +45,7 @@ int terminal(void)
 	char cmd[DAG_COMMAND_MAX] = {0};
 	char cmd2[DAG_COMMAND_MAX] = {0};
 
-	xdag_init_commands();
+	dag_init_commands();
 
 	while(1) {
 		int ispwd = 0, c = 0;
@@ -177,7 +177,7 @@ void *terminal_thread(void *arg)
 			}
 #endif
 
-			res = xdag_command(cmd, fd);
+			res = dag_command(cmd, fd);
 
 #if !defined(_WIN32) && !defined(_WIN64)
 			dag_close_file(fd);

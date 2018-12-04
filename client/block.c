@@ -1071,7 +1071,7 @@ int do_mining(struct dag_block *block, struct block_internal **pretop, xtime_t s
 		pthread_mutex_lock(&g_create_block_mutex);
 		struct block_internal *pretop_new = pretop_block();
 		pthread_mutex_unlock(&g_create_block_mutex);
-		if(*pretop != pretop_new && xdag_get_xtimestamp() < send_time) {
+		if(*pretop != pretop_new && dag_get_xtimestamp() < send_time) {
 			*pretop = pretop_new;
 			dag_info("Mining: start from beginning because of pre-top block changed");
 			return 0;
@@ -1127,7 +1127,7 @@ begin:
 	g_dag_state = XDAG_STATE_LOAD;
 	dag_mess("Loading blocks from local storage...");
 
-	xtime_t start = xdag_get_xtimestamp();
+	xtime_t start = dag_get_xtimestamp();
 	dag_show_state(0);
 
 	dag_load_blocks(t, dag_get_xtimestamp(), &t, &add_block_callback);
@@ -1172,7 +1172,7 @@ begin:
 		unsigned nblk;
 
 		t0 = t;
-		t = xdag_get_xtimestamp();
+		t = dag_get_xtimestamp();
 		nhashes0 = nhashes;
 		nhashes = g_dag_extstats.nhashes;
 		nmain = g_dag_stats.nmain;
@@ -1306,7 +1306,7 @@ int dag_blocks_start(int is_pool, int mining_threads_count, int miner_address)
 		g_light_mode = 1;
 	}
 
-	if (dag_mem_init(g_light_mode && !miner_address ? 0 : (((xdag_get_xtimestamp() - DAG_ERA) >> 10) + (uint64_t)365 * 24 * 60 * 60) * 2 * sizeof(struct block_internal))) {
+	if (dag_mem_init(g_light_mode && !miner_address ? 0 : (((dag_get_xtimestamp() - DAG_ERA) >> 10) + (uint64_t)365 * 24 * 60 * 60) * 2 * sizeof(struct block_internal))) {
 		return -1;
 	}
 
@@ -1478,7 +1478,7 @@ int dag_set_balance(dag_hash_t hash, dag_amount_t balance)
 }
 
 // 通过散列返回块的位置和时间；如果块是额外的和块！= 0还返回整个块
-int64_t dag_get_block_pos(const dag_hash_t hash, xtime_t *t, struct xdag_block *block)
+int64_t dag_get_block_pos(const dag_hash_t hash, xtime_t *t, struct dag_block *block)
 {
 	if (block) pthread_mutex_lock(&block_mutex);
 	struct block_internal *bi = block_by_hash(hash);
@@ -1588,7 +1588,7 @@ int dag_print_block_info(dag_hash_t hash, FILE *out)
 	flags = bi->flags;
 	pthread_mutex_unlock(&block_mutex);
 	if((flags & BI_REF) && ref != NULL) {
-		xdag_hash2address(ref->hash, address);
+		dag_hash2address(ref->hash, address);
 	} else {
 		strcpy(address, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 	}
@@ -1683,7 +1683,7 @@ static inline void print_block(struct block_internal *block, int print_only_addr
 		fprintf(out, "%s\n", address);
 	} else {
 		dag_xtime_to_string(block->time, time_buf);
-		fprintf(out, "%s   %s   %-8s  %-32s\n", address, time_buf, xdag_get_block_state_info(block->flags), get_remark(block));
+		fprintf(out, "%s   %s   %-8s  %-32s\n", address, time_buf, dag_get_block_state_info(block->flags), get_remark(block));
 	}
 }
 
@@ -1808,7 +1808,7 @@ int32_t check_signature_out_cached(struct block_internal* blockRef, struct dag_p
 	}
 }
 
-int32_t check_signature_out(struct block_internal* blockRef, struct xdag_public_key *public_keys, const int keysCount)
+int32_t check_signature_out(struct block_internal* blockRef, struct dag_public_key *public_keys, const int keysCount)
 {
 	struct dag_block buf;
 	struct dag_block *bref = dag_storage_load(blockRef->hash, blockRef->time, blockRef->storage_pos, &buf);
@@ -1818,7 +1818,7 @@ int32_t check_signature_out(struct block_internal* blockRef, struct xdag_public_
 	return find_and_verify_signature_out(bref, public_keys, keysCount);
 }
 
-static int32_t find_and_verify_signature_out(struct xdag_block* bref, struct xdag_public_key *public_keys, const int keysCount)
+static int32_t find_and_verify_signature_out(struct dag_block* bref, struct dag_public_key *public_keys, const int keysCount)
 {
 	int j = 0;
 	for(int k = 0; j < DAG_BLOCK_FIELDS; ++j) {
@@ -1901,9 +1901,9 @@ void remove_orphan(struct block_internal* bi, int remove_action)
 	if(!(bi->flags & BI_REF) && (remove_action != ORPHAN_REMOVE_EXTRA || (bi->flags & BI_EXTRA))) {
 		struct orphan_block *obt = bi->oref;
 		if (obt == NULL) {
-			xdag_crit("Critical error. obt=0");
+			dag_crit("Critical error. obt=0");
 		} else if (obt->orphan_bi != bi) {
-			xdag_crit("Critical error. bi=%p, flags=%x, action=%d, obt=%p, prev=%p, next=%p, obi=%p",
+			dag_crit("Critical error. bi=%p, flags=%x, action=%d, obt=%p, prev=%p, next=%p, obi=%p",
 				  bi, bi->flags, remove_action, obt, obt->prev, obt->next, obt->orphan_bi);
 		} else {
 			int index = get_orphan_index(bi), i;
@@ -1914,7 +1914,7 @@ void remove_orphan(struct block_internal* bi, int remove_action)
 
 			if (index) {
 				if (remove_action != ORPHAN_REMOVE_REUSE) {
-					bi->storage_pos = xdag_storage_save(obt->block);
+					bi->storage_pos = dag_storage_save(obt->block);
 					for (i = 0; i < bi->nlinks; ++i) {
 						remove_orphan(bi->link[i], ORPHAN_REMOVE_NORMAL);
 					}
@@ -1937,7 +1937,7 @@ void add_orphan(struct block_internal* bi, struct dag_block *block)
 	int index = get_orphan_index(bi);
 	struct orphan_block *obt = malloc(sizeof(struct orphan_block) + index * sizeof(struct dag_block));
 	if(obt == NULL){
-		xdag_crit("Error. Malloc failed. [function: add_orphan]");
+		dag_crit("Error. Malloc failed. [function: add_orphan]");
 	} else {
 		obt->orphan_bi = bi;
 		obt->prev = g_orphan_last[index];
@@ -2036,7 +2036,7 @@ static inline size_t remark_acceptance(dag_remark_t origin)
 static int add_remark_bi(struct block_internal* bi, dag_remark_t strbuf)
 {
 	size_t size = remark_acceptance(strbuf);
-	char *remark_tmp = xdag_malloc(size + 1);
+	char *remark_tmp = dag_malloc(size + 1);
 	if(remark_tmp == NULL) {
 		dag_err("xdag_malloc failed, [function add_remark_bi]");
 		return 0;
@@ -2058,7 +2058,7 @@ static void add_backref(struct block_internal* blockRef, struct block_internal* 
 	// LIFO list: if the first element doesn't exist or it is full, a new element of the backrefs list will be created
 	// and added as first element of backrefs block list
 	if( tmp == NULL || tmp->backrefs[N_BACKREFS - 1]) {
-		struct block_backrefs *blockRefs_to_insert = xdag_malloc(sizeof(struct block_backrefs));
+		struct block_backrefs *blockRefs_to_insert = dag_malloc(sizeof(struct block_backrefs));
 		if(blockRefs_to_insert == NULL) {
 			dag_err("xdag_malloc failed. [function add_backref]");
 			return;
@@ -2075,10 +2075,10 @@ static void add_backref(struct block_internal* blockRef, struct block_internal* 
 	tmp->backrefs[i] = nodeBlock;
 }
 
-static inline int get_nfield(struct xdag_block *bref, int field_type)
+static inline int get_nfield(struct dag_block *bref, int field_type)
 {
 	for(int i = 0; i < DAG_BLOCK_FIELDS; ++i) {
-		if(xdag_type(bref, i) == field_type){
+		if(dag_type(bref, i) == field_type){
 			return i;
 		}
 	}
@@ -2099,7 +2099,7 @@ static inline const char* get_remark(struct block_internal *bi){
 
 static int load_remark(struct block_internal* bi) {
 	struct dag_block buf;
-	struct dag_block *bref = xdag_storage_load(bi->hash, bi->time, bi->storage_pos, &buf);
+	struct dag_block *bref = dag_storage_load(bi->hash, bi->time, bi->storage_pos, &buf);
 	if(bref == NULL) {
 		return 0;
 	}

@@ -179,7 +179,7 @@ begin:
 		mess = "can't find the block";
 		goto err;
 	} else {
-		struct dag_block *blk = xdag_storage_load(hash, t, pos, &b);
+		struct dag_block *blk = dag_storage_load(hash, t, pos, &b);
 		if(!blk) {
 			mess = "can't load the block";
 			goto err;

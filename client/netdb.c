@@ -189,7 +189,7 @@ static int read_database(const char *fname, int flags)
 
 		if (!h) continue;
 
-		xdag_debug("Netdb : host=%lx, flags=%x, read '%s'", (long)h, h->flags, str);
+		dag_debug("Netdb : host=%lx, flags=%x, read '%s'", (long)h, h->flags, str);
 		
 		if (flags & HOST_CONNECTED && n_selected_hosts < MAX_SELECTED_HOSTS / 2) {
 			selected_hosts[n_selected_hosts++] = h;
@@ -257,8 +257,8 @@ static void *monitor_thread(void *arg)
 				for (int j = 0; j < g_xdag_n_white_ips; ++j) {
 					if (h->ip == g_xdag_white_ips[j]) {
 						sprintf(str, "connect %u.%u.%u.%u:%u", h->ip & 0xff, h->ip >> 8 & 0xff, h->ip >> 16 & 0xff, h->ip >> 24 & 0xff, h->port);
-						xdag_debug("Netdb : host=%lx flags=%x query='%s'", (long)h, h->flags, str);
-						xdag_net_command(str, (f ? f : stderr));
+						dag_debug("Netdb : host=%lx flags=%x query='%s'", (long)h, h->flags, str);
+						dag_net_command(str, (f ? f : stderr));
 						n++;
 						break;
 					}

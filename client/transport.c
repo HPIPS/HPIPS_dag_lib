@@ -91,7 +91,7 @@ static int process_transport_block(struct dag_block *received_block, void *conne
 	pthread_mutex_unlock(&g_transport_mutex);
 
 	dag_netdb_receive((uint8_t*)&received_block->field[2] + sizeof(struct dag_stats),
-		(xdag_type(received_block, 1) == DAG_MESSAGE_SUMS_REPLY ? 6 : 14) * sizeof(struct dag_field)
+		(dag_type(received_block, 1) == DAG_MESSAGE_SUMS_REPLY ? 6 : 14) * sizeof(struct dag_field)
 		- sizeof(struct dag_stats));
 
 	switch(dag_type(received_block, 1)) {
@@ -188,7 +188,7 @@ static int process_transport_block(struct dag_block *received_block, void *conne
 
 			if (pos == -2l) {
 				dnet_send_xdag_packet(&buf, connection);
-			} else if (pos >= 0 && (blk = xdag_storage_load(received_block->field[1].hash, t, pos, &buf))) {
+			} else if (pos >= 0 && (blk = dag_storage_load(received_block->field[1].hash, t, pos, &buf))) {
 				dnet_send_xdag_packet(blk, connection);
 			}
 
@@ -206,7 +206,7 @@ static int block_arrive_callback(void *packet, void *connection)
 {
 	struct dag_block *received_block = (struct dag_block *)packet;
 
-	const enum dag_field_type first_field_type = xdag_type(received_block, 0);
+	const enum dag_field_type first_field_type = dag_type(received_block, 0);
 	if(first_field_type == g_block_header_type) {
 		xdag_sync_add_block(received_block, connection);
 	}
