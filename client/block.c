@@ -359,7 +359,7 @@ static inline void hash_for_signature(struct dag_block b[2], const struct dag_pu
 
 	dag_hash(b, sizeof(struct dag_block) + sizeof(dag_hash_t) + 1, hash);
 
-	dag_debug("Hash  : hash=[%s] data=[%s]", xdag_log_hash(hash),
+	dag_debug("Hash  : hash=[%s] data=[%s]", dag_log_hash(hash),
 		dag_log_array(b, sizeof(struct dag_block) + sizeof(dag_hash_t) + 1));
 }
 
@@ -393,8 +393,8 @@ static int valid_signature(const struct dag_block *b, int signo_r, int keysLengt
 			int res2 = !xdag_verify_signature(keys[i].key, hash, b->field[signo_r].data, b->field[signo_s].data);
 			if(res1 != res2) {
 				dag_warn("Different result between openssl and secp256k1: res openssl=%2d res secp256k1=%2d key parity bit = %ld key=[%s] hash=[%s] r=[%s], s=[%s]",
-					res2, res1, ((uintptr_t)keys[i].pub & 1), xdag_log_hash((uint64_t*)((uintptr_t)keys[i].pub & ~1l)),
-					xdag_log_hash(hash), xdag_log_hash(b->field[signo_r].data), xdag_log_hash(b->field[signo_s].data));
+					res2, res1, ((uintptr_t)keys[i].pub & 1), dag_log_hash((uint64_t*)((uintptr_t)keys[i].pub & ~1l)),
+					dag_log_hash(hash), dag_log_hash(b->field[signo_r].data), dag_log_hash(b->field[signo_s].data));
 			}
 			if(res2) {
 #else

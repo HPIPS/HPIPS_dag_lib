@@ -297,8 +297,8 @@ int dag_sign(const void *key, const dag_hash_t hash, dag_hash_t sign_r, dag_hash
 		memcpy((uint8_t*)sign_s + sizeof(dag_hash_t) - s, p, s);
 	}
 
-	//dag_debug("Sign  : hash=[%s] sign=[%s] r=[%s], s=[%s]", xdag_log_hash(hash),
-	//	xdag_log_array(buf, sig_len), xdag_log_hash(sign_r), xdag_log_hash(sign_s));
+	dag_debug("Sign  : hash=[%s] sign=[%s] r=[%s], s=[%s]", dag_log_hash(hash),
+		xdag_log_array(buf, sig_len), dag_log_hash(sign_r), dag_log_hash(sign_s));
 
 	return 0;
 }
@@ -339,8 +339,8 @@ int dag_verify_signature(const void *key, const dag_hash_t hash, const dag_hash_
 	buf[1] = ptr - buf - 2;
 	res = ECDSA_verify(0, (const uint8_t*)hash, sizeof(dag_hash_t), buf, ptr - buf, (EC_KEY*)key);
 
-	dag_debug("Verify: res=%2d key=%lx hash=[%s] sign=[%s] r=[%s], s=[%s]", res, (long)key, xdag_log_hash(hash),
-		dag_log_array(buf, ptr - buf), xdag_log_hash(sign_r), xdag_log_hash(sign_s));
+	dag_debug("Verify: res=%2d key=%lx hash=[%s] sign=[%s] r=[%s], s=[%s]", res, (long)key, dag_log_hash(hash),
+		dag_log_array(buf, ptr - buf), dag_log_hash(sign_r), dag_log_hash(sign_s));
 
 	return res != 1;
 }
@@ -391,7 +391,7 @@ int dag_verify_signature_optimized_ec(const void *key, const dag_hash_t hash, co
 
 	if((res = secp256k1_ec_pubkey_parse(ctx_noopenssl, &pubkey_noopenssl, buf_pubkey, pubkeylen)) != 1) {
 		dag_debug("Public key parsing failed: res=%2d key parity bit = %ld key=[%s] hash=[%s] r=[%s], s=[%s]", res, ((uintptr_t)key & 1),
-			xdag_log_hash((uint64_t*)((uintptr_t)key & ~1l)), xdag_log_hash(hash), xdag_log_hash(sign_r), xdag_log_hash(sign_s));
+			dag_log_hash((uint64_t*)((uintptr_t)key & ~1l)), dag_log_hash(hash), dag_log_hash(sign_r), dag_log_hash(sign_s));
 
 	}
 
@@ -405,8 +405,8 @@ int dag_verify_signature_optimized_ec(const void *key, const dag_hash_t hash, co
 
 	if((res = secp256k1_ecdsa_signature_parse_der(ctx_noopenssl, &sig_noopenssl, sign_buf, ptr - sign_buf)) != 1) {
 		dag_debug("Signature parsing failed: res=%2d key parity bit = %ld key=[%s] hash=[%s] sign=[%s] r=[%s], s=[%s]", res, ((uintptr_t)key & 1),
-			xdag_log_hash((uint64_t*)((uintptr_t)key & ~1l)), xdag_log_hash(hash),
-			dag_log_array(sign_buf, ptr - sign_buf), xdag_log_hash(sign_r), xdag_log_hash(sign_s));
+			dag_log_hash((uint64_t*)((uintptr_t)key & ~1l)), dag_log_hash(hash),
+			dag_log_array(sign_buf, ptr - sign_buf), dag_log_hash(sign_r), dag_log_hash(sign_s));
 		return 1;
 	}
 
@@ -415,14 +415,14 @@ int dag_verify_signature_optimized_ec(const void *key, const dag_hash_t hash, co
 
 	if((res = secp256k1_ecdsa_verify(ctx_noopenssl, &sig_noopenssl_normalized, (unsigned char*)hash, &pubkey_noopenssl)) != 1) {
 		dag_debug("Verify failed: res =%2d key parity bit = %ld key=[%s] hash=[%s] sign=[%s] r=[%s], s=[%s]", res, ((uintptr_t)key & 1),
-			xdag_log_hash((uint64_t*)((uintptr_t)key & ~1l)), xdag_log_hash(hash),
-			dag_log_array(sign_buf, ptr - sign_buf), xdag_log_hash(sign_r), xdag_log_hash(sign_s));
+			dag_log_hash((uint64_t*)((uintptr_t)key & ~1l)), dag_log_hash(hash),
+			dag_log_array(sign_buf, ptr - sign_buf), dag_log_hash(sign_r), dag_log_hash(sign_s));
 		return 1;
 	}
 
 	dag_debug("Verify completed: parity bit = %ld key=[%s] hash=[%s] sign=[%s] r=[%s], s=[%s]", ((uintptr_t)key & 1),
-		xdag_log_hash((uint64_t*)((uintptr_t)key & ~1l)), xdag_log_hash(hash),
-		dag_log_array(sign_buf, ptr - sign_buf), xdag_log_hash(sign_r), xdag_log_hash(sign_s));
+		dag_log_hash((uint64_t*)((uintptr_t)key & ~1l)), dag_log_hash(hash),
+		dag_log_array(sign_buf, ptr - sign_buf), dag_log_hash(sign_r), dag_log_hash(sign_s));
 	return 0;
 }
 

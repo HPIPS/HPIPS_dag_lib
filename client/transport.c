@@ -106,20 +106,20 @@ static int process_transport_block(struct dag_block *received_block, void *conne
 			send_data->connection = connection;
 
 			if(received_block->field[0].end_time - received_block->field[0].time <= REQUEST_BLOCKS_MAX_TIME) {
-				xdag_send_thread(send_data);
+				dag_send_thread(send_data);
 			}
 			else {
 				pthread_t t;
 				int err = pthread_create(&t, 0, dag_send_thread, send_data);
 				if(err != 0) {
-					printf("create xdag_send_thread failed, error : %s\n", strerror(err));
+					printf("create dag_send_thread failed, error : %s\n", strerror(err));
 					free(send_data);
 					return -1;
 				}
 
 				err = pthread_detach(t);
 				if(err != 0) {
-					printf("detach xdag_send_thread failed, error : %s\n", strerror(err));
+					printf("detach dag_send_thread failed, error : %s\n", strerror(err));
 					return -1;
 				}
 			}
@@ -152,7 +152,7 @@ static int process_transport_block(struct dag_block *received_block, void *conne
 
 			memcpy(&received_block->field[2], &g_dag_stats, sizeof(g_dag_stats));
 
-			xdag_netdb_send((uint8_t*)&received_block->field[2] + sizeof(struct dag_stats),
+			dag_netdb_send((uint8_t*)&received_block->field[2] + sizeof(struct dag_stats),
 				6 * sizeof(struct dag_field) - sizeof(struct dag_stats));
 
 			dnet_send_xdag_packet(received_block, connection);
@@ -335,7 +335,7 @@ static int do_request(int type, xtime_t start_time, xtime_t end_time, void *data
 	memcpy(&b.field[2], &g_dag_stats, sizeof(g_dag_stats));
 	add_main_timestamp((struct dag_stats*)&b.field[2]);
 
-	xdag_netdb_send((uint8_t*)&b.field[2] + sizeof(struct dag_stats),
+	dag_netdb_send((uint8_t*)&b.field[2] + sizeof(struct dag_stats),
 						 14 * sizeof(struct dag_field) - sizeof(struct dag_stats));
 
 	pthread_mutex_lock(&g_process_mutex);
@@ -436,7 +436,7 @@ int dag_request_block(dag_hash_t hash, void *conn)
 	memcpy(&b.field[2], &g_dag_stats, sizeof(g_dag_stats));
 	add_main_timestamp((struct dag_stats*)&b.field[2]);
 
-	xdag_netdb_send((uint8_t*)&b.field[2] + sizeof(struct dag_stats),
+	dag_netdb_send((uint8_t*)&b.field[2] + sizeof(struct dag_stats),
 						 14 * sizeof(struct dag_field) - sizeof(struct dag_stats));
 	
 	if ((uintptr_t)conn & ~0xffl && !((uintptr_t)conn & 1) && dnet_test_connection(conn) < 0) {

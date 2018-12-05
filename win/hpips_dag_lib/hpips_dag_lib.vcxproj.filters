@@ -49,6 +49,9 @@
     <Filter Include="win\sys">
       <UniqueIdentifier>{3de9ebc8-1c7b-4d52-aa87-aadca6816b3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cilent\utils\moving_statistics">
+      <UniqueIdentifier>{0bfa144e-d427-4847-8e8a-0178d11845c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\client\address.h">
@@ -229,6 +232,9 @@
     <ClInclude Include="..\unistd.h">
       <Filter>win</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\client\utils\moving_statistics\moving_average.h">
+      <Filter>cilent\utils\moving_statistics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c">
@@ -350,6 +356,9 @@
     </ClCompile>
     <ClCompile Include="..\system.c">
       <Filter>win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\client\utils\moving_statistics\moving_average.c">
+      <Filter>cilent\utils\moving_statistics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
