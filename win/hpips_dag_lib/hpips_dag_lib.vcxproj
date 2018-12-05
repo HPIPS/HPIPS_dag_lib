@@ -188,6 +188,14 @@
     <ClInclude Include="..\..\dnet\dnet_packet.h" />
     <ClInclude Include="..\..\dnet\system.h" />
     <ClInclude Include="..\..\dus\programs\dar\source\include\crc.h" />
+    <ClInclude Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_crypt.h" />
+    <ClInclude Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_random.h" />
+    <ClInclude Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_string.h" />
+    <ClInclude Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_types.h" />
+    <ClInclude Include="..\..\dus\programs\dfstools\source\include\dfsrsa.h" />
+    <ClInclude Include="..\..\ldus\source\include\ldus\atomic.h" />
+    <ClInclude Include="..\..\ldus\source\include\ldus\list.h" />
+    <ClInclude Include="..\..\ldus\source\include\ldus\rbtree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c" />
@@ -225,6 +233,10 @@
     <ClCompile Include="..\..\dnet\dnet_crypt.c" />
     <ClCompile Include="..\..\dnet\dnet_xdag.c" />
     <ClCompile Include="..\..\dus\programs\dar\source\lib\crc_c.c" />
+    <ClCompile Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_crypt.c" />
+    <ClCompile Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_random.c" />
+    <ClCompile Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_string.c" />
+    <ClCompile Include="..\..\dus\programs\dfstools\source\lib\dfsrsa.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\dnet\dnet_keys.bin" />

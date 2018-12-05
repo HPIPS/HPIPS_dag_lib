@@ -31,6 +31,12 @@
     <Filter Include="dus\dar">
       <UniqueIdentifier>{04af13d3-6bd3-47f4-8c40-d1e63f81409f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dus\dfstools">
+      <UniqueIdentifier>{a34e80dd-ffed-4eab-9735-ed9f902ca976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ldus">
+      <UniqueIdentifier>{8d02d4a6-ca2a-4a28-b212-6d44c84f8712}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\client\address.h">
@@ -160,6 +166,30 @@
       <Filter>dus\dar</Filter>
     </ClInclude>
     <ClInclude Include="..\..\client\version.h" />
+    <ClInclude Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_crypt.h">
+      <Filter>dus\dfstools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_random.h">
+      <Filter>dus\dfstools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_string.h">
+      <Filter>dus\dfstools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_types.h">
+      <Filter>dus\dfstools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dus\programs\dfstools\source\include\dfsrsa.h">
+      <Filter>dus\dfstools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ldus\source\include\ldus\atomic.h">
+      <Filter>ldus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ldus\source\include\ldus\list.h">
+      <Filter>ldus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ldus\source\include\ldus\rbtree.h">
+      <Filter>ldus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c">
@@ -266,6 +296,18 @@
     </ClCompile>
     <ClCompile Include="..\..\dus\programs\dar\source\lib\crc_c.c">
       <Filter>dus\dar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_crypt.c">
+      <Filter>dus\dfstools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_random.c">
+      <Filter>dus\dfstools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_string.c">
+      <Filter>dus\dfstools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dus\programs\dfstools\source\lib\dfsrsa.c">
+      <Filter>dus\dfstools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
