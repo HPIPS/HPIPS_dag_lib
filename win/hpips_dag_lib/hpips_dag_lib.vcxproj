@@ -196,6 +196,15 @@
     <ClInclude Include="..\..\ldus\source\include\ldus\atomic.h" />
     <ClInclude Include="..\..\ldus\source\include\ldus\list.h" />
     <ClInclude Include="..\..\ldus\source\include\ldus\rbtree.h" />
+    <ClInclude Include="..\arpa\inet.h" />
+    <ClInclude Include="..\netdb.h" />
+    <ClInclude Include="..\netinet\in.h" />
+    <ClInclude Include="..\sys\ioctl.h" />
+    <ClInclude Include="..\sys\resource.h" />
+    <ClInclude Include="..\sys\socket.h" />
+    <ClInclude Include="..\sys\time.h" />
+    <ClInclude Include="..\termios.h" />
+    <ClInclude Include="..\unistd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c" />
@@ -237,6 +246,7 @@
     <ClCompile Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_random.c" />
     <ClCompile Include="..\..\dus\programs\dfstools\source\dfslib\dfslib_string.c" />
     <ClCompile Include="..\..\dus\programs\dfstools\source\lib\dfsrsa.c" />
+    <ClCompile Include="..\system.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\dnet\dnet_keys.bin" />

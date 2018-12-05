@@ -37,6 +37,18 @@
     <Filter Include="ldus">
       <UniqueIdentifier>{8d02d4a6-ca2a-4a28-b212-6d44c84f8712}</UniqueIdentifier>
     </Filter>
+    <Filter Include="win">
+      <UniqueIdentifier>{6171d81d-b088-4b9a-97c5-9c0cf0637c81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="win\arpa">
+      <UniqueIdentifier>{5b690690-ec38-4909-a102-afba72f3d648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="win\netinet">
+      <UniqueIdentifier>{9f21c37e-884b-4757-ae33-a02d8257971f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="win\sys">
+      <UniqueIdentifier>{3de9ebc8-1c7b-4d52-aa87-aadca6816b3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\client\address.h">
@@ -190,6 +202,33 @@
     <ClInclude Include="..\..\ldus\source\include\ldus\rbtree.h">
       <Filter>ldus</Filter>
     </ClInclude>
+    <ClInclude Include="..\arpa\inet.h">
+      <Filter>win\arpa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\netinet\in.h">
+      <Filter>win\netinet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sys\ioctl.h">
+      <Filter>win\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sys\resource.h">
+      <Filter>win\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sys\socket.h">
+      <Filter>win\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sys\time.h">
+      <Filter>win\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\netdb.h">
+      <Filter>win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\termios.h">
+      <Filter>win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unistd.h">
+      <Filter>win</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c">
@@ -308,6 +347,9 @@
     </ClCompile>
     <ClCompile Include="..\..\dus\programs\dfstools\source\lib\dfsrsa.c">
       <Filter>dus\dfstools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\system.c">
+      <Filter>win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
