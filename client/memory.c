@@ -97,17 +97,17 @@ int dag_mem_init(size_t size)
 
 	int wrote = snprintf(tfile_node->tmpfile, PATH_MAX,"%s%s", g_tmpfile_path, TMPFILE_TEMPLATE);
 	if (wrote < 0){
-		xdag_fatal("Error: Fail to write tmpfile");
+		dag_fatal("Error: Fail to write tmpfile");
 		free(tfile_node);
 		return -1;
 	} else if (wrote == PATH_MAX){
-		xdag_fatal("Error: Temporary file path exceed the max length that is %d characters", PATH_MAX);
+		dag_fatal("Error: Temporary file path exceed the max length that is %d characters", PATH_MAX);
 		free(tfile_node);
 		return -1;
 	}
 	tfile_node->fd = mkstemp(tfile_node->tmpfile);
 	if (tfile_node->fd < 0) {
-		xdag_fatal("Unable to create temporary file %s errno:%d", tfile_node->tmpfile, errno);
+		dag_fatal("Unable to create temporary file %s errno:%d", tfile_node->tmpfile, errno);
 		free(tfile_node);
 		return -1;
 	}

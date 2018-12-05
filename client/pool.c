@@ -1069,7 +1069,7 @@ void *pool_block_thread(void *arg)
 
 			int res = dag_add_block(b);
 			if(res > 0) {
-				xdag_send_new_block(b);
+				dag_send_new_block(b);
 			}
 			free(b);
 		}
@@ -1260,7 +1260,7 @@ static void transfer_payment(struct miner_pool_data *miner, dag_amount_t payment
 	dag_log_xfer(fields[0].data, fields[*field_index].data, payment_sum);
 
 	if(++*field_index == payments_per_block) {
-		struct dag_block *payment_block = xdag_create_block(fields, 1, *field_index - 1, 0, 0, 0, NULL);
+		struct dag_block *payment_block = dag_create_block(fields, 1, *field_index - 1, 0, 0, 0, NULL);
 		block_queue_append_new(payment_block);
 
 		*field_index = 1;
@@ -1306,7 +1306,7 @@ static void do_payments(uint64_t *hash, int payments_per_block, struct payment_d
 	}
 
 	if(field_index > 1) {
-		struct xdag_block *payment_block = xdag_create_block(fields, 1, field_index - 1, 0, 0, 0, NULL);
+		struct xdag_block *payment_block = dag_create_block(fields, 1, field_index - 1, 0, 0, 0, NULL);
 		block_queue_append_new(payment_block);
 	}
 }
@@ -1336,7 +1336,7 @@ int pay_miners(xtime_t time)
 	data.pay = data.balance - (dag_amount_t)(g_pool_fee * data.balance);
 	if(!data.pay) return -3;
 
-	int key = xdag_get_key(hash);
+	int key = dag_get_key(hash);
 	if(key < 0) return -4;
 
 	if(!dag_wallet_default_key(&defkey)) return -5;
@@ -1662,7 +1662,7 @@ static void miner_print_time_intervals(struct miner_pool_data *miner, int curren
 		} else if(i > current_interval_index) {
 			task_time = task_time - (2 << 15) * (current_interval_index + CONFIRMATIONS_COUNT - i);
 		}
-		xdag_xtime_to_string(task_time, time_buf);
+		dag_xtime_to_string(task_time, time_buf);
 
 		fprintf(out, "      %s  %2d     %s  %10lf         %s\n",
 			i == current_interval_index ? ">" : " ", i + 1, time_buf, miner->maxdiff[i], is_reward ? "+" : " ");

@@ -174,7 +174,7 @@ struct dag_block *dag_storage_load(dag_hash_t hash, xtime_t time, uint64_t pos, 
 	}
 
 	if (!buf) {
-		xdag_blocks_reset();
+		dag_blocks_reset();
 	}
 
 	return buf;
@@ -265,11 +265,11 @@ uint64_t dag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void 
 				
 				s.size = s.sum = 0;
 				mask = (1l << 16) - 1;
-			} else if (sprintf(path, STORAGE_DIR3, STORAGE_DIR3_ARGS(start_time)), xdag_file_exists(path)) {
+			} else if (sprintf(path, STORAGE_DIR3, STORAGE_DIR3_ARGS(start_time)), dag_file_exists(path)) {
 				mask = (1l << 16) - 1;
-			} else if (sprintf(path, STORAGE_DIR2, STORAGE_DIR2_ARGS(start_time)), xdag_file_exists(path)) {
+			} else if (sprintf(path, STORAGE_DIR2, STORAGE_DIR2_ARGS(start_time)), dag_file_exists(path)) {
 				mask = (1l << 24) - 1;
-			} else if (sprintf(path, STORAGE_DIR1, STORAGE_DIR1_ARGS(start_time)), xdag_file_exists(path)) {
+			} else if (sprintf(path, STORAGE_DIR1, STORAGE_DIR1_ARGS(start_time)), dag_file_exists(path)) {
 				mask = (1ll << 32) - 1;
 			} else {
 				mask = (1ll << 40) - 1;

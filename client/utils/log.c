@@ -245,7 +245,7 @@ extern int dag_set_log_level(int level)
 static void sigCatch(int signum, siginfo_t *info, void *context)
 {
 
-	xdag_fatal("Signal %d delivered", signum);
+	dag_fatal("Signal %d delivered", signum);
 
 #if defined (__linux__) || ( defined (__MACOS__) || defined (__APPLE__) )
 
@@ -258,18 +258,18 @@ static void sigCatch(int signum, siginfo_t *info, void *context)
 		static char buf[0x100]; *buf = 0;
 		ucontext_t *uc = (ucontext_t*)context;
 		REG_(RIP); REG_(EFL); REG_(ERR); REG_(CR2);
-		xdag_fatal("%s", buf); *buf = 0;
+		dag_fatal("%s", buf); *buf = 0;
 		REG_(RAX); REG_(RBX); REG_(RCX); REG_(RDX); REG_(RSI); REG_(RDI); REG_(RBP); REG_(RSP);
-		xdag_fatal("%s", buf); *buf = 0;
+		dag_fatal("%s", buf); *buf = 0;
 		REG_(R8); REG_(R9); REG_(R10); REG_(R11); REG_(R12); REG_(R13); REG_(R14); REG_(R15);
-		xdag_fatal("%s", buf);
+		dag_fatal("%s", buf);
 	}
 #endif
 	frames = backtrace(callstack, 100);
 	strs = backtrace_symbols(callstack, frames);
 
 	for (i = 0; i < frames; ++i) {
-		xdag_fatal("%s", strs[i]);
+		dag_fatal("%s", strs[i]);
 	}
 #endif
 	signal(signum, SIG_DFL);

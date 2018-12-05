@@ -208,7 +208,7 @@ static int block_arrive_callback(void *packet, void *connection)
 
 	const enum dag_field_type first_field_type = dag_type(received_block, 0);
 	if(first_field_type == g_block_header_type) {
-		xdag_sync_add_block(received_block, connection);
+		dag_sync_add_block(received_block, connection);
 	}
 	else if(first_field_type == DAG_FIELD_NONCE) {
 		process_transport_block(received_block, connection);
@@ -412,8 +412,8 @@ int dag_net_command(const char *cmd, void *out)
 	return dnet_execute_command(cmd, out);
 }
 
-/* sends the package, conn is the same as in function dnet_send_xdag_packet */
-int xdag_send_packet(struct xdag_block *b, void *conn)
+/*发送包，CONN与dnet_send_xdag_packet 函数 */
+int dag_send_packet(struct xdag_block *b, void *conn)
 {
 	if ((uintptr_t)conn & ~0xffl && !((uintptr_t)conn & 1) && dnet_test_connection(conn) < 0) {
 		conn = (void*)(uintptr_t)1l;

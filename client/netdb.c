@@ -367,7 +367,7 @@ int dag_netdb_init(const char *our_host_str, int npairs, const char **addr_port_
 	if (!g_dag_blocked_ips || !g_dag_white_ips) return -1;
 	
 	if (read_database(DATABASE, HOST_INDB) < 0) {
-		xdag_fatal("Can't find file '%s'", DATABASE);
+		dag_fatal("Can't find file '%s'", DATABASE);
 	}
 	
 	read_database(DATABASEWHITE, HOST_WHITE);
@@ -380,7 +380,7 @@ int dag_netdb_init(const char *our_host_str, int npairs, const char **addr_port_
 
 	pthread_t t;
 	if (pthread_create(&t, 0, monitor_thread, 0)) {
-		xdag_fatal("Can't start netdb thread\n");
+		dag_fatal("Can't start netdb thread\n");
 		return -1;
 	}
 	if(pthread_detach(t)) {
@@ -388,7 +388,7 @@ int dag_netdb_init(const char *our_host_str, int npairs, const char **addr_port_
 	}
 
 	if(pthread_create(&t, 0, refresh_thread, 0)) {
-		xdag_fatal("Can't start refresh white-list netdb thread\n");
+		dag_fatal("Can't start refresh white-list netdb thread\n");
 		return -1;
 	}
 	if(pthread_detach(t)) {

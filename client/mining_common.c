@@ -55,8 +55,8 @@ int dag_initialize_mining(const char *pool_arg, const char *miner_address)
 	g_miner_address = miner_address;
 
 	for(int i = 0; i < 2; ++i) {
-		g_dag_pool_task[i].ctx0 = malloc(xdag_hash_ctx_size());
-		g_dag_pool_task[i].ctx = malloc(xdag_hash_ctx_size());
+		g_dag_pool_task[i].ctx0 = malloc(dag_hash_ctx_size());
+		g_dag_pool_task[i].ctx = malloc(dag_hash_ctx_size());
 
 		if(!g_dag_pool_task[i].ctx0 || !g_dag_pool_task[i].ctx) {
 			return -1;
