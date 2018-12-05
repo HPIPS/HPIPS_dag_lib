@@ -102,12 +102,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;DFSTOOLS;HAVE_STRUCT_TIMESPEC;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;SHA256_USE_OPENSSL_TXFM;SHA256_OPENSSL_MBLOCK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\deps;..\..\deps\pthreads;..\..\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\deps;..\..\deps\pthreads;..\..\win;..\..\win\x64\Debug;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\..\deps\pthreads\x64\pthreadVC2.lib;..\..\deps\libssl.lib;..\..\deps\libcrypto.lib;..\..\deps\capi.lib;..\..\deps\dasync.lib;..\..\deps\libapps.lib;..\..\deps\libtestutil.lib;..\..\deps\openssl.lib;..\..\deps\ossltest.lib;..\..\deps\libcrypto_static.lib;..\..\deps\libssl_static.lib;..\..\deps\padlock.lib;..\..\deps\uitest.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\deps\pthreads\x64\pthreadVC2.lib;..\..\deps\libssl.lib;..\..\deps\libcrypto.lib;..\..\deps\capi.lib;..\..\deps\dasync.lib;..\..\deps\libapps.lib;..\..\deps\libtestutil.lib;..\..\deps\openssl.lib;..\..\deps\ossltest.lib;..\..\deps\libcrypto_static.lib;..\..\deps\libssl_static.lib;..\..\deps\padlock.lib;..\..\deps\uitest.lib;..\..\win\x64\Debug\secp256k1.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

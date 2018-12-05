@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hpips_dag", "hpips_dag\hpip
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xdaglib", "xdaglib\xdaglib.vcxproj", "{49C6CE86-04E0-4431-B55F-A6CE88268996}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "secp256k1", "secp256k1\secp256k1\secp256k1.vcxproj", "{76685A91-5D47-423A-BB5D-0D180029DA22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -55,6 +57,18 @@ Global
 		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release|x64.Build.0 = Release|x64
 		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release|x86.ActiveCfg = Release|Win32
 		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release|x86.Build.0 = Release|Win32
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Debug|x64.ActiveCfg = Debug|x64
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Debug|x64.Build.0 = Debug|x64
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Debug|x86.ActiveCfg = Debug|Win32
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Debug|x86.Build.0 = Debug|Win32
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release_profiling|x64.ActiveCfg = Release|x64
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release_profiling|x64.Build.0 = Release|x64
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release_profiling|x86.ActiveCfg = Release|Win32
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release_profiling|x86.Build.0 = Release|Win32
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release|x64.ActiveCfg = Release|x64
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release|x64.Build.0 = Release|x64
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release|x86.ActiveCfg = Release|Win32
+		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
