@@ -172,7 +172,7 @@ static inline struct cache_block *cache_block_by_hash(const dag_hashlow_t hash)
 static void log_block(const char *mess, dag_hash_t h, xtime_t t, uint64_t pos)
 {
 	/* Do not log blocks as we are loading from local storage */
-	if(g_dag_state != XDAG_STATE_LOAD) {
+	if(g_dag_state != DAG_STATE_LOAD) {
 		dag_info("%s: %016llx%016llx%016llx%016llx t=%llx pos=%llx", mess,
 			((uint64_t*)h)[3], ((uint64_t*)h)[2], ((uint64_t*)h)[1], ((uint64_t*)h)[0], t, pos);
 	}
@@ -692,7 +692,7 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 
 	struct block_internal *nodeBlock;
 	if (g_dag_extstats.nextra > MAX_ALLOWED_EXTRA
-			&& (g_dag_state == XDAG_STATE_SYNC || g_dag_state == XDAG_STATE_STST)) {
+			&& (g_dag_state == DAG_STATE_SYNC || g_dag_state == DAG_STATE_STST)) {
 		/* if too many extra blocks then reuse the oldest */
 		nodeBlock = g_orphan_first[1]->orphan_bi;
 		remove_orphan(nodeBlock, ORPHAN_REMOVE_REUSE);
@@ -745,7 +745,7 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 
 	if(xdag_diff_gt(tmpNodeBlock.difficulty, g_dag_stats.difficulty)) {
 		/* Only log this if we are NOT loading state */
-		if(g_dag_state != XDAG_STATE_LOAD)
+		if(g_dag_state != DAG_STATE_LOAD)
 			dag_info("Diff  : %llx%016llx (+%llx%016llx)", xdag_diff_args(tmpNodeBlock.difficulty), xdag_diff_args(diff0));
 
 		for(blockRef = nodeBlock, blockRef0 = 0; blockRef && !(blockRef->flags & BI_MAIN_CHAIN); blockRef = blockRef->link[blockRef->max_diff_link]) {
@@ -1124,7 +1124,7 @@ static void *work_thread(void *arg)
 
 begin:
 	// loading block from the local storage
-	g_dag_state = XDAG_STATE_LOAD;
+	g_dag_state = DAG_STATE_LOAD;
 	dag_mess("Loading blocks from local storage...");
 
 	xtime_t start = dag_get_xtimestamp();
@@ -1136,7 +1136,7 @@ begin:
 
 	// waiting for command "run"
 	while (!g_dag_run) {
-		g_dag_state = XDAG_STATE_STOP;
+		g_dag_state = DAG_STATE_STOP;
 		sleep(1);
 	}
 
@@ -1182,10 +1182,10 @@ begin:
 		}
 
 		if (!g_block_production_on && !g_light_mode &&
-				(g_dag_state == XDAG_STATE_WAIT || g_dag_state == XDAG_STATE_WTST ||
-				g_dag_state == XDAG_STATE_SYNC || g_dag_state == XDAG_STATE_STST || 
-				g_dag_state == XDAG_STATE_CONN || g_dag_state == XDAG_STATE_CTST)) {
-			if (g_dag_state == XDAG_STATE_SYNC || g_dag_state == XDAG_STATE_STST || 
+				(g_dag_state == DAG_STATE_WAIT || g_dag_state == DAG_STATE_WTST ||
+				g_dag_state == DAG_STATE_SYNC || g_dag_state == DAG_STATE_STST || 
+				g_dag_state == DAG_STATE_CONN || g_dag_state == DAG_STATE_CTST)) {
+			if (g_dag_state == DAG_STATE_SYNC || g_dag_state == DAG_STATE_STST || 
 					g_dag_stats.nmain >= (MAIN_TIME(t) - dag_start_main_time())) {
 				g_block_production_on = 1;
 			} else if (last_nmain != nmain) {
@@ -1216,7 +1216,7 @@ begin:
 
 		pthread_mutex_lock(&block_mutex);
 
-		if (g_dag_state == XDAG_STATE_REST) {
+		if (g_dag_state == DAG_STATE_REST) {
 			g_xdag_sync_on = 0;
 			pthread_mutex_unlock(&block_mutex);
 			dag_mining_start(0);
@@ -1248,8 +1248,8 @@ begin:
 		} else {
 			pthread_mutex_lock(&g_transport_mutex);
 			if (t > (g_dag_last_received << 10) && t - (g_dag_last_received << 10) > 3 * MAIN_CHAIN_PERIOD) {
-				g_dag_state = (g_light_mode ? (g_dag_testnet ? XDAG_STATE_TTST : XDAG_STATE_TRYP)
-					: (g_dag_testnet ? XDAG_STATE_WTST : XDAG_STATE_WAIT));
+				g_dag_state = (g_light_mode ? (g_dag_testnet ? DAG_STATE_TTST : DAG_STATE_TRYP)
+					: (g_dag_testnet ? DAG_STATE_WTST : DAG_STATE_WAIT));
 				conn_time = sync_time = 0;
 			} else {
 				if (!conn_time) {
@@ -1262,15 +1262,15 @@ begin:
 				}
 
 				if (t - (g_dag_xfer_last << 10) <= 2 * MAIN_CHAIN_PERIOD + 4) {
-					g_dag_state = XDAG_STATE_XFER;
+					g_dag_state = DAG_STATE_XFER;
 				} else if (g_light_mode) {
 					g_dag_state = (g_dag_mining_threads > 0 ?
-						(g_dag_testnet ? XDAG_STATE_MTST : XDAG_STATE_MINE)
-						: (g_dag_testnet ? XDAG_STATE_PTST : XDAG_STATE_POOL));
+						(g_dag_testnet ? DAG_STATE_MTST : DAG_STATE_MINE)
+						: (g_dag_testnet ? DAG_STATE_PTST : DAG_STATE_POOL));
 				} else if (t - sync_time > 8 * MAIN_CHAIN_PERIOD) {
-					g_dag_state = (g_dag_testnet ? XDAG_STATE_CTST : XDAG_STATE_CONN);
+					g_dag_state = (g_dag_testnet ? DAG_STATE_CTST : DAG_STATE_CONN);
 				} else {
-					g_dag_state = (g_dag_testnet ? XDAG_STATE_STST : XDAG_STATE_SYNC);
+					g_dag_state = (g_dag_testnet ? DAG_STATE_STST : DAG_STATE_SYNC);
 				}
 			}
 			pthread_mutex_unlock(&g_transport_mutex);
@@ -1515,9 +1515,9 @@ int dag_get_key(dag_hash_t hash)
 int dag_blocks_reset(void)
 {
 	pthread_mutex_lock(&block_mutex);
-	if (g_dag_state != XDAG_STATE_REST) {
+	if (g_dag_state != DAG_STATE_REST) {
 		dag_crit("The local storage is corrupted. Resetting blocks engine.");
-		g_dag_state = XDAG_STATE_REST;
+		g_dag_state = DAG_STATE_REST;
 		dag_show_state(0);
 	}
 	pthread_mutex_unlock(&block_mutex);

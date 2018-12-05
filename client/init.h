@@ -10,9 +10,9 @@
 
 enum dag_states
 {
-#define dag_state(n,s) XDAG_STATE_##n ,
+#define dag_state(n,s) DAG_STATE_##n ,
 #include "state.h"
-#undef xdag_state
+#undef dag_state
 };
 
 extern struct dag_stats

@@ -354,7 +354,7 @@ void processAccountCommand(char *nextParam, FILE *out)
 	if(cmd) {
 		sscanf(cmd, "%d", &d.count);
 	}
-	if(g_dag_state < XDAG_STATE_XFER) {
+	if(g_dag_state < DAG_STATE_XFER) {
 		fprintf(out, "Not ready to show balances. Type 'state' command to see the reason.\n");
 	}
 	dag_traverse_our_blocks(&d, &account_callback);
@@ -363,7 +363,7 @@ void processAccountCommand(char *nextParam, FILE *out)
 // ½ø³ÌÆ½ºâÃüÁî
 void processBalanceCommand(char *nextParam, FILE *out)
 {
-	if(g_dag_state < XDAG_STATE_XFER) {
+	if(g_dag_state < DAG_STATE_XFER) {
 		fprintf(out, "Not ready to show a balance. Type 'state' command to see the reason.\n");
 	} else {
 		dag_hash_t hash;
@@ -508,7 +508,7 @@ void processRPCCommand(char *nextParam, FILE *out)
 		strcat(rpccmd, " ");
 	}
 
-	xdag_rpc_command(rpccmd, out);
+	dag_rpc_command(rpccmd, out);
 	return;
 }
 
@@ -713,15 +713,15 @@ void processAutoRefreshCommand(char *nextParam, FILE *out)
 
 void processReloadCommand(char *nextParam, FILE *out)
 {
-	g_dag_state = XDAG_STATE_REST;
+	g_dag_state = DAG_STATE_REST;
 }
 
 const char *get_state()
 {
 	static const char *states[] = {
-#define xdag_state(n,s) s ,
+#define dag_state(n,s) s ,
 #include "state.h"
-#undef xdag_state
+#undef dag_state
 	};
 	return states[g_dag_state];
 }
@@ -734,7 +734,7 @@ int account_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t t
 		return -1;
 	}
 	dag_hash2address(hash, address);
-	if(g_dag_state < XDAG_STATE_XFER)
+	if(g_dag_state < DAG_STATE_XFER)
 		fprintf(d->out, "%s  key %d\n", address, n_our_key);
 	else
 		fprintf(d->out, "%s %20.9Lf  key %d\n", address, amount2xdags(amount), n_our_key);
@@ -817,7 +817,7 @@ int dag_do_xfer(void *outv, const char *amount, const char *address, const char 
 
 	dag_wallet_default_key(&xfer.keys[XFER_MAX_IN]);
 	xfer.outsig = 1;
-	g_dag_state = XDAG_STATE_XFER;
+	g_dag_state = DAG_STATE_XFER;
 	g_dag_xfer_last = time(0);
 	dag_traverse_our_blocks(&xfer, &fer_callback);
 	if(out) {
@@ -947,7 +947,7 @@ int dag_show_state(dag_hash_t hash)
 	if(!g_dag_show_state) {
 		return -1;
 	}
-	if(g_dag_state < XDAG_STATE_XFER) {
+	if(g_dag_state < DAG_STATE_XFER) {
 		strcpy(balance, "Not ready");
 	} else {
 		sprintf(balance, "%.9Lf", amount2xdags(dag_get_balance(0)));

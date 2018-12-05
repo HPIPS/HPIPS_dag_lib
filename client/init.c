@@ -34,7 +34,7 @@ char *g_coinname, *g_progname;
 
 #define ARG_EQUAL(a,b,c) strcmp(c, "") == 0 ? strcmp(a, b) == 0 : (strcmp(a, b) == 0 || strcmp(a, c) == 0)
 
-int g_dag_state = XDAG_STATE_INIT;
+int g_dag_state = DAG_STATE_INIT;
 int g_dag_testnet = 0;
 int g_is_miner = 0;
 static int g_is_pool = 0;

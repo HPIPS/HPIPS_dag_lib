@@ -321,7 +321,7 @@ cJSON * method_dag_get_account(struct dag_rpc_context *ctx, cJSON *params, cJSON
 
 	cJSON *ret = NULL;
 	if(ctx->error_code == 0) {
-		if(g_dag_state < XDAG_STATE_XFER) {
+		if(g_dag_state < DAG_STATE_XFER) {
 			ctx->error_code = 1;
 			ctx->error_message = strdup("Not ready to show a balance.");
 		} else {
@@ -369,7 +369,7 @@ cJSON * method_dag_get_balance(struct dag_rpc_context * ctx, cJSON *params, cJSO
 		}
 	}
 	
-	if(g_dag_state < XDAG_STATE_XFER) {
+	if(g_dag_state < DAG_STATE_XFER) {
 		ctx->error_code = 1;
 		ctx->error_message = strdup("Not ready to show a balance.");
 		return NULL;
@@ -613,7 +613,7 @@ cJSON * method_dag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *i
 		return NULL;
 	}
 	
-	if(g_dag_state < XDAG_STATE_XFER) {
+	if(g_dag_state < DAG_STATE_XFER) {
 		ctx->error_code = 1;
 		ctx->error_message = strdup("Not ready to transfer.");
 		return NULL;
@@ -642,7 +642,7 @@ cJSON * method_dag_do_xfer(struct dag_rpc_context * ctx, cJSON *params, cJSON *i
 			}
 #endif
 
-			g_dag_state = XDAG_STATE_XFER;
+			g_dag_state = DAG_STATE_XFER;
 			g_dag_xfer_last = time(0);
 			dag_traverse_our_blocks(&xfer, &fer_callback);
 
@@ -835,9 +835,9 @@ cJSON * method_dag_get_transactions(struct dag_rpc_context * ctx, cJSON *params,
 int dag_rpc_init_procedures(void)
 {
 	/* register */
-	rpc_register_func(xdag_version);
-	rpc_register_func(xdag_state);
-	rpc_register_func(xdag_stats);
+	//rpc_register_func(dag_version);
+	//rpc_register_func(dag_state);
+	//rpc_register_func(dag_stats);
 
 	/* register xdag_get_account, xdag_get_balance, xdag_do_xfer, xdag_get_transactions */
 	rpc_register_func(dag_get_account);

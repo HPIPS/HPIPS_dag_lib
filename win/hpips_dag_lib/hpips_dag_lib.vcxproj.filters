@@ -159,6 +159,7 @@
     <ClInclude Include="..\..\dus\programs\dar\source\include\crc.h">
       <Filter>dus\dar</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\client\version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\client\address.c">
