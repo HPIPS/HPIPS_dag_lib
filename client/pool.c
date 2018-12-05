@@ -175,7 +175,7 @@ int xdag_initialize_pool(const char *pool_arg)
 	memset(&g_pool_miner, 0, sizeof(struct miner_pool_data));
 	memset(&g_fund_miner, 0, sizeof(struct miner_pool_data));
 
-	xdag_get_our_block(g_pool_miner.id.data);
+	dag_get_our_block(g_pool_miner.id.data);
 	g_pool_miner.state = MINER_SERVICE;
 
 	g_fds = malloc(MAX_CONNECTIONS_COUNT * sizeof(struct pollfd));
@@ -682,7 +682,7 @@ static int register_new_miner(connection_list_element *connection)
 	struct connection_pool_data *conn_data = &connection->connection_data;
 
 	xtime_t tm;
-	const int64_t position = xdag_get_block_pos((const uint64_t*)conn_data->data, &tm, 0);
+	const int64_t position = dag_get_block_pos((const uint64_t*)conn_data->data, &tm, 0);
 	if(position < 0) {
 		char address_buf[33] = {0};
 		char message[100] = {0};
@@ -1197,7 +1197,7 @@ static double precalculate_payments(uint64_t *hash, int confirmation_index, stru
 	if(g_pool_fund) {
 		if(g_fund_miner.state == MINER_UNKNOWN) {
 			xtime_t t;
-			if(!dag_address2hash(FUND_ADDRESS, g_fund_miner.id.hash) && xdag_get_block_pos(g_fund_miner.id.hash, &t, 0) >= 0) {
+			if(!dag_address2hash(FUND_ADDRESS, g_fund_miner.id.hash) && dag_get_block_pos(g_fund_miner.id.hash, &t, 0) >= 0) {
 				g_fund_miner.state = MINER_SERVICE;
 			}
 		}
@@ -1344,7 +1344,7 @@ int pay_miners(xtime_t time)
 	const int payments_per_block = (key == defkey ? 12 : 10);
 
 	struct dag_block buf;
-	int64_t pos = xdag_get_block_pos(hash, &time, &buf);
+	int64_t pos = dag_get_block_pos(hash, &time, &buf);
 	if (pos == -2l) {
 		;
 	} else if (pos < 0) {

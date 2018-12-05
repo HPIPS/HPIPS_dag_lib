@@ -184,7 +184,7 @@ static int process_transport_block(struct dag_block *received_block, void *conne
 		{
 			struct dag_block buf, *blk;
 			xtime_t t;
-			int64_t pos = xdag_get_block_pos(received_block->field[1].hash, &t, &buf);
+			int64_t pos = dag_get_block_pos(received_block->field[1].hash, &t, &buf);
 
 			if (pos == -2l) {
 				dnet_send_xdag_packet(&buf, connection);
@@ -228,8 +228,8 @@ static int conn_open_check(uint32_t ip, uint16_t port)
 		}
 	}
 
-	for (int i = 0; i < g_xdag_n_white_ips; ++i) {
-		if(ip == g_xdag_white_ips[i]) {
+	for (int i = 0; i < g_dag_n_white_ips; ++i) {
+		if(ip == g_dag_white_ips[i]) {
 			return 0;
 		}
 	}

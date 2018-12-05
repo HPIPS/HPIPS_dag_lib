@@ -84,17 +84,17 @@ static struct host *find_add_host(struct host *h)
 		}
 
 		if (!(h->flags & HOST_INDB)) {
-			FILE *f = xdag_open_file(DATABASE, "a");
+			FILE *f = dag_open_file(DATABASE, "a");
 			if (f) {
 				fprintf(f, "%u.%u.%u.%u:%u\n", h->ip & 0xff, h->ip >> 8 & 0xff, h->ip >> 16 & 0xff, h->ip >> 24 & 0xff, h->port);
-				xdag_close_file(f);
+				dag_close_file(f);
 			}
 		}
 	}
 
 	if (h->flags & HOST_WHITE) {
-		if (g_xdag_n_white_ips < MAX_WHITE_IPS) {
-			g_xdag_white_ips[g_xdag_n_white_ips++] = h0->ip;
+		if (g_dag_n_white_ips < MAX_WHITE_IPS) {
+			g_dag_white_ips[g_dag_n_white_ips++] = h0->ip;
 		}
 	}
 
@@ -162,7 +162,7 @@ static int read_database(const char *fname, int flags)
 	uint8_t ips_count[MAX_BLOCKED_IPS * MAX_ALLOWED_FROM_IP];
 	struct host h0;
 	char str[64] = {0}, *p = NULL;
-	FILE *f = xdag_open_file(fname, "r");
+	FILE *f = dag_open_file(fname, "r");
 	int n = 0, n_ips = 0, n_blocked = 0, i;
 
 	if (!f) return -1;
@@ -198,7 +198,7 @@ static int read_database(const char *fname, int flags)
 		n++;
 	}
 
-	xdag_close_file(f);
+	dag_close_file(f);
 	
 	if (flags & HOST_CONNECTED) {
 		g_dag_n_blocked_ips = n_blocked;
@@ -221,7 +221,7 @@ static void *monitor_thread(void *arg)
 	}
 
 	for (;;) {
-		FILE *f = xdag_open_file("netdb.tmp", "w");
+		FILE *f = dag_open_file("netdb.tmp", "w");
 		time_t prev_time = time(0);
 
 		if (!f) continue;
@@ -245,7 +245,7 @@ static void *monitor_thread(void *arg)
 		int n = read_database("netdb.tmp", HOST_CONNECTED | HOST_SET | HOST_NOT_ADD);
 		if (n < 0) n = 0;
 
-		f = xdag_open_file("netdb.log", "a");
+		f = dag_open_file("netdb.log", "a");
 
 		for (int i = 0; i < MAX_SELECTED_HOSTS; ++i) {
 			struct host *h = random_host(HOST_CONNECTED | HOST_OUR);
@@ -254,8 +254,8 @@ static void *monitor_thread(void *arg)
 			if (!h) continue;
 
 			if (n < MAX_SELECTED_HOSTS) {
-				for (int j = 0; j < g_xdag_n_white_ips; ++j) {
-					if (h->ip == g_xdag_white_ips[j]) {
+				for (int j = 0; j < g_dag_n_white_ips; ++j) {
+					if (h->ip == g_dag_white_ips[j]) {
 						sprintf(str, "connect %u.%u.%u.%u:%u", h->ip & 0xff, h->ip >> 8 & 0xff, h->ip >> 16 & 0xff, h->ip >> 24 & 0xff, h->port);
 						dag_debug("Netdb : host=%lx flags=%x query='%s'", (long)h, h->flags, str);
 						dag_net_command(str, (f ? f : stderr));
@@ -272,9 +272,9 @@ static void *monitor_thread(void *arg)
 			}
 		}
 
-		if (f) xdag_close_file(f);
+		if (f) dag_close_file(f);
 		
-		g_xdag_n_white_ips = 0;
+		g_dag_n_white_ips = 0;
 		
 		pthread_mutex_lock(&g_white_list_mutex);
 		read_database(DATABASEWHITE, HOST_WHITE);
@@ -331,7 +331,7 @@ static void *refresh_thread(void *arg)
 			if(resp) {
 				if(is_valid_whitelist(resp)) {
 					pthread_mutex_lock(&g_white_list_mutex);
-					FILE *f = xdag_open_file(DATABASEWHITE, "w");
+					FILE *f = dag_open_file(DATABASEWHITE, "w");
 					if(f) {
 						fwrite(resp, 1, strlen(resp), f);
 						fclose(f);

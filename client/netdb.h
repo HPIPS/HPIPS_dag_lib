@@ -27,8 +27,8 @@ extern unsigned dag_netdb_receive(const uint8_t *data, unsigned len);
 extern void dag_netdb_finish(void);
 
 /* 传入连接的阻塞IP及其数量 */
-extern uint32_t *g_dag_blocked_ips, *g_xdag_white_ips;
-extern int g_dag_n_blocked_ips, g_xdag_n_white_ips;
+extern uint32_t *g_dag_blocked_ips, *g_dag_white_ips;
+extern int g_dag_n_blocked_ips, g_dag_n_white_ips;
 
 #ifdef __cplusplus
 };

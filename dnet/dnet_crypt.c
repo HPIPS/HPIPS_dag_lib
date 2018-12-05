@@ -239,9 +239,9 @@ int dnet_crypt_init(const char *version) {
     keys = g_dnet_keys;
     dfslib_random_init();
 	if (crc_init()) return 2;
-	f = xdag_open_file(KEYFILE, "rb");
+	f = dag_open_file(KEYFILE, "rb");
     if (f) {
-        if (fread(keys, sizeof(struct dnet_keys), 1, f) != 1) xdag_close_file(f), f = 0;
+        if (fread(keys, sizeof(struct dnet_keys), 1, f) != 1) dag_close_file(f), f = 0;
 		else {
 			g_keylen = dnet_detect_keylen(keys->pub.key, DNET_KEYLEN);
 			if (dnet_test_keys()) {
@@ -260,7 +260,7 @@ int dnet_crypt_init(const char *version) {
     if (!f) {
         char buf[256];
         struct dfslib_string str;
-		f = xdag_open_file(KEYFILE, "wb");
+		f = dag_open_file(KEYFILE, "wb");
 		if (!f) return 3;
 #ifndef QDNET
         if (dnet_limited_version)
@@ -315,7 +315,7 @@ int dnet_crypt_init(const char *version) {
 		if (g_dnet_user_crypt) for (i = 0; i < (sizeof(struct dnet_keys) >> 9); ++i)
 			dfslib_uncrypt_sector(g_dnet_user_crypt, (uint32_t *)keys + 128 * i, ~(uint64_t)i);
 	}
-    xdag_close_file(f);
+    dag_close_file(f);
     return -dnet_test_keys();
 }
 

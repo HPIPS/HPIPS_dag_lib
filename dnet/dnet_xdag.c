@@ -725,7 +725,7 @@ static void angelize(void)
 #if defined(_WIN32) || defined(_WIN64) || defined (__MACOS__) || defined (__APPLE__)
 static int dnet_load_keys(void)
 {
-	FILE *f = xdag_open_file("dnet_keys.bin", "rb");
+	FILE *f = dag_open_file("dnet_keys.bin", "rb");
 	if(!f) {
 		dnet_err("Load dnet keys failed");
 		return -1;
@@ -733,11 +733,11 @@ static int dnet_load_keys(void)
 
 	if(fread(&g_xkeys, sizeof(struct xdnet_keys), 1, f) != 1) {
 		dnet_err("Load dnet keys failed");
-		xdag_close_file(f);
+		dag_close_file(f);
 		return -1;
 	}
 
-	xdag_close_file(f);
+	dag_close_file(f);
 	return 0;
 }
 #endif

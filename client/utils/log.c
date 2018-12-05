@@ -138,7 +138,7 @@ int dag_log(const char *logfile, int level, const char *format, ...)
 	pthread_mutex_lock(&log_mutex);
 	sprintf(buf, "%s", logfile);
 	
-	f = xdag_open_file(buf, "a");
+	f = dag_open_file(buf, "a");
 	if (!f) {
 		done = -1; goto end;
 	}
@@ -166,7 +166,7 @@ int dag_log(const char *logfile, int level, const char *format, ...)
 	fprintf(f, "\n");
 #endif
 	
-	xdag_close_file(f);
+	dag_close_file(f);
 
  end:
 	pthread_mutex_unlock(&log_mutex);
