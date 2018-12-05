@@ -155,7 +155,7 @@ static pthread_mutex_t g_pool_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int pay_miners(xtime_t time);
 void remove_inactive_miners(void);
-void block_queue_append_new(struct xdag_block *b);
+void block_queue_append_new(struct dag_block *b);
 struct dag_block *block_queue_first(void);
 
 void *general_mining_thread(void *arg);
@@ -168,7 +168,7 @@ void *pool_payment_thread(void *arg);
 void update_mean_log_diff(struct connection_pool_data *, struct xdag_pool_task *, dag_hash_t);
 
 /* initialization of the pool */
-int xdag_initialize_pool(const char *pool_arg)
+int dag_initialize_pool(const char *pool_arg)
 {
 	pthread_t th;
 
@@ -1306,7 +1306,7 @@ static void do_payments(uint64_t *hash, int payments_per_block, struct payment_d
 	}
 
 	if(field_index > 1) {
-		struct xdag_block *payment_block = dag_create_block(fields, 1, field_index - 1, 0, 0, 0, NULL);
+		struct dag_block *payment_block = dag_create_block(fields, 1, field_index - 1, 0, 0, 0, NULL);
 		block_queue_append_new(payment_block);
 	}
 }
@@ -1350,7 +1350,7 @@ int pay_miners(xtime_t time)
 	} else if (pos < 0) {
 		return -6;
 	} else {
-		struct xdag_block *block = dag_storage_load(hash, time, pos, &buf);
+		struct dag_block *block = dag_storage_load(hash, time, pos, &buf);
 		if(!block) return -7;
 	}
 
@@ -1684,7 +1684,7 @@ static void connection_print_time_intervals(struct connection_pool_data *conn_da
 static void print_connection_stats(struct connection_pool_data *conn_data, int connection_index, int current_interval_index, FILE *out)
 {
 	char time_buf[50] = {0};
-	xdag_time_to_string(conn_data->connected_time, time_buf);
+	dag_time_to_string(conn_data->connected_time, time_buf);
 	int ip = conn_data->ip;
 
 	fprintf(out, "\nConnection %d\n", connection_index);
@@ -1716,7 +1716,7 @@ static void print_connection_stats(struct connection_pool_data *conn_data, int c
 static void print_miner_stats(struct miner_pool_data *miner, FILE *out)
 {
 	char time_buf[50] = {0};
-	xdag_time_to_string(miner->registered_time, time_buf);
+	dag_time_to_string(miner->registered_time, time_buf);
 
 	const uint64_t task_index = g_dag_pool_task_index;
 	struct dag_pool_task *task = &g_dag_pool_task[task_index & 1];

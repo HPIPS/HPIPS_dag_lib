@@ -184,7 +184,7 @@ struct dag_block *dag_storage_load(dag_hash_t hash, xtime_t time, uint64_t pos, 
 
 static int sort_callback(const void *l, const void *r)
 {
-	struct dag_block **L = (struct xdag_block **)l, **R = (struct xdag_block **)r;
+	struct dag_block **L = (struct dag_block **)l, **R = (struct dag_block **)r;
 
 	if ((*L)->field[0].time < (*R)->field[0].time) return -1;
 	if ((*L)->field[0].time > (*R)->field[0].time) return 1;
@@ -289,7 +289,7 @@ uint64_t dag_load_blocks(xtime_t start_time, xtime_t end_time, void *data, void 
 /* 将块和置于“和”数组中，按从开始时间到结束时间的间隔对块进行过滤，分成16个部分；
  * 结束启动应该在表格16 ^ k中
  * (original russian comment is unclear too) */
-int xdag_load_sums(xtime_t start_time, xtime_t end_time, struct dag_storage_sum sums[16])
+int dag_load_sums(xtime_t start_time, xtime_t end_time, struct dag_storage_sum sums[16])
 {
 	struct dag_storage_sum buf[256];
 	char path[256] = {0};

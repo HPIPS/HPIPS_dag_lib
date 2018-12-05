@@ -20,7 +20,7 @@ typedef struct {
 } dag_diff_t;
 
 #define xdag_diff_max      { -1, -1, -1, -1 }
-#define xdag_diff_gt(l, r) (dfsrsa_cmp((l).num, (r).num, 4) > 0)
+#define dag_diff_gt(l, r) (dfsrsa_cmp((l).num, (r).num, 4) > 0)
 #define xdag_diff_args(d)  (unsigned long long)(*(uint64_t*)&d.num[2]), (unsigned long long)(*(uint64_t*)&d.num[0])
 #define xdag_diff_shr32(p) ((p)->num[0] = (p)->num[1], (p)->num[1] = (p)->num[2], (p)->num[2] = (p)->num[3], (p)->num[3] = 0)
 static inline dag_diff_t xdag_diff_add(dag_diff_t p, dag_diff_t q)
@@ -57,7 +57,7 @@ typedef long ssize_t;
 #define pthread_self_ptr()      pthread_self()
 typedef unsigned __int128 dag_diff_t;
 #define xdag_diff_max      (-(dag_diff_t)1)
-#define xdag_diff_gt(l, r) ((l) > (r))
+#define dag_diff_gt(l, r) ((l) > (r))
 #define xdag_diff_shr32(p) (*(p) >>= 32)
 #define xdag_diff_args(d)  (unsigned long long)((d) >> 64), (unsigned long long)(d)
 #define xdag_diff_add(p, q) ((p) + (q))

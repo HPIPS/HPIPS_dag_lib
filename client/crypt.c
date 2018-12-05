@@ -298,7 +298,7 @@ int dag_sign(const void *key, const dag_hash_t hash, dag_hash_t sign_r, dag_hash
 	}
 
 	dag_debug("Sign  : hash=[%s] sign=[%s] r=[%s], s=[%s]", dag_log_hash(hash),
-		xdag_log_array(buf, sig_len), dag_log_hash(sign_r), dag_log_hash(sign_s));
+		dag_log_array(buf, sig_len), dag_log_hash(sign_r), dag_log_hash(sign_s));
 
 	return 0;
 }

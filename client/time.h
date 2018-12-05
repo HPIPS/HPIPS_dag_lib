@@ -41,7 +41,7 @@ void dag_xtime_to_string(xtime_t time, char *buf);
 // minimal length of string buffer `buf` should be 50
 void dag_time_to_string(xtime_t time, char* buf);
 
-extern time_t dag_get_xtimestamp(void);
+extern xtime_t dag_get_xtimestamp(void);
 
 extern uint64_t dag_get_time_ms(void);
 	

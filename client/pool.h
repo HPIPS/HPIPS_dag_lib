@@ -24,8 +24,8 @@ extern int g_pool_has_tag;
 extern "C" {
 #endif
 	
-/* initialization of the pool */
-extern int xdag_initialize_pool(const char *pool_arg);
+/* ³õÊ¼»¯¿ó³Ø */
+extern int dag_initialize_pool(const char *pool_arg);
 
 /* gets pool parameters as a string, 0 - if the pool is disabled */
 extern char *xdag_pool_get_config(char *buf);

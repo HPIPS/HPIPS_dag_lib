@@ -44,7 +44,7 @@ void dag_xtime_to_string(xtime_t time, char *buf)
 
 // convert time to string representation
 // minimal length of string buffer `buf` should be 50
-void xdag_time_to_string(xtime_t time, char* buf)
+void dag_time_to_string(xtime_t time, char* buf)
 {
 	struct tm tm;
 	localtime_r(&time, &tm);

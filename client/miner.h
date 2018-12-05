@@ -22,7 +22,7 @@ extern int dag_initialize_miner(const char *pool_address);
 extern void *miner_net_thread(void *arg);
 
 /* 通过池向网络发送块 */
-extern int dag_send_block_via_pool(struct xdag_block *block);
+extern int dag_send_block_via_pool(struct dag_block *block);
 
 /* 从池列表中选择随机池 */
 extern int dag_pick_pool(char *pool_address);

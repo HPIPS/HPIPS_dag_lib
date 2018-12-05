@@ -98,7 +98,7 @@ typedef struct {
 
 extern void xsha256_multi_block(SHA256_MB_CTX *, const HASH_DESC *, int);
 
-uint64_t xdag_hash_final_multi(void *ctxv, uint64_t *nonce, int attempts, int step, dag_hash_t hash)
+uint64_t dag_hash_final_multi(void *ctxv, uint64_t *nonce, int attempts, int step, dag_hash_t hash)
 {
 	SHA256_MB_CTX mctx1, mctx2, mctx;
 	SHA256REF_CTX *ctx1 = (SHA256REF_CTX*)ctxv, ctx2[1];

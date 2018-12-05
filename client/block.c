@@ -449,7 +449,7 @@ static int insert_index(struct block_internal *bi)
 }
 
 #define set_pretop(b) if ((b) && MAIN_TIME((b)->time) < MAIN_TIME(timestamp) && \
-		(!pretop_main_chain || xdag_diff_gt((b)->difficulty, pretop_main_chain->difficulty))) { \
+		(!pretop_main_chain || dag_diff_gt((b)->difficulty, pretop_main_chain->difficulty))) { \
 		pretop_main_chain = (b); \
 		log_block("Pretop", (b)->hash, (b)->time, (b)->storage_pos); \
 }
@@ -667,12 +667,12 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 				while(blockRef && MAIN_TIME(blockRef->time) == MAIN_TIME(tmpNodeBlock.time)) {
 					blockRef = blockRef->link[blockRef->max_diff_link];
 				}
-				if(blockRef && xdag_diff_gt(xdag_diff_add(diff0, blockRef->difficulty), diff)) {
+				if(blockRef && dag_diff_gt(xdag_diff_add(diff0, blockRef->difficulty), diff)) {
 					diff = xdag_diff_add(diff0, blockRef->difficulty);
 				}
 			}
 
-			if(xdag_diff_gt(diff, tmpNodeBlock.difficulty)) {
+			if(dag_diff_gt(diff, tmpNodeBlock.difficulty)) {
 				tmpNodeBlock.difficulty = diff;
 				tmpNodeBlock.max_diff_link = tmpNodeBlock.nlinks;
 			}
@@ -743,13 +743,13 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 	set_pretop(nodeBlock);
 	set_pretop(top_main_chain);
 
-	if(xdag_diff_gt(tmpNodeBlock.difficulty, g_dag_stats.difficulty)) {
+	if(dag_diff_gt(tmpNodeBlock.difficulty, g_dag_stats.difficulty)) {
 		/* Only log this if we are NOT loading state */
 		if(g_dag_state != DAG_STATE_LOAD)
 			dag_info("Diff  : %llx%016llx (+%llx%016llx)", xdag_diff_args(tmpNodeBlock.difficulty), xdag_diff_args(diff0));
 
 		for(blockRef = nodeBlock, blockRef0 = 0; blockRef && !(blockRef->flags & BI_MAIN_CHAIN); blockRef = blockRef->link[blockRef->max_diff_link]) {
-			if((!blockRef->link[blockRef->max_diff_link] || xdag_diff_gt(blockRef->difficulty, blockRef->link[blockRef->max_diff_link]->difficulty))
+			if((!blockRef->link[blockRef->max_diff_link] || dag_diff_gt(blockRef->difficulty, blockRef->link[blockRef->max_diff_link]->difficulty))
 				&& (!blockRef0 || MAIN_TIME(blockRef0->time) > MAIN_TIME(blockRef->time))) {
 				blockRef->flags |= BI_MAIN_CHAIN;
 				blockRef0 = blockRef;
@@ -764,7 +764,7 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 		top_main_chain = nodeBlock;
 		g_dag_stats.difficulty = tmpNodeBlock.difficulty;
 
-		if(xdag_diff_gt(g_dag_stats.difficulty, g_dag_stats.max_difficulty)) {
+		if(dag_diff_gt(g_dag_stats.difficulty, g_dag_stats.max_difficulty)) {
 			g_dag_stats.max_difficulty = g_dag_stats.difficulty;
 		}
 
@@ -800,11 +800,11 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 		g_dag_extstats.hashrate_last_time = nodeBlock->time;
 	}
 
-	if(xdag_diff_gt(diff0, g_dag_extstats.hashrate_total[i])) {
+	if(dag_diff_gt(diff0, g_dag_extstats.hashrate_total[i])) {
 		g_dag_extstats.hashrate_total[i] = diff0;
 	}
 
-	if(tmpNodeBlock.flags & BI_OURS && xdag_diff_gt(diff0, g_dag_extstats.hashrate_ours[i])) {
+	if(tmpNodeBlock.flags & BI_OURS && dag_diff_gt(diff0, g_dag_extstats.hashrate_ours[i])) {
 		g_dag_extstats.hashrate_ours[i] = diff0;
 	}
 
