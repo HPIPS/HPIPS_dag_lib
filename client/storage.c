@@ -145,7 +145,7 @@ int64_t dag_storage_save(const struct dag_block *b)
 }
 
 /* 从本地存储库读取块及其编号；将其写入缓冲区或返回永久引用，万一出错，返回0  */
-struct xdag_block *dag_storage_load(dag_hash_t hash, xtime_t time, uint64_t pos, struct dag_block *buf)
+struct dag_block *dag_storage_load(dag_hash_t hash, xtime_t time, uint64_t pos, struct dag_block *buf)
 {
 	dag_hash_t hash0;
 	char path[256] = {0};

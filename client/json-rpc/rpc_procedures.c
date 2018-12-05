@@ -1,4 +1,4 @@
-//
+﻿//
 //  rpc_procedures.c
 //  xdag
 //
@@ -233,11 +233,11 @@ cJSON * method_xdag_stats(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id
 		cJSON *json_max_diff = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "maxdifficulty", json_max_diff);
 
-		sprintf(buf, "%.9Lf", amount2xdags(xdag_get_supply(g_dag_stats.nmain)));
+		sprintf(buf, "%.9Lf", amount2xdags(dag_get_supply(g_dag_stats.nmain)));
 		cJSON *json_supply = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "supply", json_supply);
 
-		sprintf(buf, "%.9Lf", amount2xdags(xdag_get_supply(g_dag_stats.total_nmain)));
+		sprintf(buf, "%.9Lf", amount2xdags(dag_get_supply(g_dag_stats.total_nmain)));
 		cJSON *json_total_supply = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "totalsupply", json_total_supply);
 
@@ -434,7 +434,7 @@ int rpc_get_block_info_callback(void *data, int flags, dag_hash_t hash, dag_amou
 	cJSON *json_flags = cJSON_CreateString(str);
 	cJSON_AddItemToObject(callback_data, "flags", json_flags);
 
-	sprintf(str, "%s", xdag_get_block_state_info(flags));
+	sprintf(str, "%s", dag_get_block_state_info(flags));
 	cJSON *json_state = cJSON_CreateString(str);
 	cJSON_AddItemToObject(callback_data, "state", json_state);
 
@@ -537,7 +537,7 @@ cJSON * method_dag_get_block_info(struct dag_rpc_context * ctx, cJSON *params, c
 	cJSON *ret = NULL;
 	cJSON *info = cJSON_CreateObject();
 	cJSON *links = cJSON_CreateArray();
-	if(xdag_get_block_info(hash, (void *)info, rpc_get_block_info_callback, (void *)links, rpc_get_block_links_callback)) {
+	if(dag_get_block_info(hash, (void *)info, rpc_get_block_info_callback, (void *)links, rpc_get_block_links_callback)) {
 		ctx->error_code = 1;
 		ctx->error_message = strdup("Block not found.");
 		free(info);
@@ -696,7 +696,7 @@ int rpc_transactions_callback(void *data, int type, int flags, dag_hash_t hash, 
 		return -1;
 	}
 
-	cJSON *json_state = cJSON_CreateString(xdag_get_block_state_info(flags));
+	cJSON *json_state = cJSON_CreateString(dag_get_block_state_info(flags));
 	
 	cJSON *json_direction = cJSON_CreateString(type ? "output" : "input");
 	
@@ -815,7 +815,7 @@ cJSON * method_dag_get_transactions(struct dag_rpc_context * ctx, cJSON *params,
 	callback_data.json_root = array;
 	callback_data.count = 0;
 	
-	int total = xdag_get_transactions(hash, &callback_data, &rpc_transactions_callback);
+	int total = dag_get_transactions(hash, &callback_data, &rpc_transactions_callback);
 	if( total < 0) {
 		ctx->error_code = 1;
 		ctx->error_message = strdup("Block is not found.");
@@ -842,12 +842,12 @@ int dag_rpc_init_procedures(void)
 	/* register xdag_get_account, xdag_get_balance, xdag_do_xfer, xdag_get_transactions */
 	rpc_register_func(xdag_get_account);
 	rpc_register_func(dag_get_balance);
-	rpc_register_func(xdag_get_block_info);
+	rpc_register_func(dag_get_block_info);
 
 	if(g_rpc_xfer_enable) {
 		rpc_register_func(dag_do_xfer);
 	}
 
-	rpc_register_func(xdag_get_transactions);
+	rpc_register_func(dag_get_transactions);
 	return 0;
 }

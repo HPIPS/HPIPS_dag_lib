@@ -164,8 +164,8 @@ void dag_list_orphan_blocks(int, FILE*);
 void dag_block_finish(void);
 	
 // 获取指定地址的块信息
-//extern int dag_get_block_info(xdag_hash_t, void *, int (*)(void*, int, dag_hash_t, dag_amount_t, xtime_t, const char*),
-//							void *, int (*)(void*, const char *, dag_hash_t, dag_amount_t));
+extern int dag_get_block_info(dag_hash_t hash, void *info, int(*info_callback)(void*, int, dag_hash_t, dag_amount_t, xtime_t, const char *),
+	void *links, int(*links_callback)(void*, const char *, dag_hash_t, dag_amount_t));
 
 #ifdef __cplusplus
 };
