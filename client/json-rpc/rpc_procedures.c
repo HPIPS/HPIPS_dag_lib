@@ -41,7 +41,7 @@
 #include "../utils/log.h"
 #include "../utils/utils.h"
 
-#define rpc_register_func(command) xdag_rpc_service_register_procedure(&method_##command, #command, NULL);
+#define rpc_register_func(command) dag_rpc_service_register_procedure(&method_##command, #command, NULL);
 
 /* method: xdag_version */
 cJSON * method_xdag_version(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
@@ -50,7 +50,7 @@ cJSON * method_xdag_version(struct dag_rpc_context *ctx, cJSON *params, cJSON *i
 cJSON * method_xdag_state(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
 
 /* method: xdag_stats */
-cJSON * method_xdag_stats(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
+cJSON * method_dag_stats(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version);
 
 /* method: xdag_get_account */
 int rpc_account_callback(void *data, dag_hash_t hash, dag_amount_t amount, xtime_t time, int n_our_key);
@@ -181,7 +181,7 @@ cJSON * method_xdag_state(struct dag_rpc_context *ctx, cJSON *params, cJSON *id,
  "totalsupply":"TOTAL SUPPLY"
  }], "error":null, "id":1
  */
-cJSON * method_xdag_stats(struct xdag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
+cJSON * method_dag_stats(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, char *version)
 {
 	dag_debug("rpc call method xdag_stats, version %s",version);
 	cJSON *ret = NULL;
@@ -840,7 +840,7 @@ int dag_rpc_init_procedures(void)
 	rpc_register_func(xdag_stats);
 
 	/* register xdag_get_account, xdag_get_balance, xdag_do_xfer, xdag_get_transactions */
-	rpc_register_func(xdag_get_account);
+	rpc_register_func(dag_get_account);
 	rpc_register_func(dag_get_balance);
 	rpc_register_func(dag_get_block_info);
 

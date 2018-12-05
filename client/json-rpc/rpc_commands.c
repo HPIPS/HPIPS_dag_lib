@@ -30,8 +30,8 @@ typedef struct rpc_white_element {
 } rpc_white_element;
 struct rpc_white_element *g_rpc_white_host = NULL;
 
-/* when white list is enable if host is in white list, return 1, else return 0 */
-int xdag_rpc_command_host_check(struct sockaddr_in peeraddr)
+/*当白名单启用时，如果主机处于白名单中，返回1，否则返回0。 */
+int dag_rpc_command_host_check(struct sockaddr_in peeraddr)
 {
 	if(!g_rpc_white_enable) {
 		return 1;
@@ -53,7 +53,7 @@ int xdag_rpc_command_host_check(struct sockaddr_in peeraddr)
 	return 0;
 }
 
-int xdag_rpc_command_host_add(const char *host)
+int dag_rpc_command_host_add(const char *host)
 {
 	rpc_white_element *new_white_host = NULL;
 	int white_num = 0;
@@ -91,7 +91,7 @@ int xdag_rpc_command_host_add(const char *host)
 	return 0;
 }
 
-int xdag_rpc_command_host_del(const char *host)
+int dag_rpc_command_host_del(const char *host)
 {
 	rpc_white_element *node = NULL ,*tmp = NULL,  *del_node = NULL;
 	struct in_addr addr = {0};
@@ -110,7 +110,7 @@ int xdag_rpc_command_host_del(const char *host)
 	return -1;
 }
 
-void xdag_rpc_command_host_clear(void)
+void dag_rpc_command_host_clear(void)
 {
 	rpc_white_element *node = NULL ,*tmp = NULL;
 	LL_FOREACH_SAFE(g_rpc_white_host, node, tmp)
@@ -121,7 +121,7 @@ void xdag_rpc_command_host_clear(void)
 	return;
 }
 
-void xdag_rpc_command_host_query(char *result)
+void dag_rpc_command_host_query(char *result)
 {
 	rpc_white_element *element = NULL;
 	char new_host[RPC_WHITE_ADDR_LEN] = {0};
@@ -134,12 +134,12 @@ void xdag_rpc_command_host_query(char *result)
 	}
 }
 
-void xdag_rpc_command_list_methods(char * result)
+void dag_rpc_command_list_methods(char * result)
 {
 	dag_rpc_service_list_procedures(result);
 }
 
-void xdag_rpc_command_disable_xfer(void)
+void dag_rpc_command_disable_xfer(void)
 {
 	if(!g_rpc_xfer_enable) {
 		return;
@@ -155,7 +155,7 @@ void xdag_rpc_command_disable_xfer(void)
 	dag_rpc_service_start(g_rpc_port);
 }
 
-void xdag_rpc_command_enable_xfer(void)
+void dag_rpc_command_enable_xfer(void)
 {
 	if(g_rpc_xfer_enable) {
 		return;
@@ -172,7 +172,7 @@ void xdag_rpc_command_enable_xfer(void)
 	dag_rpc_service_start(g_rpc_port);
 }
 
-static void xdag_rpc_command_status(FILE *out)
+static void dag_rpc_command_status(FILE *out)
 {
 	if(0 == g_rpc_stop) {
 		fprintf(out, "rpc service is running at port : %d, with xfer %s and white list %s.\n", g_rpc_port, g_rpc_xfer_enable?"enable":"disable", g_rpc_white_enable?"enable":"disable");
@@ -183,7 +183,7 @@ static void xdag_rpc_command_status(FILE *out)
 	}
 }
 
-void xdag_rpc_command_help(FILE *out)
+void dag_rpc_command_help(FILE *out)
 {
 	fprintf(out,"Commands:\n");
 	fprintf(out,"  list                  - list white hosts\n");
@@ -196,14 +196,14 @@ void xdag_rpc_command_help(FILE *out)
 	fprintf(out,"  help                  - print this help\n");
 }
 
-int xdag_rpc_command(const char *cmd, FILE *out)
+int dag_rpc_command(const char *cmd, FILE *out)
 {
 	char buf[4096], *nextParam;
 	strcpy(buf, cmd);
 
 	char *method = strtok_r(buf, " \t\r\n", &nextParam);
 	if(!method) {
-		xdag_rpc_command_status(out);
+		dag_rpc_command_status(out);
 		return 0;
 	}
 
@@ -224,7 +224,7 @@ int xdag_rpc_command(const char *cmd, FILE *out)
 		}
 	} else if(!strcmp(method, "list")) {
 		char list[RPC_WHITE_MAX * RPC_WHITE_ADDR_LEN] = {0};
-		xdag_rpc_command_host_query(list);
+		dag_rpc_command_host_query(list);
 		fprintf(out, "%s", list);
 	} else if(!strcmp(method, "add")) {
 		char *address = strtok_r(0, " \t\r\n", &nextParam);
@@ -232,7 +232,7 @@ int xdag_rpc_command(const char *cmd, FILE *out)
 			fprintf(out, "rpc: address not given. Type rpc help to see commands\n");
 			return -1;
 		}
-		int ret = xdag_rpc_command_host_add(address);
+		int ret = dag_rpc_command_host_add(address);
 		switch(ret){
 			case 0:
 				break;
@@ -252,9 +252,9 @@ int xdag_rpc_command(const char *cmd, FILE *out)
 			fprintf(out, "rpc: address not given. Type rpc help to see commands\n");
 			return 0;
 		}
-		xdag_rpc_command_host_del(address);
+		dag_rpc_command_host_del(address);
 	} else if(!strcmp(method, "clear")) {
-		xdag_rpc_command_host_clear();
+		dag_rpc_command_host_clear();
 	} else if(!strcmp(method, "methods")) {
 		char list[1204] = {0};
 		dag_rpc_service_list_procedures(list);
@@ -266,11 +266,11 @@ int xdag_rpc_command(const char *cmd, FILE *out)
 			return -1;
 		}
 		if(!strcmp(opt, "enable")) {
-			xdag_rpc_command_enable_xfer();
+			dag_rpc_command_enable_xfer();
 		} else if(!strcmp(opt, "disable")) {
-			xdag_rpc_command_disable_xfer();
+			dag_rpc_command_disable_xfer();
 		} else {
-			xdag_rpc_command_help(out);
+			dag_rpc_command_help(out);
 		}
 	} else if(!strcmp(method, "white")) {
 		char *opt = strtok_r(0, " \t\r\n", &nextParam);
@@ -283,10 +283,10 @@ int xdag_rpc_command(const char *cmd, FILE *out)
 		} else if(!strcmp(opt, "disable")) {
 			g_rpc_white_enable = 0;
 		} else {
-			xdag_rpc_command_help(out);
+			dag_rpc_command_help(out);
 		}
 	} else {
-		xdag_rpc_command_help(out);
+		dag_rpc_command_help(out);
 	}
 
 	return 0;

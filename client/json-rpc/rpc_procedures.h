@@ -14,7 +14,7 @@ extern "C" {
 #endif
 	
 /* init rpc procedures */
-extern int xdag_rpc_init_procedures(void);
+extern int dag_rpc_init_procedures(void);
 
 #ifdef __cplusplus
 };

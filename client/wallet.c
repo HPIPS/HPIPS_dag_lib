@@ -35,14 +35,14 @@ static int add_key(dag_hash_t priv)
 
 	if (priv) {
 		memcpy(k->priv, priv, sizeof(dag_hash_t));
-		k->key = xdag_private_to_key(k->priv, k->pub, &k->pub_bit);
+		k->key = dag_private_to_key(k->priv, k->pub, &k->pub_bit);
 	} else {
 		FILE *f;
 		uint32_t priv32[sizeof(dag_hash_t) / sizeof(uint32_t)];
 
-		k->key = xdag_create_key(k->priv, k->pub, &k->pub_bit);
+		k->key = dag_create_key(k->priv, k->pub, &k->pub_bit);
 		
-		f = xdag_open_file(WALLET_FILE, "ab");
+		f = dag_open_file(WALLET_FILE, "ab");
 		if (!f) goto fail;
 		
 		memcpy(priv32, k->priv, sizeof(dag_hash_t));
@@ -50,11 +50,11 @@ static int add_key(dag_hash_t priv)
 		dag_user_crypt_action(priv32, nkeys, sizeof(dag_hash_t) / sizeof(uint32_t), 1);
 		
 		if (fwrite(priv32, sizeof(dag_hash_t), 1, f) != 1) {
-			xdag_close_file(f);
+			dag_close_file(f);
 			goto fail;
 		}
 
-		xdag_close_file(f);
+		dag_close_file(f);
 	}
 
 	if (!k->key) goto fail;

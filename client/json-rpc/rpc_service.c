@@ -64,7 +64,7 @@ int g_rpc_xfer_enable = 0; // 0 disable xfer, 1 enable xfer
 int g_rpc_white_enable = 1; // 0 disable white list, 1 enable white list
 
 static struct pollfd *g_fds = NULL;
-struct xdag_rpc_connection {
+struct dag_rpc_connection {
 	struct pollfd fd;
 	int is_http;
 	int pos;
@@ -76,7 +76,7 @@ static void wrap_http(int fd)
 	write(fd, "Content-Type: application/json\r\n\r\n", 34);
 }
 
-static int send_response(struct xdag_rpc_connection * conn,const char *response) {
+static int send_response(struct dag_rpc_connection * conn,const char *response) {
 	int fd = conn->fd.fd;
 	if(conn->is_http) {
 		wrap_http(fd);
@@ -86,16 +86,16 @@ static int send_response(struct xdag_rpc_connection * conn,const char *response)
 }
 
 /* create xdag connection */
-static struct xdag_rpc_connection* create_connection(struct pollfd *fd)
+static struct dag_rpc_connection* create_connection(struct pollfd *fd)
 {
-	struct xdag_rpc_connection *conn = (struct xdag_rpc_connection*)malloc(sizeof(struct xdag_rpc_connection));
-	memset(conn, 0, sizeof(struct xdag_rpc_connection));
+	struct dag_rpc_connection *conn = (struct dag_rpc_connection*)malloc(sizeof(struct dag_rpc_connection));
+	memset(conn, 0, sizeof(struct dag_rpc_connection));
 	conn->fd = *fd;
 	return conn;
 }
 
 /* close xdag connection */
-static void close_connection(struct xdag_rpc_connection* conn)
+static void close_connection(struct dag_rpc_connection* conn)
 {
 	shutdown(conn->fd.fd, SHUT_WR);
 	recv(conn->fd.fd, NULL, 0, 0);
@@ -106,7 +106,7 @@ static void close_connection(struct xdag_rpc_connection* conn)
 /* handle rpc request thread */
 static void* rpc_handle_thread(void *arg)
 {
-	struct xdag_rpc_connection* conn = (struct xdag_rpc_connection *)arg;
+	struct dag_rpc_connection* conn = (struct dag_rpc_connection *)arg;
 
 	char req_buffer[BUFFER_SIZE] = {0};
 	memset(req_buffer, 0, sizeof(req_buffer));
@@ -202,10 +202,10 @@ static void *rpc_service_thread(void *arg)
 				continue;
 			}
 
-			if(!xdag_rpc_command_host_check(peeraddr)) {
+			if(!dag_rpc_command_host_check(peeraddr)) {
 				dag_warn("rpc client is not in white list : %s, closed", inet_ntoa(peeraddr.sin_addr));
-				struct xdag_rpc_connection *conn = (struct xdag_rpc_connection*)malloc(sizeof(struct xdag_rpc_connection));
-				memset(conn, 0, sizeof(struct xdag_rpc_connection));
+				struct dag_rpc_connection *conn = (struct dag_rpc_connection*)malloc(sizeof(struct dag_rpc_connection));
+				memset(conn, 0, sizeof(struct dag_rpc_connection));
 				g_fds[MAX_OPEN].fd = client_fd;
 				conn->fd = *(g_fds + MAX_OPEN);
 				send_response(conn, "connection refused by white host");
@@ -222,8 +222,8 @@ static void *rpc_service_thread(void *arg)
 
 				if(i == MAX_OPEN) {
 					dag_warn("rpc service : too many connections, max connections : %d, close connection from %s", MAX_OPEN, inet_ntoa(peeraddr.sin_addr));
-					struct xdag_rpc_connection *conn = (struct xdag_rpc_connection*)malloc(sizeof(struct xdag_rpc_connection));
-					memset(conn, 0, sizeof(struct xdag_rpc_connection));
+					struct dag_rpc_connection *conn = (struct dag_rpc_connection*)malloc(sizeof(struct dag_rpc_connection));
+					memset(conn, 0, sizeof(struct dag_rpc_connection));
 					g_fds[MAX_OPEN].fd = client_fd;
 					conn->fd = *(g_fds + MAX_OPEN);
 					send_response(conn, "too many connections, please try later.");
@@ -258,7 +258,7 @@ static void *rpc_service_thread(void *arg)
 
 			if(p->revents & POLLIN) {
 				ready = 1;
-				struct xdag_rpc_connection * conn = create_connection(p);
+				struct dag_rpc_connection * conn = create_connection(p);
 				pthread_t th;
 				int err = pthread_create(&th, 0, rpc_handle_thread, conn);
 				if(err) {
@@ -311,10 +311,10 @@ static int xdag_rpc_service_init(int port)
 		return -1;
 	}
 
-	xdag_rpc_command_host_add("127.0.0.1"); // always accept localhost
+	dag_rpc_command_host_add("127.0.0.1"); // always accept localhost
 	
 	/* init rpc procedures */
-	xdag_rpc_init_procedures();
+	dag_rpc_init_procedures();
 	
 	return 0;
 }
@@ -339,6 +339,6 @@ int dag_rpc_service_start(int port)
 int dag_rpc_service_stop(void)
 {
 	g_rpc_stop = 2;
-	xdag_rpc_command_host_clear(); //clear all white list.
+	dag_rpc_command_host_clear(); //clear all white list.
 	return 0;
 }
