@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include "types.h"
 
+
 /* the maximum period of time for which blocks are requested, not their amounts */
 #define REQUEST_BLOCKS_MAX_TIME (1 << 20)
 
@@ -15,15 +16,14 @@
 #define MAIN_TIME(t)            ((t) >> 16)
 #define DAG_TEST_ERA           0x16900000000ll
 #define DAG_MAIN_ERA           0x16940000000ll
-#define DAG_ERA                g_dag_era
+//#define DAG_ERA				   g_dag_era
 #define MAX_TIME_NMAIN_STALLED  (1 << 10)
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern xtime_t g_dag_era;
-
+xtime_t g_dag_era;
 // 返回一个时间周期索引，其中周期为64秒长。
 xtime_t dag_main_time(void);
 

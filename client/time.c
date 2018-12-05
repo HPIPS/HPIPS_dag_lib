@@ -17,7 +17,7 @@ xtime_t dag_main_time(void)
 // 返回与网络启动相对应的时间周期索引
 xtime_t dag_start_main_time(void)
 {
-	return MAIN_TIME(DAG_ERA); //
+	return MAIN_TIME(g_dag_era); //
 }
 
 ///*Dag 时间参数初始化
