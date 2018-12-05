@@ -111,7 +111,7 @@ size_t get_log(char* log, size_t size)
 	return size;
 }
 
-int xdag_log(const char *logfile, int level, const char *format, ...)
+int dag_log(const char *logfile, int level, const char *format, ...)
 {
 	static const char lvl[] = "NONEFATACRITINTEERROWARNMESSINFODBUGTRAC";
 	char tbuf[64] = {0}, buf[64] = {0};
@@ -278,7 +278,7 @@ static void sigCatch(int signum, siginfo_t *info, void *context)
 	exit(-1);
 }
 
-int xdag_log_init(void)
+int dag_log_init(void)
 {
 	int i;
 	struct sigaction sa;
@@ -300,7 +300,7 @@ int xdag_log_init(void)
 
 #else
 
-int xdag_log_init(void)
+int dag_log_init(void)
 {
 	return 0;
 }

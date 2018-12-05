@@ -107,7 +107,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\..\deps\pthreads\x64\pthreadVC2.lib;..\..\deps;..\..\;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\deps\pthreads\x64\pthreadVC2.lib;..\..\deps\libssl.lib;..\..\deps\libcrypto.lib;..\..\deps\capi.lib;..\..\deps\dasync.lib;..\..\deps\libapps.lib;..\..\deps\libtestutil.lib;..\..\deps\openssl.lib;..\..\deps\ossltest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

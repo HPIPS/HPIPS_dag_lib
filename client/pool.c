@@ -971,7 +971,7 @@ static int send_data_to_connection(connection_list_element *connection, int *pro
 
 void *pool_main_thread(void *arg)
 {
-	while(!g_xdag_sync_on) {
+	while(!g_dag_sync_on) {
 		sleep(1);
 	}
 
@@ -1054,7 +1054,7 @@ void *pool_main_thread(void *arg)
 
 void *pool_block_thread(void *arg)
 {
-	while(!g_xdag_sync_on) {
+	while(!g_dag_sync_on) {
 		sleep(1);
 	}
 
@@ -1084,7 +1084,7 @@ void *pool_payment_thread(void *arg)
 {
 	xtime_t prev_task_time = 0;
 
-	while(!g_xdag_sync_on) {
+	while(!g_dag_sync_on) {
 		sleep(1);
 	}
 

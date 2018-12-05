@@ -1141,7 +1141,7 @@ begin:
 	}
 
 	// launching of synchronization thread
-	g_xdag_sync_on = 1;
+	g_dag_sync_on = 1;
 	if (!g_light_mode && !sync_thread_running) {
 		dag_mess("Starting sync thread...");
 		int err = pthread_create(&th, 0, sync_thread, 0);
@@ -1217,7 +1217,7 @@ begin:
 		pthread_mutex_lock(&block_mutex);
 
 		if (g_dag_state == DAG_STATE_REST) {
-			g_xdag_sync_on = 0;
+			g_dag_sync_on = 0;
 			pthread_mutex_unlock(&block_mutex);
 			dag_mining_start(0);
 

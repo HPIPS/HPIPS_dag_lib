@@ -552,7 +552,7 @@ void processStatsCommand(FILE *out)
 			xdag_diff_args(g_dag_stats.max_difficulty), g_coinname,
 			amount2xdags(dag_get_supply(g_dag_stats.nmain)),
 			amount2xdags(dag_get_supply(g_dag_stats.total_nmain)),
-			xdag_hashrate(g_dag_extstats.hashrate_ours), xdag_hashrate(g_dag_extstats.hashrate_total)
+			dag_hashrate(g_dag_extstats.hashrate_ours), dag_hashrate(g_dag_extstats.hashrate_total)
 		);
 	}
 }

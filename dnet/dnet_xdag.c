@@ -50,7 +50,7 @@
 #define OLD_DNET_TIMEOUT_SEC		30
 #define BAD_CONN_TIMEOUT_SEC		90
 
-extern int g_xdag_sync_on;
+extern int g_dag_sync_on;
 extern void dnet_session_init_crypt(struct dfslib_crypt *crypt, uint32_t sector[SECTOR_SIZE / 4]);
 
 struct xsector {
@@ -387,7 +387,7 @@ static void *xthread_main(void *arg)
 		sleep(1);
 	}
 	while(poll(t->fds, t->nconnections, 1) >= 0) {
-		while(!g_xdag_sync_on) {
+		while(!g_dag_sync_on) {
 			sleep(1);
 		}
 		int nmax = t->nconnections;
@@ -620,7 +620,7 @@ static void *accept_thread_main(void *arg)
 	socklen_t peeraddr_len = sizeof(peeraddr);
 	int reuseaddr = 1;
 
-	while(!g_xdag_sync_on) {
+	while(!g_dag_sync_on) {
 		sleep(1);
 	}
 
@@ -645,7 +645,7 @@ static void *accept_thread_main(void *arg)
 	}
 
 	for(;;) {
-		while(!g_xdag_sync_on) {
+		while(!g_dag_sync_on) {
 			sleep(1);
 		}
 

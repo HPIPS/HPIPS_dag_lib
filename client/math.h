@@ -32,7 +32,7 @@ long double xdag_log_difficulty2hashrate(long double);
 
 // 从上次记录的HASHRATE_LAST_MAX_TIME 难度计算哈希率
 // DIFF实际上是指向元素的xdAgDeffixt数组的HASHRATE_LAST_MAX_TIME指针
-long double xdag_hashrate(dag_diff_t *diff);
+long double dag_hashrate(dag_diff_t *diff);
 	
 #ifdef __cplusplus
 };

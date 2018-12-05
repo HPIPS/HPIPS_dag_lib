@@ -241,11 +241,11 @@ cJSON * method_dag_stats(struct dag_rpc_context *ctx, cJSON *params, cJSON *id, 
 		cJSON *json_total_supply = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "totalsupply", json_total_supply);
 
-		sprintf(buf, "%.2Lf MHs", xdag_hashrate(g_dag_extstats.hashrate_ours));
+		sprintf(buf, "%.2Lf MHs", dag_hashrate(g_dag_extstats.hashrate_ours));
 		cJSON *json_hashrate = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "hashrate", json_hashrate);
 
-		sprintf(buf, "%.2Lf MHs", xdag_hashrate(g_dag_extstats.hashrate_total));
+		sprintf(buf, "%.2Lf MHs", dag_hashrate(g_dag_extstats.hashrate_total));
 		cJSON * json_total_hashrate = cJSON_CreateString(buf);
 		cJSON_AddItemToObject(item, "totalhashrate", json_total_hashrate);
 	}
