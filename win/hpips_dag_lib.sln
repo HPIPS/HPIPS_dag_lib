@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hpips_dag_lib", "hpips_dag_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hpips_dag", "hpips_dag\hpips_dag.vcxproj", "{E66556D6-800C-4CBC-82E7-DC6435565A02}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xdaglib", "xdaglib\xdaglib.vcxproj", "{49C6CE86-04E0-4431-B55F-A6CE88268996}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "secp256k1", "secp256k1\secp256k1\secp256k1.vcxproj", "{76685A91-5D47-423A-BB5D-0D180029DA22}"
 EndProject
 Global
@@ -45,18 +43,6 @@ Global
 		{E66556D6-800C-4CBC-82E7-DC6435565A02}.Release|x64.Build.0 = Release|x64
 		{E66556D6-800C-4CBC-82E7-DC6435565A02}.Release|x86.ActiveCfg = Release|Win32
 		{E66556D6-800C-4CBC-82E7-DC6435565A02}.Release|x86.Build.0 = Release|Win32
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Debug|x64.ActiveCfg = Debug|x64
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Debug|x64.Build.0 = Debug|x64
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Debug|x86.ActiveCfg = Debug|Win32
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Debug|x86.Build.0 = Debug|Win32
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release_profiling|x64.ActiveCfg = Release_profiling|x64
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release_profiling|x64.Build.0 = Release_profiling|x64
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release_profiling|x86.ActiveCfg = Release_profiling|Win32
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release_profiling|x86.Build.0 = Release_profiling|Win32
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release|x64.ActiveCfg = Release|x64
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release|x64.Build.0 = Release|x64
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release|x86.ActiveCfg = Release|Win32
-		{49C6CE86-04E0-4431-B55F-A6CE88268996}.Release|x86.Build.0 = Release|Win32
 		{76685A91-5D47-423A-BB5D-0D180029DA22}.Debug|x64.ActiveCfg = Debug|x64
 		{76685A91-5D47-423A-BB5D-0D180029DA22}.Debug|x64.Build.0 = Debug|x64
 		{76685A91-5D47-423A-BB5D-0D180029DA22}.Debug|x86.ActiveCfg = Debug|Win32

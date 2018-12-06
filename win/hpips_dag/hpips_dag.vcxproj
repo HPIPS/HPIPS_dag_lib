@@ -27,6 +27,14 @@
   <ItemGroup>
     <ResourceCompile Include="version.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\hpips_dag_lib\hpips_dag_lib.vcxproj">
+      <Project>{0b8ea0d8-eeca-4eff-8ef5-d4eb744a73ca}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\secp256k1\secp256k1\secp256k1.vcxproj">
+      <Project>{76685a91-5d47-423a-bb5d-0d180029da22}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E66556D6-800C-4CBC-82E7-DC6435565A02}</ProjectGuid>
@@ -81,6 +89,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>F:\hpips_dag_lib\win\x64\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\hpips_dag_lib\client;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -93,15 +103,17 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\hpips_dag_lib\win\x64\Debug;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>hpips_dag_lib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

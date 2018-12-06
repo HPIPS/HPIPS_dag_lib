@@ -3,6 +3,5 @@
 #include "init.h"
 int main(int argc, char **argv)
 {
-	dag_init(argc, argv, 0);
-	return 0;
+	return dag_init(argc, argv, 0);
 }
