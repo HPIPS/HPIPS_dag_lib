@@ -196,10 +196,10 @@ int dnet_user_crypt_action(unsigned *data, unsigned long long data_id, unsigned 
 				memset(pwd, 0, 256);
 				memset(&str, 0, sizeof(struct dfslib_string));
 				(*g_input_password)("Password", pwd, 256);
-				dfslib_utf8_string(&str, pwd, strlen(pwd));
+				dfslib_utf8_string(&str, pwd, strlen(pwd)); //dfslib转换为String
 				memset(crypt->pwd, 0, sizeof(crypt->pwd));
 				crypt->ispwd = 0;
-				dfslib_crypt_set_password(crypt, &str);
+				dfslib_crypt_set_password(crypt, &str); //通过加密函数解析密码
 				res = (g_dnet_user_crypt->ispwd == crypt->ispwd
 						&& !memcmp(g_dnet_user_crypt->pwd, crypt->pwd, sizeof(crypt->pwd)));
 				free(crypt);

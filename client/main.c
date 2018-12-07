@@ -14,11 +14,9 @@ int main(int argc, char **argv)
 	//}
 	//argv = new char*[200];
 	argc = 6;
-	argv[1] = "detect";
-	argv[2] = "train";
-	argv[3] = "data/voc.data";
-	argv[4] = "cfg/yolov3.cfg";
-	argv[5] = "detect";
+	//argv[1] = "-P";
+	//argv[2] = "127.0.0.1:2323";
+	argv[1] = "-i";
 	dag_init(argc, argv, 0);
 	return 0;
 }
