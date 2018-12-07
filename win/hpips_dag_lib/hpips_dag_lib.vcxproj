@@ -255,6 +255,9 @@
     <None Include="..\..\dnet\dnet_keys.bin" />
     <None Include="..\..\doc\HPIPS_DAG_逻辑导图.mm" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="任务记录文本.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
