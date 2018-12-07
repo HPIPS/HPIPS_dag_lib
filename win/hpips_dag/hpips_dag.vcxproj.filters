@@ -29,4 +29,9 @@
       <Filter>资源文件</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\x64\Debug\hpips_dag_lib.dll">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
 </Project>

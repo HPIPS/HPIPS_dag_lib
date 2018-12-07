@@ -334,3 +334,16 @@ void printUsage(char* appName)
 		"  -tag           - tag for pool to distingush pools. Max length is 32 chars\n"
 		, appName);
 }
+
+#ifdef __cplusplus         // if used by C++ code
+extern "C" {                  // we need to export the C interface
+#endif
+
+	__declspec(dllexport) int init(int argc, char **argv)
+	{
+		dag_init(argc, argv, 0);
+	}
+
+#ifdef __cplusplus
+}
+#endif
