@@ -100,89 +100,90 @@ int dag_init(int argc, char **argv, int isGui)
 			}
 			continue;
 		}
-		
-		//获取输入参数的详细信息
-		if (ARG_EQUAL(argv[i], "-a", "")) { /* 获取挖矿用户地址miner_address*/
-			if (++i < argc) miner_address = argv[i];
-		} else if(ARG_EQUAL(argv[i], "-c", "")) { /* 另一个完整节点地址 addrports */
-			if (++i < argc && n_addrports < 256)
-				addrports[n_addrports++] = argv[i];
-		} else if(ARG_EQUAL(argv[i], "-d", "")) { /* 守护进程模式*/
-#if !defined(_WIN32) && !defined(_WIN64)
-			transport_flags |= XDAG_DAEMON;
-#endif
-		} else if(ARG_EQUAL(argv[i], "-h", "")) { /* 帮助指令 */
-			printUsage(argv[0]); //打印帮助内容
-			return 0;
-		} else if(ARG_EQUAL(argv[i], "-i", "")) { /* 互动模式 ，进入指令互动模式*/
-			return terminal();
-		} else if(ARG_EQUAL(argv[i], "-z", "")) { /* 内存形式  */
-			if (++i < argc) {
-				dag_mem_tempfile_path(argv[i]);
-			}
-		} else if(ARG_EQUAL(argv[i], "-t", "")) { /* 连接测试网标志位 */
-			g_dag_testnet = 1;
-			g_block_header_type = DAG_FIELD_HEAD_TEST; //块头在测试网络中具有不同的类型
-		} else if(ARG_EQUAL(argv[i], "-m", "")) { /* 挖掘线程数设置 */
-			if (++i < argc) {
-				sscanf(argv[i], "%d", &mining_threads_count);
-				if (mining_threads_count < 0) mining_threads_count = 0;
-			}
-		} else if(ARG_EQUAL(argv[i], "-p", "")) { /* 公开的公钥和指针*/
-			if (++i < argc) {
-				is_pool = 1;
-				pubaddr = argv[i];
-			}
-		} else if(ARG_EQUAL(argv[i], "-P", "")) { /* 矿池的设置信息 */
-			if (++i < argc) {
-				pool_arg = argv[i];
-			}
-		} else if(ARG_EQUAL(argv[i], "-r", "")) { /* 加载块文件，在运行状态 */
-			g_dag_run = 0;
-		} else if(ARG_EQUAL(argv[i], "-s", "")) { /* 此节点的地址 */
-			if (++i < argc)
-				bindto = argv[i];
-		} else if(ARG_EQUAL(argv[i], "-v", "")) { /* 日志级别 */
-			if (++i < argc && sscanf(argv[i], "%d", &level) == 1) {
-				dag_set_log_level(level);
-			} else {
-				printf("Illevel use of option -v\n");
-				return -1;
-			}
-		} else if(ARG_EQUAL(argv[i], "", "-rpc-enable")) { /*启用JSON-RPC服务*/
-			is_rpc = 1;
-		} else if(ARG_EQUAL(argv[i], "", "-rpc-port")) { /* 设置JSON-RPC服务端口  */
-			if(!(++i < argc && sscanf(argv[i], "%d", &rpc_port) == 1)) {
-				printf("rpc port not specified.\n");
-				return -1;
-			}
-		} else if(ARG_EQUAL(argv[i], "", "-threads")) { /* 传输层线程数 */
-			if (!(++i < argc && sscanf(argv[i], "%d", &transport_threads) == 1))
-				printf("Number of transport threads is not given.\n");
-		} else if(ARG_EQUAL(argv[i], "", "-dm")) { /* 禁用挖掘 */
-			g_disable_mining = 1;
-		} else if(ARG_EQUAL(argv[i], "", "-tag")) { /* 池标签 */
-			if(i+1 < argc) {
-				if(validate_remark(argv[i+1])) {
-					memcpy(g_pool_tag, argv[i+1], strlen(argv[i+1]));
-					g_pool_has_tag = 1;
-					++i;
-				} else {
-					printf("Pool tag exceeds 32 chars or is invalid ascii.\n");
-					return -1;
-				}
-			} else {
-				printUsage(argv[0]);
-				return -1;
-			}
-		} else if(ARG_EQUAL(argv[i], "", "-disable-refresh")) { /* 禁用自动刷新白名单 */
-			g_prevent_auto_refresh = 1;
-		} else if(ARG_EQUAL(argv[i], "-l", "")) { /* 余额清单 */
-			return out_balances();
-		} else {
-			printUsage(argv[0]);
-			return 0;
-		}
+
+//		
+//		//获取输入参数的详细信息
+//		if (ARG_EQUAL(argv[i], "-a", "")) { /* 获取挖矿用户地址miner_address*/
+//			if (++i < argc) miner_address = argv[i];
+//		} else if(ARG_EQUAL(argv[i], "-c", "")) { /* 另一个完整节点地址 addrports */
+//			if (++i < argc && n_addrports < 256)
+//				addrports[n_addrports++] = argv[i];
+//		} else if(ARG_EQUAL(argv[i], "-d", "")) { /* 守护进程模式*/
+//#if !defined(_WIN32) && !defined(_WIN64)
+//			transport_flags |= XDAG_DAEMON;
+//#endif
+//		} else if(ARG_EQUAL(argv[i], "-h", "")) { /* 帮助指令 */
+//			printUsage(argv[0]); //打印帮助内容
+//			return 0;
+//		} else if(ARG_EQUAL(argv[i], "-i", "")) { /* 互动模式 ，进入指令互动模式*/
+//			return terminal();
+//		} else if(ARG_EQUAL(argv[i], "-z", "")) { /* 内存形式  */
+//			if (++i < argc) {
+//				dag_mem_tempfile_path(argv[i]);
+//			}
+//		} else if(ARG_EQUAL(argv[i], "-t", "")) { /* 连接测试网标志位 */
+//			g_dag_testnet = 1;
+//			g_block_header_type = DAG_FIELD_HEAD_TEST; //块头在测试网络中具有不同的类型
+//		} else if(ARG_EQUAL(argv[i], "-m", "")) { /* 挖掘线程数设置 */
+//			if (++i < argc) {
+//				sscanf(argv[i], "%d", &mining_threads_count);
+//				if (mining_threads_count < 0) mining_threads_count = 0;
+//			}
+//		} else if(ARG_EQUAL(argv[i], "-p", "")) { /* 公开的公钥和指针*/
+//			if (++i < argc) {
+//				is_pool = 1;
+//				pubaddr = argv[i];
+//			}
+//		} else if(ARG_EQUAL(argv[i], "-P", "")) { /* 矿池的设置信息 */
+//			if (++i < argc) {
+//				pool_arg = argv[i];
+//			}
+//		} else if(ARG_EQUAL(argv[i], "-r", "")) { /* 加载块文件，在运行状态 */
+//			g_dag_run = 0;
+//		} else if(ARG_EQUAL(argv[i], "-s", "")) { /* 此节点的地址 */
+//			if (++i < argc)
+//				bindto = argv[i];
+//		} else if(ARG_EQUAL(argv[i], "-v", "")) { /* 日志级别 */
+//			if (++i < argc && sscanf(argv[i], "%d", &level) == 1) {
+//				dag_set_log_level(level);
+//			} else {
+//				printf("Illevel use of option -v\n");
+//				return -1;
+//			}
+//		} else if(ARG_EQUAL(argv[i], "", "-rpc-enable")) { /*启用JSON-RPC服务*/
+//			is_rpc = 1;
+//		} else if(ARG_EQUAL(argv[i], "", "-rpc-port")) { /* 设置JSON-RPC服务端口  */
+//			if(!(++i < argc && sscanf(argv[i], "%d", &rpc_port) == 1)) {
+//				printf("rpc port not specified.\n");
+//				return -1;
+//			}
+//		} else if(ARG_EQUAL(argv[i], "", "-threads")) { /* 传输层线程数 */
+//			if (!(++i < argc && sscanf(argv[i], "%d", &transport_threads) == 1))
+//				printf("Number of transport threads is not given.\n");
+//		} else if(ARG_EQUAL(argv[i], "", "-dm")) { /* 禁用挖掘 */
+//			g_disable_mining = 1;
+//		} else if(ARG_EQUAL(argv[i], "", "-tag")) { /* 池标签 */
+//			if(i+1 < argc) {
+//				if(validate_remark(argv[i+1])) {
+//					memcpy(g_pool_tag, argv[i+1], strlen(argv[i+1]));
+//					g_pool_has_tag = 1;
+//					++i;
+//				} else {
+//					printf("Pool tag exceeds 32 chars or is invalid ascii.\n");
+//					return -1;
+//				}
+//			} else {
+//				printUsage(argv[0]);
+//				return -1;
+//			}
+//		} else if(ARG_EQUAL(argv[i], "", "-disable-refresh")) { /* 禁用自动刷新白名单 */
+//			g_prevent_auto_refresh = 1;
+//		} else if(ARG_EQUAL(argv[i], "-l", "")) { /* 余额清单 */
+//			return out_balances();
+//		} else {
+//			printUsage(argv[0]);
+//			return 0;
+//		}
 	}
 
 	//初始化时间参数
@@ -197,49 +198,49 @@ int dag_init(int argc, char **argv, int isGui)
 		return -1;
 	}
 
-	//挖矿，矿池的处理
-	if(!is_pool && pool_arg == NULL) {
-		if(!dag_pick_pool(g_pool_address)) {
-			return -1;
-		}
-		is_miner = 1;
-		pool_arg = g_pool_address;
-	}
+	////挖矿，矿池的处理
+	//if(!is_pool && pool_arg == NULL) {
+	//	if(!dag_pick_pool(g_pool_address)) {
+	//		return -1;
+	//	}
+	//	is_miner = 1;
+	//	pool_arg = g_pool_address;
+	//}
 
-	//挖矿池验证
-	if (is_miner) {
-		if (is_pool || bindto || n_addrports || transport_threads > 0) {
-			printf("Miner can't be a pool or have directly connected to the dag network.\n");
-			return -1;
-		}
-		transport_threads = 0;
-	}
-	
-	g_dag_pool = is_pool; // 移动到这里以避免数据竞争
+	////挖矿池验证
+	//if (is_miner) {
+	//	if (is_pool || bindto || n_addrports || transport_threads > 0) {
+	//		printf("Miner can't be a pool or have directly connected to the dag network.\n");
+	//		return -1;
+	//	}
+	//	transport_threads = 0;
+	//}
+	//
+	//g_dag_pool = is_pool; // 移动到这里以避免数据竞争
 
-	g_is_miner = is_miner;
-	g_is_pool = is_pool;
+	//g_is_miner = is_miner;
+	//g_is_pool = is_pool;
 
-	if (pubaddr && !bindto) {
-		char str[64] = {0}, *p = strchr(pubaddr, ':');
-		if (p) {
-			sprintf(str, "0.0.0.0%s", p);
-			bindto = strdup(str);
-		}
-	}
+	//if (pubaddr && !bindto) {
+	//	char str[64] = {0}, *p = strchr(pubaddr, ':');
+	//	if (p) {
+	//		sprintf(str, "0.0.0.0%s", p);
+	//		bindto = strdup(str);
+	//	}
+	//}
 
-	if(g_disable_mining && g_is_miner) {
-		g_disable_mining = 0;   // 此选项仅用于矿池
-	}
+	//if(g_disable_mining && g_is_miner) {
+	//	g_disable_mining = 0;   // 此选项仅用于矿池
+	//}
 
-	memset(&g_dag_stats, 0, sizeof(g_dag_stats));
-	memset(&g_dag_extstats, 0, sizeof(g_dag_extstats));
+	//memset(&g_dag_stats, 0, sizeof(g_dag_stats));
+	//memset(&g_dag_extstats, 0, sizeof(g_dag_extstats));
 
-	dag_mess("Starting %s, version %s", g_progname, DAG_VERSION);
-	dag_mess("Starting synchonization engine...");
-	if (dag_sync_init()) return -1;
-	dag_mess("Starting dnet transport...");
-	printf("Transport module: ");
+	//dag_mess("Starting %s, version %s", g_progname, DAG_VERSION);
+	//dag_mess("Starting synchonization engine...");
+	//if (dag_sync_init()) return -1;
+	//dag_mess("Starting dnet transport...");
+	//printf("Transport module: ");
 
 	//启动文件传输系统
 	if (dag_transport_start(transport_flags, transport_threads, bindto, n_addrports, addrports)) return -1;
@@ -303,47 +304,34 @@ int dag_set_password_callback(int(*callback)(const char *prompt, char *buf, unsi
 void printUsage(char* appName)
 {
 	printf("Usage: %s flags [pool_ip:port]\n"
-		"If pool_ip:port argument is given, then the node operates as a miner.\n"
+		"如果提供 pool_ip:port 端口参数, 则节点作为矿工运行。\n"
 		"Flags:\n"
-		"  -a address     - specify your address to use in the miner\n"
-		"  -c ip:port     - address of another xdag full node to connect\n"
-		"  -d             - run as daemon (default is interactive mode)\n"
-		"  -h             - print this help\n"
-		"  -i             - run as interactive terminal for daemon running in this folder\n"
-		"  -l             - output non zero balances of all accounts\n"
-		"  -m N           - use N CPU mining threads (default is 0)\n"
-		"  -p ip:port     - public address of this node\n"
-		"  -P ip:port:CFG - run the pool, bind to ip:port, CFG is miners:maxip:maxconn:fee:reward:direct:fund\n"
-		"                     miners - maximum allowed number of miners,\n"
-		"                     maxip - maximum allowed number of miners connected from single ip,\n"
-		"                     maxconn - maximum allowed number of miners with the same address,\n"
-		"                     fee - pool fee in percent,\n"
-		"                     reward - reward to miner who got a block in percent,\n"
-		"                     direct - reward to miners participated in earned block in percent,\n"
-		"                     fund - community fund fee in percent\n"
-		"  -r             - load local blocks and wait for 'run' command to continue\n"
-		"  -s ip:port     - address of this node to bind to\n"
-		"  -t             - connect to test net (default is main net)\n"
-		"  -v N           - set loglevel to N\n"
-		"  -z <path>      - path to temp-file folder\n"
-		"  -z RAM         - use RAM instead of temp-files\n"
-		"  -rpc-enable    - enable JSON-RPC service\n"
-		"  -rpc-port      - set HTTP JSON-RPC port (default is 7667)\n"
-		"  -threads N     - create N transport layer threads for pool (default is 6)\n"
-		"  -dm            - disable mining on pool (-P option is ignored)\n"
-		"  -tag           - tag for pool to distingush pools. Max length is 32 chars\n"
+		"  -a 地址		  - 指定矿工使用的地址\n"
+		"  -c ip:port     - 连接另一个DAG完整节点的地址\n"
+		"  -d             - 作为守护进程运行（默认为交互模式）\n"
+		"  -h             - 打印此帮助\n"
+		"  -i             - 在这个文件夹中运行守护进程的交互终端\n"
+		"  -l             - 所有帐户的输出非零余额\n"
+		"  -m N           - 使用nCPU挖掘线程（默认值为0）\n"
+		"  -p ip:port     - 此节点的公共地址\n"
+		"  -P ip:port:CFG - 运行池，绑定到 ip:port, CFG 是 miners:maxip:maxconn:fee:reward:direct:fund\n"
+		"                     miners - 最大允许矿工数,\n"
+		"                     maxip - 从单一IP连接的最大允许矿工数,\n"
+		"                     maxconn - 具有相同地址的矿工的最大允许数量,\n"
+		"                     fee - 池费百分比,\n"
+		"                     reward - 对矿工的奖励,\n"
+		"                     direct - 奖励矿工参与出块的百分比,\n"
+		"                     fund - 社区基金费百分比\n"
+		"  -r             - 加载本地块并等待“Run”命令继续\n"
+		"  -s ip:port     - 绑定到指定节点的地址\n"
+		"  -t             - 连接到测试网（默认为主网）\n"
+		"  -v N           - 将日志级别设置为N\n"
+		"  -z <path>      - 临时文件夹的路径\n"
+		"  -z RAM         - 使用RAM代替临时文件\n"
+		"  -rpc-enable    - 启用JSON-RPC服务\n"
+		"  -rpc-port      - 设置HTTP JSON-RPC端口（默认值为7667）\n"
+		"  -threads N     - 为池创建n个传输层线程（默认值为6）\n"
+		"  -dm            - 禁用池上的挖掘（-p选项被忽略）\n"
+		"  -tag           - 用于池池的标签。最大长度为32字符\n"
 		, appName);
 }
-
-#ifdef __cplusplus         // if used by C++ code
-extern "C" {                  // we need to export the C interface
-#endif
-
-	__declspec(dllexport) int init(int argc, char **argv)
-	{
-		dag_init(argc, argv, 0);
-	}
-
-#ifdef __cplusplus
-}
-#endif

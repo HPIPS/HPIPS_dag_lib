@@ -20,7 +20,7 @@ xtime_t dag_start_main_time(void)
 	return MAIN_TIME(g_dag_era); //
 }
 
-///*Dag 时间参数初始化
+///*Dag 时间参数初始化，g_dag_era赋值初值
 int dag_time_init(void)
 {
 	if (g_dag_testnet) {
