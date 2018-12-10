@@ -16,7 +16,11 @@ int main(int argc, char **argv)
 	argc = 6;
 	//argv[1] = "-P";
 	//argv[2] = "127.0.0.1:2323";
-	argv[1] = "-i";
+	argv[1] = "-t";
+	argv[2] = "-P";
+	argv[3] = "127.0.0.1:2323";
+	argv[4] = "-threads";
+	argv[5] = "1";
 	dag_init(argc, argv, 0);
 	return 0;
 }
