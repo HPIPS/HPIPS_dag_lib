@@ -21,7 +21,7 @@ END_MESSAGE_MAP()
 
 CcheatcoinwalletApp::CcheatcoinwalletApp()
 {
-	// support Restart Manager
+	// 支持重新启动管理器
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 
 	// TODO: add construction code here,

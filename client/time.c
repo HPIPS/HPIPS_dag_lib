@@ -5,7 +5,7 @@
 #include "system.h"
 #include "utils/utils.h"
 
-xtime_t g_time_limit = DEF_TIME_LIMIT, g_xdag_era = DAG_MAIN_ERA;
+xtime_t g_time_limit = DEF_TIME_LIMIT, g_dag_era = DAG_MAIN_ERA;
 extern int g_dag_testnet;
 
 // 返回一个时间周期索引，其中周期为64秒长。
@@ -17,14 +17,14 @@ xtime_t dag_main_time(void)
 // 返回与网络启动相对应的时间周期索引
 xtime_t dag_start_main_time(void)
 {
-	return MAIN_TIME(g_Ddag_era); //
+	return MAIN_TIME(g_dag_era); //
 }
 
 ///*Dag 时间参数初始化，g_dag_era赋值初值
 int dag_time_init(void)
 {
 	if (g_dag_testnet) {
-		g_Ddag_era = DAG_TEST_ERA;
+		g_dag_era = DAG_TEST_ERA;
 	}
 	
 	return 1;

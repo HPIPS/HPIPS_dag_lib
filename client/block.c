@@ -491,7 +491,7 @@ static int add_block_nolock(struct dag_block *newBlock, xtime_t limit)
 
 	tmpNodeBlock.time = newBlock->field[0].time;
 
-	if(tmpNodeBlock.time > timestamp + MAIN_CHAIN_PERIOD / 4 || tmpNodeBlock.time < g_Ddag_era
+	if(tmpNodeBlock.time > timestamp + MAIN_CHAIN_PERIOD / 4 || tmpNodeBlock.time < g_dag_era
 		|| (limit && timestamp - tmpNodeBlock.time > limit)) {
 		i = 0;
 		err = 2;
@@ -831,7 +831,7 @@ void *add_block_callback(void *block, void *data)
 
 	pthread_mutex_lock(&block_mutex);
 
-	if(*t < g_Ddag_era) {
+	if(*t < g_dag_era) {
 		(res = add_block_nolock(b, *t));
 	} else if((res = add_block_nolock(b, 0)) >= 0 && b->field[0].time > *t) {
 		*t = b->field[0].time;
@@ -1115,7 +1115,7 @@ static void reset_callback(struct ldus_rbtree *node)
 // main thread which works with block
 static void *work_thread(void *arg)
 {
-	xtime_t t = g_Ddag_era, conn_time = 0, sync_time = 0, t0;
+	xtime_t t = g_dag_era, conn_time = 0, sync_time = 0, t0;
 	int n_mining_threads = (int)(unsigned)(uintptr_t)arg, sync_thread_running = 0;
 	uint64_t nhashes0 = 0, nhashes = 0;
 	pthread_t th;
@@ -1306,7 +1306,7 @@ int dag_blocks_start(int is_pool, int mining_threads_count, int miner_address)
 		g_light_mode = 1;
 	}
 
-	if (dag_mem_init(g_light_mode && !miner_address ? 0 : (((dag_get_xtimestamp() - g_Ddag_era) >> 10) + (uint64_t)365 * 24 * 60 * 60) * 2 * sizeof(struct block_internal))) {
+	if (dag_mem_init(g_light_mode && !miner_address ? 0 : (((dag_get_xtimestamp() - g_dag_era) >> 10) + (uint64_t)365 * 24 * 60 * 60) * 2 * sizeof(struct block_internal))) {
 		return -1;
 	}
 
@@ -1665,7 +1665,7 @@ int dag_print_block_info(dag_hash_t hash, FILE *out)
 	if (bi->flags & BI_MAIN) {
 		dag_hash2address(h, address);
 		fprintf(out, "   earning: %s  %10u.%09u  %s\n", address,
-			pramount(MAIN_START_AMOUNT >> ((MAIN_TIME(bi->time) - MAIN_TIME(g_Ddag_era)) >> MAIN_BIG_PERIOD_LOG)),
+			pramount(MAIN_START_AMOUNT >> ((MAIN_TIME(bi->time) - MAIN_TIME(g_dag_era)) >> MAIN_BIG_PERIOD_LOG)),
 			time_buf);
 	}
 	

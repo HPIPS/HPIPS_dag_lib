@@ -17,22 +17,14 @@
 class hpips_test_wallet_App : public CWinApp
 {
 public:
-	hpips_test_wallet_App() noexcept;
+	hpips_test_wallet_App();
 
 
 // 重写
 public:
 	virtual BOOL InitInstance();
-	virtual int ExitInstance();
 
-// 实现
-protected:
-	HMENU  m_hMDIMenu;
-	HACCEL m_hMDIAccel;
-
-public:
-	afx_msg void OnAppAbout();
-	afx_msg void OnFileNew();
+	// 实施
 	DECLARE_MESSAGE_MAP()
 };
 

@@ -1,6 +1,4 @@
 /* basic variables, T13.714-T14.582 $DVS:time$ */
-
-#pragma once
 #ifndef DAG_MAIN_H
 #define DAG_MAIN_H
 
@@ -74,7 +72,7 @@ __declspec(dllexport) int dag_init(int argc, char **argv, int isGui);
 
 __declspec(dllexport) int dag_set_password_callback(int(*callback)(const char *prompt, char *buf, unsigned size));
 
-__declspec(dllexport) int(*g_dag_show_state)(const char *state, const char *balance, const char *address);
+extern int(*g_dag_show_state)(const char *state, const char *balance, const char *address);
 
 #ifdef __cplusplus
 };
