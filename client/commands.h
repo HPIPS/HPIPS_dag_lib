@@ -12,7 +12,7 @@ extern "C" {
 
 /* time of last transfer */
 extern time_t g_dag_xfer_last;
-extern int dag_do_xfer(void *outv, const char *amount, const char *address, const char *remark, int isGui);
+__declspec(dllexport) int dag_do_xfer(void *outv, const char *amount, const char *address, const char *remark, int isGui);
 extern void dagSetCountMiningTread(int miningThreadsCount);
 extern double dagGetHashRate(void);
 extern long double hashrate(dag_diff_t *diff);

@@ -17,14 +17,14 @@ xtime_t dag_main_time(void)
 // 返回与网络启动相对应的时间周期索引
 xtime_t dag_start_main_time(void)
 {
-	return MAIN_TIME(g_dag_era); //
+	return MAIN_TIME(g_Ddag_era); //
 }
 
 ///*Dag 时间参数初始化，g_dag_era赋值初值
 int dag_time_init(void)
 {
 	if (g_dag_testnet) {
-		g_dag_era = DAG_TEST_ERA;
+		g_Ddag_era = DAG_TEST_ERA;
 	}
 	
 	return 1;

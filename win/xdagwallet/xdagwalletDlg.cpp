@@ -214,7 +214,7 @@ void CXDagWalletDlg::OnClickedButtonXfer()
 		MessageBox("Transfer address must be set", "Dagger wallet", MB_OK | MB_ICONSTOP);
 		return;
 	}
-	xdag_do_xfer(0, (char*)(LPCTSTR)_transferAmount, (char*)(LPCTSTR)_transferAddress, NULL, 1);
+	dag_do_xfer(0, (char*)(LPCTSTR)_transferAmount, (char*)(LPCTSTR)_transferAddress, NULL, 1);
 }
 
 LRESULT CXDagWalletDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
@@ -232,10 +232,10 @@ void CXDagWalletDlg::OnTimer(WPARAM wParam)
 {
 	KillTimer(ID_TIMER_INIT);
 
-	char *argv[] = { "xdag.exe" };
-	xdag_set_password_callback(&InputPassword);
-	g_xdag_show_state = &ShowState;
-	xdag_init(1, argv, 1);
+	char *argv[] = { "hpips_dag.exe" };
+	dag_set_password_callback(&InputPassword);
+	g_dag_show_state = &ShowState;
+	dag_init(1, argv, 1);
 
 	_transferAmountEdit.EnableWindow(TRUE);
 	_transferAddressEdit.EnableWindow(TRUE);

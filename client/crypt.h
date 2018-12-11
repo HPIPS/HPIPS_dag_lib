@@ -1,5 +1,5 @@
 /* cryptography, T13.654-T13.826 $DVS:time$ */
-
+#pragma once
 #ifndef XDAG_CRYPT_H
 #define XDAG_CRYPT_H
 

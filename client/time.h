@@ -1,5 +1,6 @@
 /* time functions, T14.524-T14.582 $DVS:time$ */
 
+#pragma once
 #ifndef DAG_TIME_H
 #define DAG_TIME_H
 
@@ -23,7 +24,7 @@
 extern "C" {
 #endif
 
-xtime_t g_dag_era;
+xtime_t g_Ddag_era;
 // 返回一个时间周期索引，其中周期为64秒长。
 xtime_t dag_main_time(void);
 

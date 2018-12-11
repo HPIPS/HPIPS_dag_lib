@@ -9,6 +9,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hpips_dag", "hpips_dag\hpip
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "secp256k1", "secp256k1\secp256k1\secp256k1.vcxproj", "{76685A91-5D47-423A-BB5D-0D180029DA22}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hpips_test_wallet", "hpips_test_wallet\hpips_test_wallet.vcxproj", "{17F4C65E-31BA-471D-8B71-C74BF54C58FF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xdagwallet", "xdagwallet\xdagwallet.vcxproj", "{EDACF749-CA11-48F7-806A-D39748389856}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -55,6 +59,30 @@ Global
 		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release|x64.Build.0 = Release|x64
 		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release|x86.ActiveCfg = Release|Win32
 		{76685A91-5D47-423A-BB5D-0D180029DA22}.Release|x86.Build.0 = Release|Win32
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Debug|x64.ActiveCfg = Debug|x64
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Debug|x64.Build.0 = Debug|x64
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Debug|x86.ActiveCfg = Debug|Win32
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Debug|x86.Build.0 = Debug|Win32
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Release_profiling|x64.ActiveCfg = Release|x64
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Release_profiling|x64.Build.0 = Release|x64
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Release_profiling|x86.ActiveCfg = Release|Win32
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Release_profiling|x86.Build.0 = Release|Win32
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Release|x64.ActiveCfg = Release|x64
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Release|x64.Build.0 = Release|x64
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Release|x86.ActiveCfg = Release|Win32
+		{17F4C65E-31BA-471D-8B71-C74BF54C58FF}.Release|x86.Build.0 = Release|Win32
+		{EDACF749-CA11-48F7-806A-D39748389856}.Debug|x64.ActiveCfg = Debug|x64
+		{EDACF749-CA11-48F7-806A-D39748389856}.Debug|x64.Build.0 = Debug|x64
+		{EDACF749-CA11-48F7-806A-D39748389856}.Debug|x86.ActiveCfg = Debug|Win32
+		{EDACF749-CA11-48F7-806A-D39748389856}.Debug|x86.Build.0 = Debug|Win32
+		{EDACF749-CA11-48F7-806A-D39748389856}.Release_profiling|x64.ActiveCfg = Release_profiling|x64
+		{EDACF749-CA11-48F7-806A-D39748389856}.Release_profiling|x64.Build.0 = Release_profiling|x64
+		{EDACF749-CA11-48F7-806A-D39748389856}.Release_profiling|x86.ActiveCfg = Release_profiling|Win32
+		{EDACF749-CA11-48F7-806A-D39748389856}.Release_profiling|x86.Build.0 = Release_profiling|Win32
+		{EDACF749-CA11-48F7-806A-D39748389856}.Release|x64.ActiveCfg = Release|x64
+		{EDACF749-CA11-48F7-806A-D39748389856}.Release|x64.Build.0 = Release|x64
+		{EDACF749-CA11-48F7-806A-D39748389856}.Release|x86.ActiveCfg = Release|Win32
+		{EDACF749-CA11-48F7-806A-D39748389856}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
