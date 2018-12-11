@@ -5,6 +5,7 @@
 
 #include "stdafx.h"
 #include "ToolTip.h"
+#include "CEditWalletAddr.h"
 
 class CEditWalletAddrMine : public CEditWalletAddr
 {
