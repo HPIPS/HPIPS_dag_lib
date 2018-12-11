@@ -36,6 +36,12 @@
     <ClInclude Include="CEditWalletAddrMine.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="PasswordDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolTip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hpips_test_wallet.cpp">
@@ -48,6 +54,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CEditWalletAddrMine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PasswordDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolTip.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
