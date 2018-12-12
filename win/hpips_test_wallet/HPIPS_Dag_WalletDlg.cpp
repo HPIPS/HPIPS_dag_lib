@@ -234,7 +234,7 @@ void HPIPS_Dag_WalletDlg::OnTimer(WPARAM wParam)
 
 	char *argv[] = { "hpips_dag.exe" };
 	dag_set_password_callback(&InputPassword);
-	//g_dag_show_state = &ShowState;
+	g_dag_show_state = &ShowState;
 	dag_init(1, argv, 1);
 
 	_transferAmountEdit.EnableWindow(TRUE);

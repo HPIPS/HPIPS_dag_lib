@@ -295,6 +295,7 @@ int dag_init(int argc, char **argv, int isGui)
 	return 0;
 }
 
+//ÉèÖÃÃÜÂëº¯Êı
 int dag_set_password_callback(int(*callback)(const char *prompt, char *buf, unsigned size))
 {
     return dag_user_crypt_action((uint32_t *)(void *)callback, 0, 0, 6);
