@@ -7,6 +7,7 @@
 #include "block.h"
 #include "system.h"
 
+
 enum dag_states
 {
 #define dag_state(n,s) DAG_STATE_##n ,
@@ -72,7 +73,7 @@ __declspec(dllexport) int dag_init(int argc, char **argv, int isGui);
 
 __declspec(dllexport) int dag_set_password_callback(int(*callback)(const char *prompt, char *buf, unsigned size));
 
-extern int(*g_dag_show_state)(const char *state, const char *balance, const char *address);
+extern int(*g_dag_show_state)(const char *, const char *, const char *);
 
 #ifdef __cplusplus
 };

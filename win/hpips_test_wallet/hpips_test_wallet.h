@@ -1,8 +1,8 @@
 ﻿
 // hpips_test_wallet.h: hpips_test_wallet 应用程序的主头文件
 //
-#pragma once
-
+#ifndef   HPIPS_TEST_WALLET        
+#define   HPIPS_TEST_WALLET   
 #ifndef __AFXWIN_H__
 	#error "在包含此文件之前包含“stdafx.h”以生成 PCH 文件"
 #endif
@@ -29,3 +29,5 @@ public:
 };
 
 extern hpips_test_wallet_App theApp;
+
+#endif  

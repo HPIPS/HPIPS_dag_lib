@@ -1,5 +1,6 @@
-#pragma once
 
+#ifndef   HPIPS_TEST_WALLET_dlg        
+#define   HPIPS_TEST_WALLET_dlg  
 #include "afxwin.h"
 #include "CEditWalletAddrMine.h"
 
@@ -60,3 +61,4 @@ public:
 
 extern HPIPS_Dag_WalletDlg *g_dlg;
 
+#endif 

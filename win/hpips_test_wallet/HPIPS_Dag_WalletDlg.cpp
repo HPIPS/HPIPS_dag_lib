@@ -1,17 +1,18 @@
-
+#pragma once
 #include "stdafx.h"
+#include "../../client/init.h"
+#include "../../client/commands.h"
 #include "hpips_test_wallet.h"
 #include "HPIPS_Dag_WalletDlg.h""
 #include "afxdialogex.h"
 #include "PasswordDlg.h"
-#include "../../client/init.h"
-#include "../../client/commands.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 HPIPS_Dag_WalletDlg *g_dlg = 0;
+int(*g_dag_show_state)(const char *state, const char *balance, const char *address) = 0;
 
 // CAboutDlg dialog used for App About
 

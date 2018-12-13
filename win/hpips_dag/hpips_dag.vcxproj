@@ -30,6 +30,14 @@
   <ItemGroup>
     <None Include="..\x64\Debug\hpips_dag_lib.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\hpips_dag_lib\hpips_dag_lib.vcxproj">
+      <Project>{0b8ea0d8-eeca-4eff-8ef5-d4eb744a73ca}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\secp256k1\secp256k1\secp256k1.vcxproj">
+      <Project>{76685a91-5d47-423a-bb5d-0d180029da22}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E66556D6-800C-4CBC-82E7-DC6435565A02}</ProjectGuid>
@@ -108,6 +116,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>hpips_dag_lib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(PTHREAD_ROOT)dll\x64\pthreadVC2.dll "$(OutDir)pthreadVC2.dll" /Y
+copy $(SolutionDir)dependencies\x64\msvcr100.dll "$(OutDir)msvcr100.dll" /Y
+copy $(SolutionDir)..\client\netdb.txt "$(OutDir)netdb.txt" /Y
+copy $(SolutionDir)..\client\netdb-testnet.txt "$(OutDir)netdb-testnet.txt" /Y
+copy $(SolutionDir)..\client\netdb-white.txt "$(OutDir)netdb-white.txt" /Y
+copy $(SolutionDir)..\client\netdb-white-testnet.txt "$(OutDir)netdb-white-testnet.txt" /Y
+copy $(SolutionDir)..\client\pools.txt "$(OutDir)pools.txt" /Y
+copy $(SolutionDir)..\client\pools-testnet.txt "$(OutDir)pools-testnet.txt" /Y
+copy $(SolutionDir)..\dnet\dnet_keys.bin "$(OutDir)dnet_keys.bin" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
