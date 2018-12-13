@@ -11,3 +11,7 @@
   dus 数据格式文件库
   
   secp256k1 加密函数框架
+
+  开发环境为 Visual Studio 2017 community 下载地址https://download.visualstudio.microsoft.com/download/pr/081a3be2-df51-4b2f-89b3-6060051c4803/2afefc0e13f4613720bd70a51a227410/vs_community.exe
+  
+  Visual Studio 2017主要加载的模块为C++ 开发工具已经MFC开发库
